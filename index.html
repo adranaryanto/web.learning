@@ -14,7 +14,7 @@
 
     <link
         rel="stylesheet"
-        href="./css/components.css?v=3"
+        href="./css/components.css?v=4"
     >
 
 </head>
@@ -38,7 +38,6 @@
                 <img
                     src="./static/logo.png"
                     alt="Research Manager"
-                    onerror="this.style.display='none'"
                 >
 
             </div>
@@ -66,15 +65,8 @@
                 class="nav-item active"
                 data-page="dashboard"
             >
-
-                <span class="nav-icon">
-                    ⌂
-                </span>
-
-                <span>
-                    Dashboard
-                </span>
-
+                <span class="nav-icon">⌂</span>
+                <span>Dashboard</span>
             </button>
 
 
@@ -83,15 +75,8 @@
                 class="nav-item"
                 data-page="papers"
             >
-
-                <span class="nav-icon">
-                    ▤
-                </span>
-
-                <span>
-                    Papers
-                </span>
-
+                <span class="nav-icon">▤</span>
+                <span>Papers</span>
             </button>
 
 
@@ -100,15 +85,8 @@
                 class="nav-item"
                 data-page="input-paper"
             >
-
-                <span class="nav-icon">
-                    ＋
-                </span>
-
-                <span>
-                    Input Paper
-                </span>
-
+                <span class="nav-icon">＋</span>
+                <span>Input Paper</span>
             </button>
 
 
@@ -117,15 +95,8 @@
                 class="nav-item"
                 data-page="summary"
             >
-
-                <span class="nav-icon">
-                    ≡
-                </span>
-
-                <span>
-                    Summary
-                </span>
-
+                <span class="nav-icon">≡</span>
+                <span>Summary</span>
             </button>
 
 
@@ -134,15 +105,8 @@
                 class="nav-item"
                 data-page="mini-review"
             >
-
-                <span class="nav-icon">
-                    ◫
-                </span>
-
-                <span>
-                    Mini Review
-                </span>
-
+                <span class="nav-icon">◫</span>
+                <span>Mini Review</span>
             </button>
 
 
@@ -151,15 +115,8 @@
                 class="nav-item"
                 data-page="research-gap"
             >
-
-                <span class="nav-icon">
-                    ⌕
-                </span>
-
-                <span>
-                    Research Gap
-                </span>
-
+                <span class="nav-icon">⌕</span>
+                <span>Research Gap</span>
             </button>
 
         </nav>
@@ -199,7 +156,6 @@
                 <button
                     id="sidebar-toggle"
                     type="button"
-                    aria-label="Toggle navigation"
                 >
                     ☰
                 </button>
@@ -235,7 +191,7 @@
 
 
         <!-- =================================================
-             CONTENT
+             PAGE AREA
         ================================================== -->
 
         <div id="page-area">
@@ -250,9 +206,6 @@
                 class="page dashboard-page"
             >
 
-
-                <!-- BACKGROUND -->
-
                 <div
                     class="dashboard-background"
                     aria-hidden="true"
@@ -265,27 +218,20 @@
                 ></div>
 
 
-
-                <!-- DASHBOARD CONTENT -->
-
                 <div class="dashboard-content">
 
 
-                    <!-- =================================================
-                         HERO
-                    ================================================== -->
+                    <!-- HERO -->
 
                     <section class="hero">
 
                         <div class="hero-content">
-
 
                             <div class="hero-logo">
 
                                 <img
                                     src="./static/logo.png"
                                     alt="Research Manager"
-                                    onerror="this.style.display='none'"
                                 >
 
                             </div>
@@ -315,13 +261,11 @@
                         </div>
 
 
-
                         <button
                             type="button"
                             id="hero-add-paper"
                             class="hero-button"
                         >
-
                             <span class="hero-button-icon">
                                 ＋
                             </span>
@@ -329,21 +273,15 @@
                             <span>
                                 Add New Paper
                             </span>
-
                         </button>
 
                     </section>
 
 
 
-                    <!-- =================================================
-                         STATISTICS
-                    ================================================== -->
+                    <!-- STATISTICS -->
 
                     <section class="stats">
-
-
-                        <!-- PAPERS -->
 
                         <article class="stat-card">
 
@@ -359,7 +297,6 @@
 
                             </div>
 
-
                             <div
                                 class="stat-number"
                                 id="total-papers"
@@ -367,11 +304,9 @@
                                 0
                             </div>
 
-
                             <strong>
                                 Total Papers
                             </strong>
-
 
                             <p>
                                 Research papers in your library
@@ -379,9 +314,6 @@
 
                         </article>
 
-
-
-                        <!-- SUMMARIES -->
 
                         <article class="stat-card">
 
@@ -397,7 +329,6 @@
 
                             </div>
 
-
                             <div
                                 class="stat-number"
                                 id="total-summaries"
@@ -405,11 +336,9 @@
                                 0
                             </div>
 
-
                             <strong>
                                 Summaries
                             </strong>
-
 
                             <p>
                                 Structured paper summaries
@@ -417,9 +346,6 @@
 
                         </article>
 
-
-
-                        <!-- MINI REVIEWS -->
 
                         <article class="stat-card">
 
@@ -435,7 +361,6 @@
 
                             </div>
 
-
                             <div
                                 class="stat-number"
                                 id="total-mini-reviews"
@@ -443,11 +368,9 @@
                                 0
                             </div>
 
-
                             <strong>
                                 Mini Reviews
                             </strong>
-
 
                             <p>
                                 Literature reviews
@@ -455,9 +378,6 @@
 
                         </article>
 
-
-
-                        <!-- RESEARCH GAP -->
 
                         <article class="stat-card">
 
@@ -473,7 +393,6 @@
 
                             </div>
 
-
                             <div
                                 class="stat-number"
                                 id="total-research-gaps"
@@ -481,11 +400,9 @@
                                 0
                             </div>
 
-
                             <strong>
                                 Research Gaps
                             </strong>
-
 
                             <p>
                                 Identified research opportunities
@@ -497,14 +414,10 @@
 
 
 
-                    <!-- =================================================
-                         LOWER GRID
-                    ================================================== -->
+                    <!-- LOWER GRID -->
 
                     <section class="dashboard-grid">
 
-
-                        <!-- QUICK ACTIONS -->
 
                         <div class="panel">
 
@@ -538,7 +451,6 @@
                                         ▤
                                     </div>
 
-
                                     <div class="action-text">
 
                                         <strong>
@@ -552,13 +464,11 @@
 
                                     </div>
 
-
                                     <span class="action-arrow">
                                         →
                                     </span>
 
                                 </button>
-
 
 
                                 <button
@@ -570,7 +480,6 @@
                                     <div class="action-icon">
                                         ≡
                                     </div>
-
 
                                     <div class="action-text">
 
@@ -585,13 +494,11 @@
 
                                     </div>
 
-
                                     <span class="action-arrow">
                                         →
                                     </span>
 
                                 </button>
-
 
 
                                 <button
@@ -603,7 +510,6 @@
                                     <div class="action-icon">
                                         ⌕
                                     </div>
-
 
                                     <div class="action-text">
 
@@ -618,7 +524,6 @@
 
                                     </div>
 
-
                                     <span class="action-arrow">
                                         →
                                     </span>
@@ -630,8 +535,6 @@
                         </div>
 
 
-
-                        <!-- RECENT PAPERS -->
 
                         <div class="panel">
 
@@ -672,7 +575,6 @@
                                         ＋
                                     </div>
 
-
                                     <div>
 
                                         <strong>
@@ -697,9 +599,7 @@
 
 
 
-                    <!-- =================================================
-                         WORKFLOW
-                    ================================================== -->
+                    <!-- WORKFLOW -->
 
                     <section class="workflow">
 
@@ -717,7 +617,6 @@
 
 
                         <div class="workflow-track">
-
 
                             <div class="workflow-step active">
 
@@ -807,6 +706,212 @@
 
                     </section>
 
+                </div>
+
+            </section>
+
+
+
+            <!-- =================================================
+                 PAPERS
+            ================================================== -->
+
+            <section
+                id="papers-page"
+                class="page papers-page"
+            >
+
+                <div class="papers-background"></div>
+
+
+                <div class="papers-overlay"></div>
+
+
+                <div class="papers-content">
+
+
+                    <!-- HEADER -->
+
+                    <div class="papers-heading">
+
+                        <div>
+
+                            <span class="section-eyebrow">
+                                LIBRARY
+                            </span>
+
+                            <h1>
+                                Research Papers
+                            </h1>
+
+                            <p>
+                                Browse, search, and manage
+                                your research paper collection.
+                            </p>
+
+                        </div>
+
+
+                        <button
+                            type="button"
+                            id="papers-add-button"
+                            class="primary-btn"
+                        >
+                            ＋ Add New Paper
+                        </button>
+
+                    </div>
+
+
+
+                    <!-- STATISTICS -->
+
+                    <div class="papers-stats">
+
+
+                        <div class="papers-stat">
+
+                            <span>
+                                TOTAL PAPERS
+                            </span>
+
+                            <strong
+                                id="papers-total-count"
+                            >
+                                0
+                            </strong>
+
+                        </div>
+
+
+                        <div class="papers-stat">
+
+                            <span>
+                                LATEST YEAR
+                            </span>
+
+                            <strong
+                                id="papers-latest-year"
+                            >
+                                —
+                            </strong>
+
+                        </div>
+
+
+                        <div class="papers-stat">
+
+                            <span>
+                                JOURNALS
+                            </span>
+
+                            <strong
+                                id="papers-journal-count"
+                            >
+                                0
+                            </strong>
+
+                        </div>
+
+
+                        <div class="papers-stat">
+
+                            <span>
+                                RESEARCH AREAS
+                            </span>
+
+                            <strong
+                                id="papers-area-count"
+                            >
+                                0
+                            </strong>
+
+                        </div>
+
+                    </div>
+
+
+
+                    <!-- TOOLBAR -->
+
+                    <div class="papers-toolbar">
+
+
+                        <div class="paper-search">
+
+                            <span>
+                                ⌕
+                            </span>
+
+                            <input
+                                id="paper-search"
+                                type="search"
+                                placeholder="Search title, author, journal, DOI..."
+                                autocomplete="off"
+                            >
+
+                        </div>
+
+
+                        <div class="paper-filters">
+
+                            <select
+                                id="paper-year-filter"
+                            >
+                                <option value="all">
+                                    All Years
+                                </option>
+                            </select>
+
+
+                            <select
+                                id="paper-sort"
+                            >
+
+                                <option value="newest">
+                                    Newest Added
+                                </option>
+
+                                <option value="oldest">
+                                    Oldest Added
+                                </option>
+
+                                <option value="year">
+                                    Publication Year
+                                </option>
+
+                                <option value="title">
+                                    Title A–Z
+                                </option>
+
+                            </select>
+
+                        </div>
+
+                    </div>
+
+
+
+                    <!-- RESULT HEADER -->
+
+                    <div class="papers-result-header">
+
+                        <span
+                            id="papers-result-count"
+                        >
+                            0 papers
+                        </span>
+
+                    </div>
+
+
+
+                    <!-- PAPERS -->
+
+                    <div
+                        id="papers-list"
+                        class="papers-list"
+                    ></div>
 
                 </div>
 
@@ -817,12 +922,6 @@
             <!-- =================================================
                  OTHER PAGES
             ================================================== -->
-
-            <section
-                id="papers-page"
-                class="page empty-page"
-            ></section>
-
 
             <section
                 id="input-paper-page"
@@ -852,6 +951,216 @@
 
 
 
+        <!-- =================================================
+             PAPER DETAIL MODAL
+        ================================================== -->
+
+        <div
+            id="paper-detail-modal"
+            class="paper-modal"
+        >
+
+            <div class="paper-modal-box">
+
+
+                <div class="paper-modal-header">
+
+                    <div>
+
+                        <span>
+                            PAPER DETAILS
+                        </span>
+
+                        <h2 id="detail-title">
+                            Paper
+                        </h2>
+
+                    </div>
+
+
+                    <button
+                        type="button"
+                        id="close-paper-modal"
+                        class="modal-close"
+                    >
+                        ×
+                    </button>
+
+                </div>
+
+
+                <div class="paper-modal-content">
+
+
+                    <div class="detail-primary">
+
+                        <span class="detail-label">
+                            AUTHORS
+                        </span>
+
+                        <p id="detail-authors">
+                            —
+                        </p>
+
+                    </div>
+
+
+                    <div class="detail-grid">
+
+
+                        <div class="detail-field">
+
+                            <span>
+                                YEAR
+                            </span>
+
+                            <strong id="detail-year">
+                                —
+                            </strong>
+
+                        </div>
+
+
+                        <div class="detail-field">
+
+                            <span>
+                                JOURNAL
+                            </span>
+
+                            <strong id="detail-journal">
+                                —
+                            </strong>
+
+                        </div>
+
+
+                        <div class="detail-field">
+
+                            <span>
+                                DOI
+                            </span>
+
+                            <strong id="detail-doi">
+                                —
+                            </strong>
+
+                        </div>
+
+
+                        <div class="detail-field">
+
+                            <span>
+                                VOLUME
+                            </span>
+
+                            <strong id="detail-volume">
+                                —
+                            </strong>
+
+                        </div>
+
+
+                        <div class="detail-field">
+
+                            <span>
+                                ISSUE
+                            </span>
+
+                            <strong id="detail-issue">
+                                —
+                            </strong>
+
+                        </div>
+
+
+                        <div class="detail-field">
+
+                            <span>
+                                PAGES
+                            </span>
+
+                            <strong id="detail-pages">
+                                —
+                            </strong>
+
+                        </div>
+
+
+                        <div class="detail-field">
+
+                            <span>
+                                RESEARCH AREA
+                            </span>
+
+                            <strong id="detail-area">
+                                —
+                            </strong>
+
+                        </div>
+
+
+                        <div class="detail-field">
+
+                            <span>
+                                MATERIAL
+                            </span>
+
+                            <strong id="detail-material">
+                                —
+                            </strong>
+
+                        </div>
+
+
+                    </div>
+
+
+                    <div class="detail-long">
+
+                        <span>
+                            METHODOLOGY
+                        </span>
+
+                        <p id="detail-methodology">
+                            —
+                        </p>
+
+                    </div>
+
+
+                    <div class="detail-long">
+
+                        <span>
+                            EXPERIMENTAL CONDITIONS
+                        </span>
+
+                        <p id="detail-conditions">
+                            —
+                        </p>
+
+                    </div>
+
+
+                    <div class="detail-long">
+
+                        <span>
+                            KEYWORDS
+                        </span>
+
+                        <p id="detail-keywords">
+                            —
+                        </p>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+
+
         <!-- FOOTER -->
 
         <footer id="footer">
@@ -873,9 +1182,19 @@
 
 
 
+<!-- ============================================================
+     JAVASCRIPT
+============================================================ -->
+
 <script
     src="./js/dashboard.js?v=3"
 ></script>
+
+
+<script
+    src="./js/papers.js?v=1"
+></script>
+
 
 </body>
 
