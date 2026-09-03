@@ -1,1856 +1,2398 @@
-file input paper sebelum nya:
-
 <!DOCTYPE html>
-
 <html lang="id">
-
 <head>
-
-  <meta charset="UTF-8">
-
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-  <title>Input Papers - Paper</title>
-
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
-
-  <style>
-
-    * {
-
-      box-sizing: border-box;
-
-      margin: 0;
-
-      padding: 0;
-
-    }
-
-    :root {
-
-      --primary: #2563eb;
-
-      --primary-dark: #1d4ed8;
-
-      --bg: #f5f7fb;
-
-      --card: #ffffff;
-
-      --border: #e5e7eb;
-
-      --text: #111827;
-
-      --muted: #6b7280;
-
-      --success: #16a34a;
-
-      --danger: #dc2626;
-
-      --warning: #d97706;
-
-    }
-
-    body {
-
-      font-family: Arial, Helvetica, sans-serif;
-
-      background: var(--bg);
-
-      color: var(--text);
-
-      min-height: 100vh;
-
-    }
-
-
-
-    /* SIDEBAR */
-
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Input Papers - Paper</title>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
+<style>
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+:root {
+    --primary: #2563eb;
+    --primary-dark: #1d4ed8;
+    --bg: #f5f7fb;
+    --card: #ffffff;
+    --border: #e5e7eb;
+    --text: #111827;
+    --muted: #6b7280;
+    --success: #16a34a;
+    --danger: #dc2626;
+    --warning: #d97706;
+}
+body {
+    font-family: Arial, Helvetica, sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    min-height: 100vh;
+}
+/* =========================================================
+   SIDEBAR
+========================================================= */
+.sidebar {
+    position: fixed;
+    left: 0;
+    top: 0;
+    bottom: 0;
+    width: 250px;
+    background: #151a2d;
+    color: white;
+    display: flex;
+    flex-direction: column;
+    z-index: 1000;
+    transition: 0.3s ease;
+}
+.sidebar-header {
+    height: 82px;
+    display: flex;
+    align-items: center;
+    padding: 0 22px;
+    border-bottom: 1px solid rgba(255,255,255,0.06);
+}
+.sidebar-logo {
+    width: 42px;
+    height: 42px;
+    object-fit: contain;
+    margin-right: 11px;
+}
+.brand-text {
+    display: flex;
+    flex-direction: column;
+}
+.brand-name {
+    font-size: 18px;
+    font-weight: 700;
+    letter-spacing: -0.3px;
+}
+.brand-version {
+    font-size: 9px;
+    color: #7f88a7;
+    margin-top: 2px;
+}
+.sidebar-content {
+    flex: 1;
+    overflow-y: auto;
+    padding: 20px 13px;
+}
+.nav-section {
+    margin-bottom: 23px;
+}
+.nav-title {
+    padding: 0 12px;
+    margin-bottom: 8px;
+    color: #69728f;
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+}
+.nav-item {
+    display: flex;
+    align-items: center;
+    width: 100%;
+    padding: 11px 12px;
+    margin-bottom: 3px;
+    border-radius: 9px;
+    color: #aeb5c9;
+    text-decoration: none;
+    font-size: 13px;
+    font-weight: 500;
+    transition: 0.2s ease;
+}
+.nav-item:hover {
+    background: rgba(255,255,255,0.06);
+    color: white;
+}
+.nav-item.active {
+    background: #5667f2;
+    color: white;
+    box-shadow: 0 6px 16px rgba(86,103,242,0.22);
+}
+.nav-icon {
+    width: 28px;
+    font-size: 16px;
+    text-align: center;
+    margin-right: 7px;
+}
+.sidebar-user {
+    padding: 15px;
+    border-top: 1px solid rgba(255,255,255,0.06);
+}
+.user-card {
+    display: flex;
+    align-items: center;
+    padding: 10px;
+    border-radius: 10px;
+    background: rgba(255,255,255,0.04);
+}
+.user-avatar {
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    background: #5667f2;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 14px;
+    font-weight: 700;
+    margin-right: 10px;
+}
+.user-info {
+    flex: 1;
+}
+.user-name {
+    font-size: 12px;
+    font-weight: 600;
+    color: white;
+}
+.user-role {
+    font-size: 10px;
+    color: #78819c;
+    margin-top: 2px;
+}
+.logout-button {
+    color: #8e96ad;
+    text-decoration: none;
+    font-size: 16px;
+}
+.logout-button:hover {
+    color: #ff7777;
+}
+/* =========================================================
+   MAIN
+========================================================= */
+.main {
+    margin-left: 250px;
+    min-height: 100vh;
+}
+.topbar {
+    height: 80px;
+    background: white;
+    border-bottom:
+        1px solid var(--border);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding:
+        0 35px;
+}
+.topbar-left {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+}
+.topbar h1 {
+    font-size: 22px;
+}
+.topbar-right {
+    display: flex;
+    align-items: center;
+    gap: 18px;
+}
+/* =========================================================
+   BACK TO MENU
+========================================================= */
+.back-menu-button {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    height: 37px;
+    padding:
+        0 14px;
+    border:
+        1px solid #d1d5db;
+    border-radius: 8px;
+    background: white;
+    color: #374151;
+    text-decoration: none;
+    font-size: 12px;
+    font-weight: 600;
+    cursor: pointer;
+    transition:
+        all .2s ease;
+}
+.back-menu-button:hover {
+    background: #f3f6fb;
+    border-color: #2563eb;
+    color: #2563eb;
+    transform:
+        translateY(-1px);
+}
+.back-menu-button:active {
+    transform:
+        translateY(0);
+}
+.back-menu-icon {
+    font-size: 16px;
+    line-height: 1;
+}
+/* =========================================================
+   SERVER STATUS
+========================================================= */
+.server-status {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 12px;
+    color: var(--muted);
+}
+.status-dot {
+    width: 9px;
+    height: 9px;
+    border-radius: 50%;
+    background: #9ca3af;
+}
+.status-dot.online {
+    background: var(--success);
+}
+.status-dot.offline {
+    background: var(--danger);
+}
+/* =========================================================
+   CONTENT
+========================================================= */
+.content {
+    padding:
+        30px 35px 50px;
+    max-width: 1250px;
+}
+/* =========================================================
+   PAGE HEADER
+========================================================= */
+.page-header {
+    margin-bottom: 25px;
+}
+.page-header h2 {
+    font-size: 26px;
+    margin-bottom: 7px;
+}
+.page-header p {
+    font-size: 14px;
+    color: var(--muted);
+}
+/* =========================================================
+   CARD
+========================================================= */
+.card {
+    background: var(--card);
+    border:
+        1px solid var(--border);
+    border-radius: 14px;
+    padding: 28px;
+    margin-bottom: 25px;
+    box-shadow:
+        0 3px 12px rgba(0,0,0,.03);
+}
+.card-title {
+    font-size: 17px;
+    font-weight: 700;
+    margin-bottom: 6px;
+}
+.card-description {
+    font-size: 13px;
+    color: var(--muted);
+    margin-bottom: 22px;
+}
+/* =========================================================
+   UPLOAD
+========================================================= */
+.dropzone {
+    border:
+        2px dashed #cbd5e1;
+    border-radius: 14px;
+    padding:
+        48px 25px;
+    text-align: center;
+    background: #f8fafc;
+    cursor: pointer;
+    transition: .2s;
+}
+.dropzone:hover,
+.dropzone.dragover {
+    border-color:
+        var(--primary);
+    background:
+        #eff6ff;
+}
+.upload-icon {
+    width: 65px;
+    height: 65px;
+    border-radius: 50%;
+    background:
+        #dbeafe;
+    color:
+        var(--primary);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin:
+        0 auto 16px;
+    font-size: 27px;
+}
+.dropzone h3 {
+    font-size: 18px;
+    margin-bottom: 7px;
+}
+.dropzone p {
+    color: var(--muted);
+    font-size: 13px;
+    margin-bottom: 18px;
+}
+.browse-btn {
+    display: inline-block;
+    background:
+        var(--primary);
+    color: white;
+    border-radius: 8px;
+    padding:
+        10px 20px;
+    font-size: 13px;
+    font-weight: 600;
+    cursor: pointer;
+}
+.browse-btn:hover {
+    background:
+        var(--primary-dark);
+}
+#fileInput {
+    display: none;
+}
+/* =========================================================
+   FILE INFO
+========================================================= */
+.file-info {
+    display: none;
+    margin-top: 20px;
+    border:
+        1px solid #dbeafe;
+    background:
+        #eff6ff;
+    border-radius: 10px;
+    padding: 16px;
+}
+.file-info.show {
+    display: block;
+}
+.file-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 15px;
+}
+.file-left {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    min-width: 0;
+}
+.pdf-icon {
+    width: 44px;
+    height: 44px;
+    background:
+        var(--danger);
+    color: white;
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 12px;
+    font-weight: bold;
+    flex-shrink: 0;
+}
+.file-name {
+    font-size: 14px;
+    font-weight: 600;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+.file-size {
+    font-size: 12px;
+    color: var(--muted);
+    margin-top: 3px;
+}
+.remove-btn {
+    border: none;
+    background:
+        transparent;
+    color:
+        var(--danger);
+    cursor: pointer;
+    font-size: 13px;
+    font-weight: 600;
+}
+/* =========================================================
+   TITLE
+========================================================= */
+.title-field {
+    margin-top: 20px;
+}
+.title-field label {
+    display: block;
+    font-size: 13px;
+    font-weight: 600;
+    margin-bottom: 7px;
+}
+.title-input {
+    width: 100%;
+    border:
+        1px solid #d1d5db;
+    border-radius: 8px;
+    padding:
+        11px 13px;
+    font-size: 14px;
+    outline: none;
+}
+.title-input:focus {
+    border-color:
+        var(--primary);
+}
+/* =========================================================
+   PDF PREVIEW
+========================================================= */
+.preview-section {
+    display: none;
+    margin-top: 25px;
+}
+.preview-section.show {
+    display: block;
+}
+.section-title {
+    font-size: 15px;
+    font-weight: 700;
+    margin-bottom: 12px;
+}
+.pdf-preview {
+    width: 100%;
+    height: 620px;
+    border:
+        1px solid var(--border);
+    border-radius: 10px;
+    background:
+        #f3f4f6;
+}
+/* =========================================================
+   EXTRACTION
+========================================================= */
+.extraction-box {
+    display: none;
+    margin-top: 20px;
+    border:
+        1px solid var(--border);
+    border-radius: 10px;
+    overflow: hidden;
+}
+.extraction-box.show {
+    display: block;
+}
+.extraction-header {
+    background:
+        #f8fafc;
+    padding:
+        13px 15px;
+    display: flex;
+    justify-content:
+        space-between;
+    align-items: center;
+    border-bottom:
+        1px solid var(--border);
+}
+.extraction-header strong {
+    font-size: 13px;
+}
+.extraction-stat {
+    font-size: 12px;
+    color: var(--muted);
+}
+.full-text-preview {
+    height: 320px;
+    overflow: auto;
+    padding: 15px;
+    font-family:
+        Consolas,
+        monospace;
+    font-size: 12px;
+    line-height: 1.6;
+    white-space: pre-wrap;
+    background: #fff;
+}
+/* =========================================================
+   PROGRESS
+========================================================= */
+.progress-wrapper {
+    display: none;
+    margin-top: 22px;
+}
+.progress-wrapper.show {
+    display: block;
+}
+.progress-info {
+    display: flex;
+    justify-content:
+        space-between;
+    font-size: 12px;
+    color: var(--muted);
+    margin-bottom: 7px;
+}
+.progress-bar {
+    height: 8px;
+    background:
+        #e5e7eb;
+    border-radius:
+        999px;
+    overflow: hidden;
+}
+.progress-fill {
+    width: 0%;
+    height: 100%;
+    background:
+        var(--primary);
+    transition:
+        width .2s;
+}
+/* =========================================================
+   ACTIONS
+========================================================= */
+.actions {
+    display: flex;
+    justify-content:
+        flex-end;
+    gap: 10px;
+    margin-top: 22px;
+}
+.btn {
+    border: none;
+    border-radius: 8px;
+    padding:
+        11px 20px;
+    font-size: 13px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: .2s;
+}
+.btn-secondary {
+    background:
+        #e5e7eb;
+    color:
+        #374151;
+}
+.btn-secondary:hover {
+    background:
+        #d1d5db;
+}
+.btn-primary {
+    background:
+        var(--primary);
+    color: white;
+}
+.btn-primary:hover {
+    background:
+        var(--primary-dark);
+}
+.btn-primary:disabled {
+    background:
+        #93c5fd;
+    cursor:
+        not-allowed;
+}
+/* =========================================================
+   MESSAGE
+========================================================= */
+.message {
+    display: none;
+    margin-top: 18px;
+    padding:
+        13px 15px;
+    border-radius: 9px;
+    font-size: 13px;
+    white-space: pre-wrap;
+}
+.message.show {
+    display: block;
+}
+.message.success {
+    background:
+        #dcfce7;
+    color:
+        #166534;
+    border:
+        1px solid #bbf7d0;
+}
+.message.error {
+    background:
+        #fee2e2;
+    color:
+        #991b1b;
+    border:
+        1px solid #fecaca;
+}
+.message.warning {
+    background:
+        #fef3c7;
+    color:
+        #92400e;
+    border:
+        1px solid #fde68a;
+}
+/* =========================================================
+   RESPONSIVE
+========================================================= */
+@media (max-width: 850px) {
     .sidebar {
-
-      position: fixed;
-
-      left: 0;
-
-      top: 0;
-
-      width: 250px;
-
-      height: 100vh;
-
-      background: #111827;
-
-      color: white;
-
-      display: flex;
-
-      flex-direction: column;
-
-      z-index: 1000;
-
+        width: 210px;
     }
-
-    .sidebar-header {
-
-      height: 80px;
-
-      display: flex;
-
-      align-items: center;
-
-      padding: 0 22px;
-
-      border-bottom: 1px solid rgba(255,255,255,.08);
-
-    }
-
-    .sidebar-title {
-
-      font-size: 20px;
-
-      font-weight: 700;
-
-    }
-
-    .sidebar-title span {
-
-      color: #60a5fa;
-
-    }
-
-    .nav {
-
-      padding: 20px 12px;
-
-      flex: 1;
-
-    }
-
-    .nav-title {
-
-      font-size: 11px;
-
-      font-weight: 700;
-
-      color: #6b7280;
-
-      text-transform: uppercase;
-
-      letter-spacing: 1px;
-
-      padding: 0 12px 10px;
-
-    }
-
-    .nav a {
-
-      display: flex;
-
-      align-items: center;
-
-      gap: 12px;
-
-      color: #d1d5db;
-
-      text-decoration: none;
-
-      padding: 11px 12px;
-
-      border-radius: 8px;
-
-      margin-bottom: 4px;
-
-      font-size: 14px;
-
-      transition: .2s;
-
-    }
-
-    .nav a:hover {
-
-      background: #1f2937;
-
-      color: white;
-
-    }
-
-    .nav a.active {
-
-      background: var(--primary);
-
-      color: white;
-
-    }
-
-    .nav-icon {
-
-      width: 20px;
-
-      text-align: center;
-
-    }
-
-    .sidebar-bottom {
-
-      padding: 15px;
-
-      border-top: 1px solid rgba(255,255,255,.08);
-
-    }
-
-    .version {
-
-      font-size: 11px;
-
-      color: #9ca3af;
-
-    }
-
-
-
-    /* MAIN */
-
     .main {
-
-      margin-left: 250px;
-
-      min-height: 100vh;
-
+        margin-left: 210px;
     }
-
-    .topbar {
-
-      height: 80px;
-
-      background: white;
-
-      border-bottom: 1px solid var(--border);
-
-      display: flex;
-
-      align-items: center;
-
-      justify-content: space-between;
-
-      padding: 0 35px;
-
-    }
-
-    .topbar-left {
-
-      display: flex;
-
-      align-items: center;
-
-      gap: 15px;
-
-    }
-
-    .topbar h1 {
-
-      font-size: 22px;
-
-    }
-
-    .topbar-right {
-
-      display: flex;
-
-      align-items: center;
-
-      gap: 18px;
-
-    }
-
-
-
-    .back-menu-button {
-
-      display: inline-flex;
-
-      align-items: center;
-
-      gap: 8px;
-
-      height: 37px;
-
-      padding: 0 14px;
-
-      border: 1px solid #d1d5db;
-
-      border-radius: 8px;
-
-      background: white;
-
-      color: #374151;
-
-      text-decoration: none;
-
-      font-size: 12px;
-
-      font-weight: 600;
-
-      cursor: pointer;
-
-      transition: all .2s ease;
-
-    }
-
-    .back-menu-button:hover {
-
-      background: #f3f6fb;
-
-      border-color: #2563eb;
-
-      color: #2563eb;
-
-      transform: translateY(-1px);
-
-    }
-
-
-
-    .server-status {
-
-      display: flex;
-
-      align-items: center;
-
-      gap: 8px;
-
-      font-size: 12px;
-
-      color: var(--muted);
-
-    }
-
-    .status-dot {
-
-      width: 9px;
-
-      height: 9px;
-
-      border-radius: 50%;
-
-      background: var(--success);
-
-    }
-
-
-
-    /* CONTENT */
-
     .content {
-
-      padding: 30px 35px 50px;
-
-      max-width: 1250px;
-
+        padding: 22px;
     }
-
-    .page-header {
-
-      margin-bottom: 25px;
-
+}
+@media (max-width: 650px) {
+    .sidebar {
+        position: static;
+        width: 100%;
+        height: auto;
     }
-
-    .page-header h2 {
-
-      font-size: 26px;
-
-      margin-bottom: 7px;
-
+    .sidebar-header {
+        height: 65px;
     }
-
-    .page-header p {
-
-      font-size: 14px;
-
-      color: var(--muted);
-
+    .nav {
+        display: flex;
+        padding:
+            10px 12px;
     }
-
-
-
+    .nav-title {
+        display: none;
+    }
+    .nav a {
+        flex: 1;
+        justify-content:
+            center;
+        margin:
+            0 3px;
+    }
+    .sidebar-bottom {
+        display: none;
+    }
+    .main {
+        margin-left: 0;
+    }
+    .topbar {
+        padding:
+            0 20px;
+        height: 65px;
+    }
+    .topbar h1 {
+        font-size: 18px;
+    }
+    .topbar-right {
+        gap: 8px;
+    }
+    .server-status {
+        display: none;
+    }
+    .back-menu-button {
+        height: 34px;
+        padding:
+            0 10px;
+    }
+    .content {
+        padding: 18px;
+    }
     .card {
-
-      background: var(--card);
-
-      border: 1px solid var(--border);
-
-      border-radius: 14px;
-
-      padding: 28px;
-
-      margin-bottom: 25px;
-
-      box-shadow: 0 3px 12px rgba(0,0,0,.03);
-
+        padding: 20px;
     }
-
-    .card-title {
-
-      font-size: 17px;
-
-      font-weight: 700;
-
-      margin-bottom: 6px;
-
-    }
-
-    .card-description {
-
-      font-size: 13px;
-
-      color: var(--muted);
-
-      margin-bottom: 22px;
-
-    }
-
-
-
-    /* UPLOAD DROPZONE */
-
-    .dropzone {
-
-      border: 2px dashed #cbd5e1;
-
-      border-radius: 14px;
-
-      padding: 48px 25px;
-
-      text-align: center;
-
-      background: #f8fafc;
-
-      cursor: pointer;
-
-      transition: .2s;
-
-    }
-
-    .dropzone:hover,
-
-    .dropzone.dragover {
-
-      border-color: var(--primary);
-
-      background: #eff6ff;
-
-    }
-
-    .upload-icon {
-
-      width: 65px;
-
-      height: 65px;
-
-      border-radius: 50%;
-
-      background: #dbeafe;
-
-      color: var(--primary);
-
-      display: flex;
-
-      align-items: center;
-
-      justify-content: center;
-
-      margin: 0 auto 16px;
-
-      font-size: 27px;
-
-    }
-
-    .dropzone h3 {
-
-      font-size: 18px;
-
-      margin-bottom: 7px;
-
-    }
-
-    .dropzone p {
-
-      color: var(--muted);
-
-      font-size: 13px;
-
-      margin-bottom: 18px;
-
-    }
-
-    .browse-btn {
-
-      display: inline-block;
-
-      background: var(--primary);
-
-      color: white;
-
-      border-radius: 8px;
-
-      padding: 10px 20px;
-
-      font-size: 13px;
-
-      font-weight: 600;
-
-      cursor: pointer;
-
-    }
-
-    .browse-btn:hover {
-
-      background: var(--primary-dark);
-
-    }
-
-    #fileInput {
-
-      display: none;
-
-    }
-
-
-
-    /* FILE INFO */
-
-    .file-info {
-
-      display: none;
-
-      margin-top: 20px;
-
-      border: 1px solid #dbeafe;
-
-      background: #eff6ff;
-
-      border-radius: 10px;
-
-      padding: 16px;
-
-    }
-
-    .file-info.show {
-
-      display: block;
-
-    }
-
-    .file-row {
-
-      display: flex;
-
-      align-items: center;
-
-      justify-content: space-between;
-
-      gap: 15px;
-
-    }
-
-    .file-left {
-
-      display: flex;
-
-      align-items: center;
-
-      gap: 12px;
-
-      min-width: 0;
-
-    }
-
-    .pdf-icon {
-
-      width: 44px;
-
-      height: 44px;
-
-      background: var(--danger);
-
-      color: white;
-
-      border-radius: 8px;
-
-      display: flex;
-
-      align-items: center;
-
-      justify-content: center;
-
-      font-size: 12px;
-
-      font-weight: bold;
-
-      flex-shrink: 0;
-
-    }
-
-    .file-name {
-
-      font-size: 14px;
-
-      font-weight: 600;
-
-      overflow: hidden;
-
-      text-overflow: ellipsis;
-
-      white-space: nowrap;
-
-    }
-
-    .file-size {
-
-      font-size: 12px;
-
-      color: var(--muted);
-
-      margin-top: 3px;
-
-    }
-
-    .remove-btn {
-
-      border: none;
-
-      background: transparent;
-
-      color: var(--danger);
-
-      cursor: pointer;
-
-      font-size: 13px;
-
-      font-weight: 600;
-
-    }
-
-
-
-    /* TITLE INPUT */
-
-    .title-field {
-
-      margin-top: 20px;
-
-    }
-
-    .title-field label {
-
-      display: block;
-
-      font-size: 13px;
-
-      font-weight: 600;
-
-      margin-bottom: 7px;
-
-    }
-
-    .title-input {
-
-      width: 100%;
-
-      border: 1px solid #d1d5db;
-
-      border-radius: 8px;
-
-      padding: 11px 13px;
-
-      font-size: 14px;
-
-      outline: none;
-
-    }
-
-    .title-input:focus {
-
-      border-color: var(--primary);
-
-    }
-
-
-
-    /* PREVIEWS & RESULTS */
-
-    .preview-section {
-
-      display: none;
-
-      margin-top: 25px;
-
-    }
-
-    .preview-section.show {
-
-      display: block;
-
-    }
-
-    .section-title {
-
-      font-size: 15px;
-
-      font-weight: 700;
-
-      margin-bottom: 12px;
-
-    }
-
-    .pdf-preview {
-
-      width: 100%;
-
-      height: 500px;
-
-      border: 1px solid var(--border);
-
-      border-radius: 10px;
-
-      background: #f3f4f6;
-
-    }
-
-
-
-    .extraction-box {
-
-      display: none;
-
-      margin-top: 20px;
-
-      border: 1px solid var(--border);
-
-      border-radius: 10px;
-
-      overflow: hidden;
-
-    }
-
-    .extraction-box.show {
-
-      display: block;
-
-    }
-
-    .extraction-header {
-
-      background: #f8fafc;
-
-      padding: 13px 15px;
-
-      display: flex;
-
-      justify-content: space-between;
-
-      align-items: center;
-
-      border-bottom: 1px solid var(--border);
-
-    }
-
-    .extraction-header strong {
-
-      font-size: 13px;
-
-    }
-
-    .extraction-stat {
-
-      font-size: 12px;
-
-      color: var(--muted);
-
-    }
-
-    .full-text-preview {
-
-      height: 250px;
-
-      overflow: auto;
-
-      padding: 15px;
-
-      font-family: Consolas, monospace;
-
-      font-size: 12px;
-
-      line-height: 1.6;
-
-      white-space: pre-wrap;
-
-      background: #fff;
-
-    }
-
-
-
-    /* PROGRESS */
-
-    .progress-wrapper {
-
-      display: none;
-
-      margin-top: 22px;
-
-    }
-
-    .progress-wrapper.show {
-
-      display: block;
-
-    }
-
-    .progress-info {
-
-      display: flex;
-
-      justify-content: space-between;
-
-      font-size: 12px;
-
-      color: var(--muted);
-
-      margin-bottom: 7px;
-
-    }
-
-    .progress-bar {
-
-      height: 8px;
-
-      background: #e5e7eb;
-
-      border-radius: 999px;
-
-      overflow: hidden;
-
-    }
-
-    .progress-fill {
-
-      width: 0%;
-
-      height: 100%;
-
-      background: var(--primary);
-
-      transition: width .2s;
-
-    }
-
-
-
-    /* ACTIONS */
-
     .actions {
-
-      display: flex;
-
-      justify-content: flex-end;
-
-      gap: 10px;
-
-      margin-top: 22px;
-
+        flex-direction:
+            column;
     }
-
     .btn {
-
-      border: none;
-
-      border-radius: 8px;
-
-      padding: 11px 20px;
-
-      font-size: 13px;
-
-      font-weight: 600;
-
-      cursor: pointer;
-
-      transition: .2s;
-
+        width: 100%;
     }
-
-    .btn-secondary {
-
-      background: #e5e7eb;
-
-      color: #374151;
-
+}
+/* SIDEBAR RESPONSIVE */
+@media (max-width: 850px) {
+    .sidebar {
+        width: 210px;
     }
-
-    .btn-secondary:hover {
-
-      background: #d1d5db;
-
+    .main {
+        margin-left: 210px;
     }
-
-    .btn-primary {
-
-      background: var(--primary);
-
-      color: white;
-
+}
+@media (max-width: 650px) {
+    .sidebar {
+        position: static;
+        width: 100%;
+        height: auto;
     }
-
-    .btn-primary:hover {
-
-      background: var(--primary-dark);
-
+    .sidebar-header {
+        height: 65px;
     }
-
-    .btn:disabled {
-
-      opacity: 0.6;
-
-      cursor: not-allowed;
-
+    .sidebar-content {
+        display: flex;
+        padding: 10px 12px;
+        overflow-x: auto;
+        overflow-y: hidden;
     }
-
-
-
-    /* MESSAGE */
-
-    .message {
-
-      display: none;
-
-      margin-top: 18px;
-
-      padding: 13px 15px;
-
-      border-radius: 9px;
-
-      font-size: 13px;
-
-      white-space: pre-wrap;
-
+    .nav-section {
+        display: flex;
+        align-items: center;
+        margin-bottom: 0;
     }
-
-    .message.show {
-
-      display: block;
-
+    .nav-title {
+        display: none;
     }
-
-    .message.success {
-
-      background: #dcfce7;
-
-      color: #166534;
-
-      border: 1px solid #bbf7d0;
-
+    .nav-item {
+        flex: 0 0 auto;
+        justify-content: center;
+        width: auto;
+        margin: 0 3px;
     }
-
-    .message.error {
-
-      background: #fee2e2;
-
-      color: #991b1b;
-
-      border: 1px solid #fecaca;
-
+    .sidebar-user {
+        display: none;
     }
-
-
-
-    /* RESPONSIVE */
-
-    @media (max-width: 850px) {
-
-      .sidebar { width: 210px; }
-
-      .main { margin-left: 210px; }
-
-      .content { padding: 22px; }
-
+    .main {
+        margin-left: 0;
     }
-
-    @media (max-width: 650px) {
-
-      .sidebar { position: static; width: 100%; height: auto; }
-
-      .sidebar-header { height: 65px; }
-
-      .nav { display: flex; padding: 10px 12px; }
-
-      .nav-title, .sidebar-bottom { display: none; }
-
-      .nav a { flex: 1; justify-content: center; margin: 0 3px; }
-
-      .main { margin-left: 0; }
-
-      .topbar { padding: 0 20px; height: 65px; }
-
-      .topbar h1 { font-size: 18px; }
-
-      .server-status { display: none; }
-
-      .content { padding: 18px; }
-
-      .card { padding: 20px; }
-
-      .actions { flex-direction: column; }
-
-      .btn { width: 100%; }
-
-    }
-
-  </style>
-
+}
+</style>
 </head>
-
 <body>
-
-
-
-<aside class="sidebar">
-
-  <div class="sidebar-header">
-
-    <div class="sidebar-title">Paper <span>ML</span></div>
-
-  </div>
-
-  <nav class="nav">
-
-    <div class="nav-title">Library</div>
-
-    <a href="input_paper.html" class="active">
-
-      <span class="nav-icon">📄</span> Input Paper
-
-    </a>
-
-    <a href="library.html">
-
-      <span class="nav-icon">📚</span> Paper Library
-
-    </a>
-
-  </nav>
-
-  <div class="sidebar-bottom">
-
-    <div class="version">Paper Client · V.1.0.0 (No Backend)</div>
-
-  </div>
-
-</aside>
-
-
-
-<main class="main">
-
-  <header class="topbar">
-
-    <div class="topbar-left">
-
-      <h1>Input Papers</h1>
-
+<!-- =========================================================
+     SIDEBAR
+========================================================= -->
+<aside class="sidebar" id="sidebar">
+    <div class="sidebar-header">
+        <img
+            src="../static/logo.png"
+            alt="Paper Logo"
+            class="sidebar-logo"
+        >
+        <div class="brand-text">
+            <div class="brand-name">Paper</div>
+            <div class="brand-version">AI RESEARCH PLATFORM</div>
+        </div>
     </div>
-
-    <div class="topbar-right">
-
-      <a href="menu.html" class="back-menu-button" title="Kembali ke Menu Utama">
-
-        <span class="back-menu-icon">←</span>
-
-        <span>Kembali ke Menu Utama</span>
-
-      </a>
-
-      <div class="server-status">
-
-        <span class="status-dot"></span>
-
-        <span>Client-Side Mode (Online)</span>
-
-      </div>
-
+    <div class="sidebar-content">
+        <div class="nav-section">
+            <div class="nav-title">Main</div>
+            <a href="menu_utama.html" class="nav-item">
+                <span class="nav-icon">⌂</span>
+                Dashboard
+            </a>
+            <a href="input_paper.html" class="nav-item active">
+                <span class="nav-icon">＋</span>
+                Input Papers
+            </a>
+            <a href="library.html" class="nav-item">
+                <span class="nav-icon">▤</span>
+                Library
+            </a>
+        </div>
+        <div class="nav-section">
+            <div class="nav-title">Research</div>
+            <a href="#" class="nav-item" onclick="event.preventDefault(); alert('Projects belum tersedia.');">
+                <span class="nav-icon">▦</span>
+                Projects
+            </a>
+            <a href="research_gap.html" class="nav-item">
+                <span class="nav-icon">⌕</span>
+                Research Gap
+            </a>
+            <a href="novelty_find.html" class="nav-item">
+                <span class="nav-icon">✦</span>
+                Novelty Find
+            </a>
+            <a href="paper_summary.html" class="nav-item">
+                <span class="nav-icon">≡</span>
+                Paper Summary
+            </a>
+            <a href="mini_review.html" class="nav-item">
+                <span class="nav-icon">▥</span>
+                Mini Review
+            </a>
+        </div>
+        <div class="nav-section">
+            <div class="nav-title">System</div>
+            <a href="#" class="nav-item" onclick="event.preventDefault(); alert('Settings belum tersedia.');">
+                <span class="nav-icon">⚙</span>
+                Settings
+            </a>
+        </div>
     </div>
-
-  </header>
-
-
-
-  <div class="content">
-
-    <div class="page-header" id="upload">
-
-      <h2>Upload Research Paper</h2>
-
-      <p>Upload PDF, ekstrak seluruh teks langsung di browser, ekspor CSV, dan backup file PDF asli ke Google Drive.</p>
-
-    </div>
-
-
-
-    <section class="card">
-
-      <div class="card-title">Add New Paper</div>
-
-      <div class="card-description">
-
-        Satu file PDF akan di-split: PDF dikirim ke Google Drive dan teks lengkap otomatis di-generate menjadi file CSV.
-
-      </div>
-
-
-
-      <!-- DROPZONE -->
-
-      <div id="dropzone" class="dropzone">
-
-        <div class="upload-icon">↑</div>
-
-        <h3>Drag & Drop PDF</h3>
-
-        <p>atau klik tombol di bawah untuk memilih file</p>
-
-        <label for="fileInput" class="browse-btn">Browse PDF</label>
-
-      </div>
-
-      <input type="file" id="fileInput" accept="application/pdf,.pdf">
-
-
-
-      <!-- FILE INFO -->
-
-      <div id="fileInfo" class="file-info">
-
-        <div class="file-row">
-
-          <div class="file-left">
-
-            <div class="pdf-icon">PDF</div>
-
-            <div>
-
-              <div id="fileName" class="file-name">-</div>
-
-              <div id="fileSize" class="file-size">-</div>
-
+    <div class="sidebar-user">
+        <div class="user-card">
+            <div class="user-avatar">A</div>
+            <div class="user-info">
+                <div class="user-name">Administrator</div>
+                <div class="user-role">Researcher</div>
             </div>
-
-          </div>
-
-          <button type="button" id="removeBtn" class="remove-btn">Remove</button>
-
+            <a
+                href="../index.html"
+                class="logout-button"
+                title="Logout"
+            >
+                ⇥
+            </a>
         </div>
-
-      </div>
-
-
-
-      <!-- TITLE -->
-
-      <div id="titleField" class="title-field" style="display:none;">
-
-        <label for="paperTitle">Paper Title</label>
-
-        <input id="paperTitle" class="title-input" type="text" placeholder="Judul paper">
-
-      </div>
-
-
-
-      <!-- PREVIEW SECTION -->
-
-      <div id="previewSection" class="preview-section">
-
-        <div class="section-title">PDF Preview</div>
-
-        <iframe id="pdfPreview" class="pdf-preview"></iframe>
-
-      </div>
-
-
-
-      <!-- EXTRACTION RESULT -->
-
-      <div id="extractionBox" class="extraction-box">
-
-        <div class="extraction-header">
-
-          <strong>Extracted Full Text</strong>
-
-          <span id="extractionStat" class="extraction-stat">-</span>
-
+    </div>
+</aside>
+<!-- =========================================================
+     MAIN
+========================================================= -->
+<main class="main">
+    <!-- =====================================================
+         TOPBAR
+    ====================================================== -->
+    <header class="topbar">
+        <div class="topbar-left">
+            <h1>
+                Input Papers
+            </h1>
         </div>
-
-        <div id="fullTextPreview" class="full-text-preview"></div>
-
-      </div>
-
-
-
-      <!-- PROGRESS -->
-
-      <div id="progressWrapper" class="progress-wrapper">
-
-        <div class="progress-info">
-
-          <span id="progressText">Ready</span>
-
-          <span id="progressPercent">0%</span>
-
+        <div class="topbar-right">
+            <!-- KEMBALI KE MENU UTAMA -->
+            <a
+                href="menu.html"
+                class="back-menu-button"
+                title="Kembali ke Menu Utama"
+            >
+                <span class="back-menu-icon">
+                    ←
+                </span>
+                <span>
+                    Kembali ke Menu Utama
+                </span>
+            </a>
+            <!-- SERVER STATUS -->
+            <div class="server-status">
+                <span
+                    id="statusDot"
+                    class="status-dot"
+                ></span>
+                <span
+                    id="statusText"
+                >
+                    Checking CSV server...
+                </span>
+            </div>
         </div>
-
-        <div class="progress-bar">
-
-          <div id="progressFill" class="progress-fill"></div>
-
+    </header>
+    <!-- =====================================================
+         CONTENT
+    ====================================================== -->
+    <div class="content">
+        <!-- =================================================
+             PAGE HEADER
+        ================================================= -->
+        <div
+            class="page-header"
+            id="upload"
+        >
+            <h2>
+                Upload Research Paper
+            </h2>
+            <p>
+                Upload PDF, ekstrak seluruh teks,
+                simpan full text ke database,
+                dan simpan PDF asli ke Google Drive.
+            </p>
         </div>
-
-      </div>
-
-
-
-      <!-- NOTIFICATION -->
-
-      <div id="message" class="message"></div>
-
-
-
-      <!-- ACTIONS -->
-
-      <div class="actions">
-
-        <button type="button" id="resetBtn" class="btn btn-secondary">Reset</button>
-
-        <button type="button" id="downloadCsvBtn" class="btn btn-secondary" disabled>Download CSV</button>
-
-        <button type="button" id="uploadBtn" class="btn btn-primary" disabled>Proses & Upload</button>
-
-      </div>
-
-    </section>
-
-  </div>
-
+        <!-- =================================================
+             UPLOAD CARD
+        ================================================= -->
+        <section class="card">
+            <div class="card-title">
+                Add New Paper
+            </div>
+            <div class="card-description">
+                Satu PDF akan menjadi satu paper
+                dan satu baris pada database CSV.
+            </div>
+            <!-- =================================================
+                 DROPZONE
+            ================================================= -->
+            <div
+                id="dropzone"
+                class="dropzone"
+            >
+                <div class="upload-icon">
+                    ↑
+                </div>
+                <h3>
+                    Drag *&* Drop PDF
+                </h3>
+                <p>
+                    atau pilih file PDF dari komputer
+                </p>
+                <label
+                    for="fileInput"
+                    class="browse-btn"
+                >
+                    Browse PDF
+                </label>
+            </div>
+            <!-- FILE INPUT -->
+            <input
+                type="file"
+                id="fileInput"
+                accept="application/pdf,.pdf"
+            >
+            <!-- =================================================
+                 FILE INFO
+            ================================================= -->
+            <div
+                id="fileInfo"
+                class="file-info"
+            >
+                <div class="file-row">
+                    <div class="file-left">
+                        <div class="pdf-icon">
+                            PDF
+                        </div>
+                        <div>
+                            <div
+                                id="fileName"
+                                class="file-name"
+                            >
+                                -
+                            </div>
+                            <div
+                                id="fileSize"
+                                class="file-size"
+                            >
+                                -
+                            </div>
+                        </div>
+                    </div>
+                    <button
+                        type="button"
+                        id="removeBtn"
+                        class="remove-btn"
+                    >
+                        Remove
+                    </button>
+                </div>
+            </div>
+            <!-- =================================================
+                 TITLE
+            ================================================= -->
+            <div
+                id="titleField"
+                class="title-field"
+                style="display:none;"
+            >
+                <label for="paperTitle">
+                    Paper Title
+                </label>
+                <input
+                    id="paperTitle"
+                    class="title-input"
+                    type="text"
+                    placeholder="Judul paper"
+                >
+            </div>
+            <!-- =================================================
+                 PDF PREVIEW
+            ================================================= -->
+            <div
+                id="previewSection"
+                class="preview-section"
+            >
+                <div class="section-title">
+                    PDF Preview
+                </div>
+                <iframe
+                    id="pdfPreview"
+                    class="pdf-preview"
+                ></iframe>
+            </div>
+            <!-- =================================================
+                 EXTRACTION
+            ================================================= -->
+            <div
+                id="extractionBox"
+                class="extraction-box"
+            >
+                <div class="extraction-header">
+                    <strong>
+                        Extracted Full Text
+                    </strong>
+                    <span
+                        id="extractionStat"
+                        class="extraction-stat"
+                    >
+                        -
+                    </span>
+                </div>
+                <div
+                    id="fullTextPreview"
+                    class="full-text-preview"
+                ></div>
+            </div>
+            <!-- =================================================
+                 PROGRESS
+            ================================================= -->
+            <div
+                id="progressWrapper"
+                class="progress-wrapper"
+            >
+                <div class="progress-info">
+                    <span id="progressText">
+                        Ready
+                    </span>
+                    <span id="progressPercent">
+                        0%
+                    </span>
+                </div>
+                <div class="progress-bar">
+                    <div
+                        id="progressFill"
+                        class="progress-fill"
+                    ></div>
+                </div>
+            </div>
+            <!-- =================================================
+                 MESSAGE
+            ================================================= -->
+            <div
+                id="message"
+                class="message"
+            ></div>
+            <!-- =================================================
+                 ACTIONS
+            ================================================= -->
+            <div class="actions">
+                <button
+                    type="button"
+                    id="resetBtn"
+                    class="btn btn-secondary"
+                >
+                    Reset
+                </button>
+                <button
+                    type="button"
+                    id="uploadBtn"
+                    class="btn btn-primary"
+                    disabled
+                >
+                    Upload Paper
+                </button>
+                <button type="button" id="downloadRisBtn" class="btn btn-secondary" disabled>
+                    Download RIS (.ris)
+                </button>
+            </div>
+        </section>
+    </div>
 </main>
-
-
-
 <script>
-
 "use strict";
-
-
-
-const CONFIG = {
-
-  // Google Apps Script Web App URL
-
-  GOOGLE_SCRIPT_URL: "https://script.google.com/macros/s/AKfycbxeatGVs5HUcaY8FTxAfTsqQ8KqoiF1nQDmDs3Lc_BBEedlYdXxZ2wg5VpSiOiONPem/exec",
-
-  PDF_WORKER_URL: "https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js"
-
-};
-
-
-
-if (window.pdfjsLib) {
-
-  pdfjsLib.GlobalWorkerOptions.workerSrc = CONFIG.PDF_WORKER_URL;
-
+/* =========================================================
+   RIS HELPERS
+   RIS disimpan di data.csv; PDF asli tetap di Google Drive.
+========================================================= */
+function risClean(value) {
+    return String(value || "")
+        .replace(/\r?\n+/g, " ")
+        .replace(/\s+/g, " ")
+        .trim();
 }
-
-
-
-// State
-
-let selectedFile = null;
-
-let previewUrl = null;
-
-let extractedText = "";
-
-let extractedPages = [];
-
-let generatedCsvBlob = null;
-
-
-
-// DOM Elements
-
-const fileInput = document.getElementById("fileInput");
-
-const dropzone = document.getElementById("dropzone");
-
-const fileInfo = document.getElementById("fileInfo");
-
-const fileName = document.getElementById("fileName");
-
-const fileSize = document.getElementById("fileSize");
-
-const removeBtn = document.getElementById("removeBtn");
-
-const titleField = document.getElementById("titleField");
-
-const paperTitle = document.getElementById("paperTitle");
-
-const previewSection = document.getElementById("previewSection");
-
-const pdfPreview = document.getElementById("pdfPreview");
-
-const extractionBox = document.getElementById("extractionBox");
-
-const extractionStat = document.getElementById("extractionStat");
-
-const fullTextPreview = document.getElementById("fullTextPreview");
-
-const uploadBtn = document.getElementById("uploadBtn");
-
-const downloadCsvBtn = document.getElementById("downloadCsvBtn");
-
-const resetBtn = document.getElementById("resetBtn");
-
-const progressWrapper = document.getElementById("progressWrapper");
-
-const progressFill = document.getElementById("progressFill");
-
-const progressText = document.getElementById("progressText");
-
-const progressPercent = document.getElementById("progressPercent");
-
-const message = document.getElementById("message");
-
-
-
-// Event Listeners
-
-fileInput.addEventListener("change", (e) => {
-
-  if (e.target.files[0]) handleSelectedFile(e.target.files[0]);
-
-});
-
-
-
-dropzone.addEventListener("dragover", (e) => {
-
-  e.preventDefault();
-
-  dropzone.classList.add("dragover");
-
-});
-
-
-
-dropzone.addEventListener("dragleave", () => dropzone.classList.remove("dragover"));
-
-
-
-dropzone.addEventListener("drop", (e) => {
-
-  e.preventDefault();
-
-  dropzone.classList.remove("dragover");
-
-  if (e.dataTransfer.files[0]) handleSelectedFile(e.dataTransfer.files[0]);
-
-});
-
-
-
-dropzone.addEventListener("click", (e) => {
-
-  if (e.target.closest("label")) return;
-
-  fileInput.click();
-
-});
-
-
-
-removeBtn.addEventListener("click", resetAll);
-
-resetBtn.addEventListener("click", resetAll);
-
-downloadCsvBtn.addEventListener("click", triggerCsvDownload);
-
-uploadBtn.addEventListener("click", runPipeline);
-
-
-
-async function handleSelectedFile(file) {
-
-  clearMessage();
-
-
-
-  if (file.type !== "application/pdf" && !file.name.toLowerCase().endsWith(".pdf")) {
-
-    showMessage("error", "File harus berekstensi PDF.");
-
-    return;
-
-  }
-
-
-
-  selectedFile = file;
-
-  fileName.textContent = file.name;
-
-  fileSize.textContent = formatFileSize(file.size);
-
-  fileInfo.classList.add("show");
-
-  titleField.style.display = "block";
-
-  paperTitle.value = file.name.replace(/\.pdf$/i, "");
-
-  uploadBtn.disabled = true;
-
-  downloadCsvBtn.disabled = true;
-
-  extractedText = "";
-
-  extractedPages = [];
-
-  extractionBox.classList.remove("show");
-
-
-
-  if (previewUrl) URL.revokeObjectURL(previewUrl);
-
-  previewUrl = URL.createObjectURL(file);
-
-  pdfPreview.src = previewUrl;
-
-  previewSection.classList.add("show");
-
-
-
-  try {
-
-    await extractPdfText(file);
-
-    uploadBtn.disabled = false;
-
-  } catch (error) {
-
-    console.error("Extraction error:", error);
-
-    showMessage("error", "Gagal mengekstrak teks PDF: " + error.message);
-
-    uploadBtn.disabled = true;
-
-  }
-
+function risEscape(value) {
+    return risClean(value).replace(/\\/g, "\\\\");
 }
-
-
-
-async function extractPdfText(file) {
-
-  setProgress(10, "Membaca file PDF...");
-
-  const arrayBuffer = await file.arrayBuffer();
-
-  const pdf = await pdfjsLib.getDocument({ data: arrayBuffer }).promise;
-
-  
-
-  const totalPages = pdf.numPages;
-
-  const pageTexts = [];
-
-
-
-  for (let i = 1; i <= totalPages; i++) {
-
-    const page = await pdf.getPage(i);
-
-    const content = await page.getTextContent();
-
-    const cleanText = content.items.map(item => item.str || "").join(" ").replace(/\s+/g, " ").trim();
-
-    
-
-    extractedPages.push({ page: i, text: cleanText });
-
-    pageTexts.push(`[PAGE ${i}]\n` + cleanText);
-
-
-
-    const percent = 10 + Math.round((i / totalPages) * 40);
-
-    setProgress(percent, `Mengekstrak teks halaman ${i} / ${totalPages}...`);
-
-  }
-
-
-
-  extractedText = pageTexts.join("\n\n").trim();
-
-  if (!extractedText) {
-
-    throw new Error("PDF kosong atau berupa hasil scan/gambar.");
-
-  }
-
-
-
-  extractionStat.textContent = `${totalPages} halaman · ${extractedText.length} karakter`;
-
-  fullTextPreview.textContent = extractedText;
-
-  extractionBox.classList.add("show");
-
-  setProgress(50, "Teks siap diproses.");
-
-}
-
-
-
-async function runPipeline() {
-
-  if (!selectedFile || !extractedText) return;
-
-
-
-  uploadBtn.disabled = true;
-
-  resetBtn.disabled = true;
-
-  clearMessage();
-
-
-
-  try {
-
-    const title = paperTitle.value.trim() || selectedFile.name.replace(/\.pdf$/i, "");
-
-    const paperId = "PAPER-" + Date.now();
-
-
-
-    // 1. Ekspor & Simpan ke CSV di sisi client
-
-    setProgress(60, "Membuat file CSV dataset...");
-
-    generateCsvBlob(paperId, title, selectedFile.name, extractedText);
-
-    downloadCsvBtn.disabled = false;
-
-    triggerCsvDownload(); // Otomatis mengunduh CSV ke komputer
-
-
-
-    // 2. Kirim PDF Asli ke Google Drive via Apps Script
-
-    setProgress(75, "Mengunggah PDF ke Google Drive...");
-
-    const base64Data = await fileToBase64(selectedFile);
-
-
-
-    const payload = {
-
-      action: "uploadPaper",
-
-      fileName: selectedFile.name,
-
-      mimeType: "application/pdf",
-
-      base64: base64Data,
-
-      title: title,
-
-      pageCount: extractedPages.length
-
-    };
-
-
-
-    const googleResult = await postGoogleScript(payload);
-
-    if (!googleResult || googleResult.success !== true) {
-
-      throw new Error(googleResult?.message || "Gagal mengunggah file ke Google Drive.");
-
-    }
-
-
-
-    setProgress(100, "Selesai!");
-
-    showMessage(
-
-      "success",
-
-      `Berhasil diproses!\n\n` +
-
-      `✓ 1. PDF disimpan di Google Drive: ${googleResult.fileUrl || "Tersimpan"}\n` +
-
-      `✓ 2. Full text diekspor dan diunduh otomatis sebagai CSV.`
-
+function extractRisDoi(text) {
+    const match = String(text || "").match(
+        /(?:https?:\/\/(?:doi\.org\/)?|doi:\s*)?(10\.\d{4,9}\/[\-._;()/:A-Z0-9]+)/i
     );
-
-
-
-  } catch (error) {
-
-    console.error("Pipeline error:", error);
-
-    setProgress(0, "Proses gagal.");
-
-    showMessage("error", "Terjadi kesalahan:\n" + error.message);
-
-    uploadBtn.disabled = false;
-
-  } finally {
-
-    resetBtn.disabled = false;
-
-  }
-
+    return match ? match[1].replace(/[.,;:]+$/, "") : "";
 }
-
-
-
-function generateCsvBlob(id, title, filename, text) {
-
-  // Format field CSV agar karakter tanda kutip/newline aman
-
-  const escapeCsv = (str) => `"${String(str || "").replace(/"/g, '""')}"`;
-
-  
-
-  const headers = ["id", "title", "filename", "full_text", "created_at"];
-
-  const row = [
-
-    escapeCsv(id),
-
-    escapeCsv(title),
-
-    escapeCsv(filename),
-
-    escapeCsv(text),
-
-    escapeCsv(new Date().toISOString())
-
-  ];
-
-
-
-  const csvContent = "\uFEFF" + headers.join(",") + "\n" + row.join(",");
-
-  generatedCsvBlob = new Blob([csvContent], { type: "text/csv;charset=utf-8;" });
-
+function extractRisYear(text) {
+    const matches = [...String(text || "").matchAll(/\b(19\d{2}|20\d{2}|21\d{2})\b/g)]
+        .map(m => Number(m[1]))
+        .filter(y => y >= 1950 && y <= new Date().getFullYear() + 1);
+    return matches.length ? String(matches[0]) : "";
 }
-
-
-
-function triggerCsvDownload() {
-
-  if (!generatedCsvBlob) return;
-
-  const url = URL.createObjectURL(generatedCsvBlob);
-
-  const a = document.createElement("a");
-
-  a.href = url;
-
-  a.download = (selectedFile ? selectedFile.name.replace(/\.pdf$/i, "") : "paper") + "_extracted.csv";
-
-  document.body.appendChild(a);
-
-  a.click();
-
-  a.remove();
-
-  setTimeout(() => URL.revokeObjectURL(url), 1000);
-
+function extractRisAbstract(text) {
+    const source = String(text || "");
+    const match = source.match(
+        /(?:^|\n)\s*(?:abstract|abstrak|summary)\s*[:\-]?\s*([\s\S]{80,5000}?)(?=\n\s*(?:keywords?|key\s*words|kata\s*kunci|introduction|1\.?\s*introduction|background)\b|$)/i
+    );
+    return match ? risClean(match[1]) : "";
 }
-
-
-
-async function postGoogleScript(payload) {
-
-  const response = await fetch(CONFIG.GOOGLE_SCRIPT_URL, {
-
-    method: "POST",
-
-    mode: "cors",
-
-    redirect: "follow",
-
-    headers: { "Content-Type": "text/plain;charset=utf-8" },
-
-    body: JSON.stringify(payload)
-
-  });
-
-
-
-  const responseText = await response.text();
-
-  try {
-
-    return JSON.parse(responseText);
-
-  } catch (e) {
-
-    throw new Error("Respon Google Script bukan format JSON yang valid.");
-
-  }
-
+function extractRisJournal(text) {
+    const lines = String(text || "")
+        .split(/\r?\n/)
+        .map(risClean)
+        .filter(Boolean)
+        .slice(0, 100);
+    const journalPattern = /\b(journal|review|letters?|materials?|catalysis|energy|chemistry|science|physics|engineering|electrochem|nanomaterials|communications|proceedings)\b/i;
+    return lines.find(line =>
+        line.length >= 8 && line.length <= 180 && journalPattern.test(line)
+    ) || "";
 }
-
-
-
-function fileToBase64(file) {
-
-  return new Promise((resolve, reject) => {
-
-    const reader = new FileReader();
-
-    reader.onload = () => {
-
-      const res = reader.result;
-
-      const comma = res.indexOf(",");
-
-      resolve(comma === -1 ? res : res.substring(comma + 1));
-
+function extractRisAuthors(text, title) {
+    const lines = String(text || "")
+        .split(/\r?\n/)
+        .map(risClean)
+        .filter(Boolean)
+        .slice(0, 35);
+    const normalizedTitle = risClean(title).toLowerCase();
+    for (const line of lines) {
+        const lower = line.toLowerCase();
+        if (!line || lower === normalizedTitle) continue;
+        if (line.length < 5 || line.length > 250) continue;
+        if (/^(abstract|abstrak|summary|keywords?|key words|introduction|background|received|accepted|available online|doi)\b/i.test(line)) continue;
+        if (/10\.\d{4,9}\//i.test(line)) continue;
+        if (/\b(19\d{2}|20\d{2}|21\d{2})\b/.test(line)) continue;
+        if (/@/.test(line)) continue;
+        if (/\b(university|department|institute|faculty|school|laboratory|laboratories|centre|center)\b/i.test(line)) continue;
+        const parts = line
+            .replace(/[†‡*]+/g, " ")
+            .split(/,|;|\s+and\s+|\s*&\s*/i)
+            .map(risClean)
+            .filter(p => {
+                const words = p.split(/\s+/).filter(Boolean);
+                return words.length >= 2 && words.length <= 8;
+            });
+        if (parts.length >= 1 && parts.length <= 15) return parts;
+    }
+    return [];
+}
+async function buildRisRecord({ id, title, fileName, text, pageCount, driveUrl }) {
+    const record = {
+        type: "JOUR",
+        title: risClean(title),
+        authors: extractRisAuthors(text, title),
+        year: extractRisYear(text),
+        journal: extractRisJournal(text),
+        doi: extractRisDoi(text),
+        abstract: extractRisAbstract(text),
+        url: driveUrl || "",
+        volume: "",
+        issue: "",
+        pages: "",
+        publisher: "",
+        articleUrl: ""
     };
-
-    reader.onerror = () => reject(new Error("Gagal membaca file fisik."));
-
-    reader.readAsDataURL(file);
-
-  });
-
+    // DOI ditemukan -> ambil metadata yang lebih akurat dari Crossref.
+    if (record.doi) {
+        try {
+            const response = await fetch(
+                "https://api.crossref.org/works/" + encodeURIComponent(record.doi),
+                {
+                    method: "GET",
+                    cache: "no-store",
+                    headers: { "Accept": "application/json" }
+                }
+            );
+            if (response.ok) {
+                const payload = await response.json();
+                const item = payload?.message || {};
+                const crossrefTitle = Array.isArray(item.title) ? item.title[0] : "";
+                const crossrefAuthors = Array.isArray(item.author)
+                    ? item.author.map(author => risClean([
+                        author.given || "",
+                        author.family || ""
+                    ].filter(Boolean).join(" "))).filter(Boolean)
+                    : [];
+                const dateParts =
+                    item.published?.["date-parts"]?.[0] ||
+                    item.issued?.["date-parts"]?.[0] || [];
+                const crossrefYear = Array.isArray(dateParts)
+                    ? String(dateParts[0] || "")
+                    : "";
+                const crossrefJournal = Array.isArray(item["container-title"])
+                    ? item["container-title"][0]
+                    : "";
+                if (crossrefTitle) record.title = risClean(crossrefTitle);
+                if (crossrefAuthors.length) record.authors = crossrefAuthors;
+                if (crossrefYear) record.year = crossrefYear;
+                if (crossrefJournal) record.journal = risClean(crossrefJournal);
+                if (item.DOI) record.doi = risClean(item.DOI).replace(/^https?:\/\/doi\.org\//i, "");
+                if (item.volume) record.volume = risClean(item.volume);
+                if (item.issue) record.issue = risClean(item.issue);
+                if (item.page) record.pages = risClean(item.page);
+                if (item.publisher) record.publisher = risClean(item.publisher);
+                if (item.URL) record.articleUrl = risClean(item.URL);
+            }
+        } catch (error) {
+            console.warn("Crossref lookup gagal; metadata lokal digunakan:", error);
+        }
+    }
+    const pageParts = String(record.pages || "").split(/[-–—]/);
+    const lines = [
+        "TY  - " + (record.type || "JOUR"),
+        record.title ? "TI  - " + risEscape(record.title) : "",
+        ...(record.authors || []).map(author => author ? "AU  - " + risEscape(author) : ""),
+        record.year ? "PY  - " + risEscape(record.year) : "",
+        record.journal ? "JO  - " + risEscape(record.journal) : "",
+        record.publisher ? "PB  - " + risEscape(record.publisher) : "",
+        record.volume ? "VL  - " + risEscape(record.volume) : "",
+        record.issue ? "IS  - " + risEscape(record.issue) : "",
+        pageParts[0] ? "SP  - " + risEscape(pageParts[0]) : "",
+        pageParts.length > 1 ? "EP  - " + risEscape(pageParts.slice(1).join("-")) : "",
+        record.doi ? "DO  - " + risEscape(record.doi) : "",
+        record.abstract ? "AB  - " + risEscape(record.abstract) : "",
+        record.articleUrl ? "UR  - " + risEscape(record.articleUrl) : "",
+        record.url ? "N1  - PDF: " + risEscape(record.url) : "",
+        fileName ? "N1  - Source file: " + risEscape(fileName) : "",
+        pageCount ? "N1  - PDF pages: " + risEscape(pageCount) : "",
+        id ? "ID  - " + risEscape(id) : "",
+        "ER  -",
+        ""
+    ].filter(Boolean);
+    record.ris = lines.join("\r\n");
+    return record;
 }
-
-
-
-function resetAll() {
-
-  selectedFile = null;
-
-  extractedText = "";
-
-  extractedPages = [];
-
-  generatedCsvBlob = null;
-
-
-
-  if (previewUrl) {
-
-    URL.revokeObjectURL(previewUrl);
-
-    previewUrl = null;
-
-  }
-
-
-
-  fileInput.value = "";
-
-  fileName.textContent = "-";
-
-  fileSize.textContent = "-";
-
-  paperTitle.value = "";
-
-  fileInfo.classList.remove("show");
-
-  titleField.style.display = "none";
-
-  previewSection.classList.remove("show");
-
-  extractionBox.classList.remove("show");
-
-  pdfPreview.removeAttribute("src");
-
-  fullTextPreview.textContent = "";
-
-  extractionStat.textContent = "-";
-
-  uploadBtn.disabled = true;
-
-  downloadCsvBtn.disabled = true;
-
-
-
-  clearMessage();
-
-  progressWrapper.classList.remove("show");
-
-  setProgress(0, "Ready");
-
+function downloadCurrentRis() {
+    if (!currentRisText.trim()) {
+        showMessage("error", "Data RIS belum tersedia.");
+        return;
+    }
+    const safeName = removePdfExtension(selectedFile?.name || "paper")
+        .replace(/[^a-z0-9._-]+/gi, "_")
+        .replace(/^_+|_+$/g, "") || "paper";
+    const blob = new Blob([currentRisText], {
+        type: "application/x-research-info-systems;charset=utf-8"
+    });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement("a");
+    a.href = url;
+    a.download = safeName + ".ris";
+    document.body.appendChild(a);
+    a.click();
+    a.remove();
+    setTimeout(() => URL.revokeObjectURL(url), 1000);
 }
-
-
-
-function setProgress(percent, text) {
-
-  progressWrapper.classList.add("show");
-
-  const p = Math.max(0, Math.min(100, Number(percent) || 0));
-
-  progressFill.style.width = p + "%";
-
-  progressPercent.textContent = p + "%";
-
-  progressText.textContent = text || "";
-
+/* =========================================================
+   CONFIGURATION
+========================================================= */
+const CONFIG = {
+    GOOGLE_SCRIPT_URL:
+        "https://script.google.com/macros/s/AKfycbxeatGVs5HUcaY8FTxAfTsqQ8KqoiF1nQDmDs3Lc_BBEedlYdXxZ2wg5VpSiOiONPem/exec",
+    CSV_API_URL:
+        "http://127.0.0.1:5000/api",
+    PDF_WORKER_URL:
+        "https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js",
+    MENU_URL:
+        "menu.html",
+    LIBRARY_URL:
+        "library.html"
+};
+/* =========================================================
+   PDF.JS
+========================================================= */
+if (window.pdfjsLib) {
+    pdfjsLib.GlobalWorkerOptions.workerSrc =
+        CONFIG.PDF_WORKER_URL;
 }
-
-
-
-function showMessage(type, text) {
-
-  message.className = "message show " + type;
-
-  message.textContent = text;
-
+/* =========================================================
+   STATE
+========================================================= */
+let selectedFile = null;
+let previewUrl = null;
+let extractedText = "";
+let extractedPages = [];
+let currentPaperId = null;
+let currentRisText = "";
+/* =========================================================
+   DOM
+========================================================= */
+const fileInput =
+    document.getElementById("fileInput");
+const dropzone =
+    document.getElementById("dropzone");
+const fileInfo =
+    document.getElementById("fileInfo");
+const fileName =
+    document.getElementById("fileName");
+const fileSize =
+    document.getElementById("fileSize");
+const removeBtn =
+    document.getElementById("removeBtn");
+const titleField =
+    document.getElementById("titleField");
+const paperTitle =
+    document.getElementById("paperTitle");
+const previewSection =
+    document.getElementById("previewSection");
+const pdfPreview =
+    document.getElementById("pdfPreview");
+const extractionBox =
+    document.getElementById("extractionBox");
+const extractionStat =
+    document.getElementById("extractionStat");
+const fullTextPreview =
+    document.getElementById("fullTextPreview");
+const uploadBtn =
+    document.getElementById("uploadBtn");
+const downloadRisBtn = document.getElementById("downloadRisBtn");
+const resetBtn =
+    document.getElementById("resetBtn");
+const progressWrapper =
+    document.getElementById("progressWrapper");
+const progressFill =
+    document.getElementById("progressFill");
+const progressText =
+    document.getElementById("progressText");
+const progressPercent =
+    document.getElementById("progressPercent");
+const message =
+    document.getElementById("message");
+const statusDot =
+    document.getElementById("statusDot");
+const statusText =
+    document.getElementById("statusText");
+/* =========================================================
+   INITIALIZATION
+========================================================= */
+document.addEventListener(
+    "DOMContentLoaded",
+    function() {
+        checkCsvServer();
+    }
+);
+/* =========================================================
+   FILE INPUT
+========================================================= */
+fileInput.addEventListener(
+    "change",
+    async function(event) {
+        const file =
+            event.target.files[0];
+        if (!file) {
+            return;
+        }
+        await handleSelectedFile(file);
+    }
+);
+/* =========================================================
+   DROPZONE
+========================================================= */
+dropzone.addEventListener(
+    "dragover",
+    function(event) {
+        event.preventDefault();
+        dropzone.classList.add(
+            "dragover"
+        );
+    }
+);
+dropzone.addEventListener(
+    "dragleave",
+    function() {
+        dropzone.classList.remove(
+            "dragover"
+        );
+    }
+);
+dropzone.addEventListener(
+    "drop",
+    async function(event) {
+        event.preventDefault();
+        dropzone.classList.remove(
+            "dragover"
+        );
+        const file =
+            event.dataTransfer.files[0];
+        if (!file) {
+            return;
+        }
+        await handleSelectedFile(file);
+    }
+);
+/* =========================================================
+   DROPZONE CLICK
+========================================================= */
+dropzone.addEventListener(
+    "click",
+    function(event) {
+        if (
+            event.target.closest("label")
+        ) {
+            return;
+        }
+        fileInput.click();
+    }
+);
+/* =========================================================
+   HANDLE FILE
+========================================================= */
+async function handleSelectedFile(file) {
+    clearMessage();
+    if (!isPdf(file)) {
+        showMessage(
+            "error",
+            "File harus berupa PDF."
+        );
+        return;
+    }
+    selectedFile =
+        file;
+    fileName.textContent =
+        file.name;
+    fileSize.textContent =
+        formatFileSize(file.size);
+    fileInfo.classList.add(
+        "show"
+    );
+    titleField.style.display =
+        "block";
+    paperTitle.value =
+        removePdfExtension(
+            file.name
+        );
+    uploadBtn.disabled =
+        true;
+    extractedText =
+        "";
+    extractedPages =
+        [];
+    extractionBox.classList.remove(
+        "show"
+    );
+    /* -----------------------------------------------------
+       PREVIEW
+    ----------------------------------------------------- */
+    if (previewUrl) {
+        URL.revokeObjectURL(
+            previewUrl
+        );
+    }
+    previewUrl =
+        URL.createObjectURL(file);
+    pdfPreview.src =
+        previewUrl;
+    previewSection.classList.add(
+        "show"
+    );
+    /* -----------------------------------------------------
+       EXTRACT TEXT
+    ----------------------------------------------------- */
+    try {
+        await extractPdfText(file);
+        uploadBtn.disabled =
+            false;
+    } catch (error) {
+        console.error(
+            "PDF extraction error:",
+            error
+        );
+        showMessage(
+            "error",
+            "PDF berhasil dipilih tetapi full text tidak dapat diekstrak.\n\n" +
+            error.message
+        );
+        uploadBtn.disabled =
+            true;
+    }
 }
-
-
-
+/* =========================================================
+   PDF VALIDATION
+========================================================= */
+function isPdf(file) {
+    if (!file) {
+        return false;
+    }
+    const name =
+        String(
+            file.name || ""
+        ).toLowerCase();
+    const type =
+        String(
+            file.type || ""
+        ).toLowerCase();
+    return (
+        type === "application/pdf"
+        ||
+        name.endsWith(".pdf")
+    );
+}
+/* =========================================================
+   EXTRACT PDF TEXT
+========================================================= */
+async function extractPdfText(file) {
+    if (!window.pdfjsLib) {
+        throw new Error(
+            "PDF.js tidak berhasil dimuat."
+        );
+    }
+    setProgress(
+        5,
+        "Membaca PDF..."
+    );
+    const arrayBuffer =
+        await file.arrayBuffer();
+    setProgress(
+        10,
+        "Membuka PDF..."
+    );
+    const pdf =
+        await pdfjsLib
+            .getDocument({
+                data: arrayBuffer
+            })
+            .promise;
+    extractedPages =
+        [];
+    const pageTexts =
+        [];
+    const totalPages =
+        pdf.numPages;
+    for (
+        let pageNumber = 1;
+        pageNumber <= totalPages;
+        pageNumber++
+    ) {
+        const page =
+            await pdf.getPage(
+                pageNumber
+            );
+        const content =
+            await page.getTextContent();
+        let pageText =
+            content.items
+                .map(
+                    function(item) {
+                        return item.str || "";
+                    }
+                )
+                .join(" ");
+        pageText =
+            cleanExtractedText(
+                pageText
+            );
+        extractedPages.push({
+            page:
+                pageNumber,
+            text:
+                pageText
+        });
+        pageTexts.push(
+            "[PAGE " +
+            pageNumber +
+            "]\n" +
+            pageText
+        );
+        const percent =
+            10 +
+            Math.round(
+                (
+                    pageNumber /
+                    totalPages
+                ) *
+                30
+            );
+        setProgress(
+            percent,
+            "Extracting page " +
+            pageNumber +
+            " / " +
+            totalPages
+        );
+    }
+    extractedText =
+        pageTexts
+            .join("\n\n")
+            .trim();
+    if (!extractedText) {
+        throw new Error(
+            "PDF tidak menghasilkan teks. Kemungkinan PDF merupakan scan/image PDF."
+        );
+    }
+    extractionStat.textContent =
+        totalPages +
+        " pages · " +
+        formatTextLength(
+            extractedText.length
+        );
+    fullTextPreview.textContent =
+        extractedText;
+    extractionBox.classList.add(
+        "show"
+    );
+    setProgress(
+        40,
+        "Full text berhasil dibuat."
+    );
+}
+/* =========================================================
+   CLEAN TEXT
+========================================================= */
+function cleanExtractedText(text) {
+    return String(text || "")
+        .replace(
+            /\u00a0/g,
+            " "
+        )
+        .replace(
+            /[ \t]+/g,
+            " "
+        )
+        .replace(
+            /\s+\n/g,
+            "\n"
+        )
+        .replace(
+            /\n\s+/g,
+            "\n"
+        )
+        .trim();
+}
+/* =========================================================
+   UPLOAD
+========================================================= */
+uploadBtn.addEventListener(
+    "click",
+    uploadPaper
+);
+async function uploadPaper() {
+    if (!selectedFile) {
+        showMessage(
+            "error",
+            "Pilih PDF terlebih dahulu."
+        );
+        return;
+    }
+    if (!extractedText.trim()) {
+        showMessage(
+            "error",
+            "Full text PDF belum tersedia."
+        );
+        return;
+    }
+    uploadBtn.disabled =
+        true;
+    resetBtn.disabled =
+        true;
+    clearMessage();
+    try {
+        /* =================================================
+           STEP 1
+        ================================================= */
+        setProgress(
+            42,
+            "Menyiapkan paper..."
+        );
+        const title =
+            paperTitle.value.trim()
+            ||
+            removePdfExtension(
+                selectedFile.name
+            );
+        const paperId =
+            createPaperId();
+        /* =================================================
+           STEP 2
+           FILE -> BASE64
+        ================================================= */
+        setProgress(
+            45,
+            "Membaca file PDF..."
+        );
+        const base64 =
+            await fileToBase64(
+                selectedFile
+            );
+        /* =================================================
+           STEP 3
+           GOOGLE DRIVE
+        ================================================= */
+        setProgress(
+            50,
+            "Mengupload PDF asli ke Google Drive..."
+        );
+        const googlePayload = {
+            action:
+                "uploadPaper",
+            fileName:
+                selectedFile.name,
+            mimeType:
+                "application/pdf",
+            base64:
+                base64,
+            title:
+                title,
+            pageCount:
+                extractedPages.length
+        };
+        const googleResult =
+            await postGoogleScript(
+                googlePayload
+            );
+        if (
+            !googleResult
+            ||
+            googleResult.success !== true
+        ) {
+            throw new Error(
+                googleResult?.message
+                ||
+                "Google Apps Script menolak upload PDF."
+            );
+        }
+        setProgress(
+            75,
+            "PDF berhasil disimpan. Menyimpan full text..."
+        );
+        /* =================================================
+           STEP 4
+           CSV RECORD
+        ================================================= */
+        const driveFileId =
+            googleResult.fileId
+            || googleResult.pdfFileId
+            || googleResult.driveFileId
+            || "";
+        const driveUrl =
+            googleResult.fileUrl
+            || googleResult.pdfUrl
+            || googleResult.driveUrl
+            || "";
+        /* =================================================
+           RIS RECORD
+           CSV menjadi database penyimpan data RIS.
+        ================================================= */
+        const risRecord = await buildRisRecord({
+            id: paperId,
+            title: title,
+            fileName: selectedFile.name,
+            text: extractedText,
+            pageCount: extractedPages.length,
+            driveUrl: driveUrl
+        });
+        currentRisText = risRecord.ris;
+        const csvRecord = {
+            id: paperId,
+            // Field metadata standar untuk library.html
+            type: risRecord.type,
+            title: risRecord.title,
+            authors: (risRecord.authors || []).join("; "),
+            year: risRecord.year,
+            journal: risRecord.journal,
+            volume: risRecord.volume || "",
+            issue: risRecord.issue || "",
+            pages: risRecord.pages || "",
+            publisher: risRecord.publisher || "",
+            doi: risRecord.doi,
+            abstract: risRecord.abstract,
+            url: risRecord.articleUrl || "",
+            // RIS lengkap disimpan di CSV sebagai database bibliografi
+            ris: risRecord.ris,
+            ris_type: risRecord.type,
+            ris_title: risRecord.title,
+            ris_author: (risRecord.authors || []).join("; "),
+            ris_year: risRecord.year,
+            ris_journal: risRecord.journal,
+            ris_doi: risRecord.doi,
+            ris_abstract: risRecord.abstract,
+            ris_url: risRecord.url,
+            ris_text: risRecord.ris,
+            file_name: selectedFile.name,
+            page_count: extractedPages.length,
+            text: extractedText,
+            drive_file_id: driveFileId,
+            drive_url: driveUrl,
+            uploaded_at: new Date().toISOString()
+        };
+        /* =================================================
+           STEP 5
+           SAVE CSV
+        ================================================= */
+        const csvResult =
+            await saveToCsv(
+                csvRecord
+            );
+        if (
+            !csvResult
+            ||
+            csvResult.success !== true
+        ) {
+            throw new Error(
+                csvResult?.message
+                ||
+                "Full text gagal disimpan ke data.csv."
+            );
+        }
+        /* =================================================
+           SUCCESS
+        ================================================= */
+        setProgress(
+            100,
+            "Paper berhasil disimpan."
+        );
+        showMessage(
+            "success",
+            "Paper berhasil disimpan.\n\n" +
+            "PDF asli → Google Drive\n" +
+            "Full text → data.csv\n" +
+            "Database record → 1 paper = 1 row"
+        );
+        currentPaperId =
+            paperId;
+        
+        downloadRisBtn.disabled = false;
+        uploadBtn.disabled =
+            true;
+    } catch (error) {
+        console.error(
+            "UPLOAD ERROR:",
+            error
+        );
+        setProgress(
+            0,
+            "Upload failed."
+        );
+        showMessage(
+            "error",
+            "Upload failed:\n\n" +
+            error.message
+        );
+        uploadBtn.disabled =
+            false;
+    } finally {
+        resetBtn.disabled =
+            false;
+    }
+}
+/* =========================================================
+   GOOGLE APPS SCRIPT
+========================================================= */
+async function postGoogleScript(
+    payload
+) {
+    let response;
+    try {
+        response =
+            await fetch(
+                CONFIG.GOOGLE_SCRIPT_URL,
+                {
+                    method:
+                        "POST",
+                    mode:
+                        "cors",
+                    redirect:
+                        "follow",
+                    cache:
+                        "no-cache",
+                    headers: {
+                        "Content-Type":
+                            "text/plain;charset=utf-8"
+                    },
+                    body:
+                        JSON.stringify(
+                            payload
+                        )
+                }
+            );
+    } catch (error) {
+        throw new Error(
+            "Tidak dapat terhubung ke Google Apps Script.\n\n" +
+            error.message
+        );
+    }
+    const responseText =
+        await response.text();
+    if (!responseText.trim()) {
+        throw new Error(
+            "Google Apps Script tidak mengembalikan response."
+        );
+    }
+    let result;
+    try {
+        result =
+            JSON.parse(
+                responseText
+            );
+    } catch (error) {
+        console.error(
+            "Google response:",
+            responseText
+        );
+        throw new Error(
+            "Response Google Apps Script bukan JSON.\n\n" +
+            responseText.substring(
+                0,
+                500
+            )
+        );
+    }
+    if (!response.ok) {
+        throw new Error(
+            result.message
+            ||
+            "HTTP Error " +
+            response.status
+        );
+    }
+    return result;
+}
+/* =========================================================
+   SAVE CSV
+========================================================= */
+async function saveToCsv(
+    record
+) {
+    let response;
+    try {
+        response =
+            await fetch(
+                CONFIG.CSV_API_URL +
+                "/paper",
+                {
+                    method:
+                        "POST",
+                    headers: {
+                        "Content-Type":
+                            "application/json"
+                    },
+                    body:
+                        JSON.stringify(
+                            record
+                        )
+                }
+            );
+    } catch (error) {
+        throw new Error(
+            "Tidak dapat terhubung ke CSV server lokal di " +
+            CONFIG.CSV_API_URL +
+            "/paper\n\n" +
+            "Pastikan server Python sedang berjalan.\n\n" +
+            "Error: " +
+            error.message
+        );
+    }
+    const responseText =
+        await response.text();
+    let result;
+    try {
+        result =
+            JSON.parse(
+                responseText
+            );
+    } catch (error) {
+        throw new Error(
+            "CSV server memberikan response yang bukan JSON.\n\n" +
+            responseText.substring(
+                0,
+                500
+            )
+        );
+    }
+    if (!response.ok) {
+        throw new Error(
+            result.message
+            ||
+            "CSV server HTTP Error " +
+            response.status
+        );
+    }
+    return result;
+}
+/* =========================================================
+   CHECK CSV SERVER
+========================================================= */
+async function checkCsvServer() {
+    statusText.textContent =
+        "Checking CSV server...";
+    statusDot.className =
+        "status-dot";
+    try {
+        const response =
+            await fetch(
+                CONFIG.CSV_API_URL +
+                "/status",
+                {
+                    method:
+                        "GET",
+                    cache:
+                        "no-cache"
+                }
+            );
+        if (!response.ok) {
+            throw new Error(
+                "HTTP " +
+                response.status
+            );
+        }
+        const result =
+            await response.json();
+        if (
+            result.success === true
+        ) {
+            statusDot.className =
+                "status-dot online";
+            statusText.textContent =
+                "CSV server online · " +
+                (
+                    result.total_papers
+                    ||
+                    0
+                ) +
+                " papers";
+        } else {
+            throw new Error(
+                result.message
+                ||
+                "Server error"
+            );
+        }
+    } catch (error) {
+        console.error(
+            "CSV server:",
+            error
+        );
+        statusDot.className =
+            "status-dot offline";
+        statusText.textContent =
+            "CSV server offline";
+    }
+}
+/* =========================================================
+   REMOVE FILE
+========================================================= */
+removeBtn.addEventListener(
+    "click",
+    resetFile
+);
+/* =========================================================
+   RESET
+========================================================= */
+resetBtn.addEventListener(
+    "click",
+    function() {
+        resetFile();
+        clearMessage();
+        progressWrapper.classList.remove(
+            "show"
+        );
+        setProgress(
+            0,
+            "Ready"
+        );
+    }
+);
+function resetFile() {
+    currentRisText = "";
+    if (downloadRisBtn) downloadRisBtn.disabled = true;
+    selectedFile =
+        null;
+    extractedText =
+        "";
+    extractedPages =
+        [];
+    currentPaperId =
+        null;
+    if (previewUrl) {
+        URL.revokeObjectURL(
+            previewUrl
+        );
+        previewUrl =
+            null;
+    }
+    fileInput.value =
+        "";
+    fileName.textContent =
+        "-";
+    fileSize.textContent =
+        "-";
+    paperTitle.value =
+        "";
+    fileInfo.classList.remove(
+        "show"
+    );
+    titleField.style.display =
+        "none";
+    previewSection.classList.remove(
+        "show"
+    );
+    extractionBox.classList.remove(
+        "show"
+    );
+    pdfPreview.removeAttribute(
+        "src"
+    );
+    fullTextPreview.textContent =
+        "";
+    extractionStat.textContent =
+        "-";
+    uploadBtn.disabled =
+        true;
+}
+/* =========================================================
+   FILE TO BASE64
+========================================================= */
+function fileToBase64(
+    file
+) {
+    return new Promise(
+        function(
+            resolve,
+            reject
+        ) {
+            const reader =
+                new FileReader();
+            reader.onload =
+                function() {
+                    const result =
+                        reader.result;
+                    if (
+                        typeof result !==
+                        "string"
+                    ) {
+                        reject(
+                            new Error(
+                                "FileReader gagal membaca PDF."
+                            )
+                        );
+                        return;
+                    }
+                    const commaIndex =
+                        result.indexOf(
+                            ","
+                        );
+                    if (
+                        commaIndex ===
+                        -1
+                    ) {
+                        reject(
+                            new Error(
+                                "Format Base64 PDF tidak valid."
+                            )
+                        );
+                        return;
+                    }
+                    resolve(
+                        result.substring(
+                            commaIndex + 1
+                        )
+                    );
+                };
+            reader.onerror =
+                function() {
+                    reject(
+                        new Error(
+                            "Gagal membaca file PDF."
+                        )
+                    );
+                };
+            reader.readAsDataURL(
+                file
+            );
+        }
+    );
+}
+/* =========================================================
+   PROGRESS
+========================================================= */
+function setProgress(
+    percent,
+    text
+) {
+    progressWrapper.classList.add(
+        "show"
+    );
+    const safePercent =
+        Math.max(
+            0,
+            Math.min(
+                100,
+                Number(percent) ||
+                0
+            )
+        );
+    progressFill.style.width =
+        safePercent +
+        "%";
+    progressPercent.textContent =
+        Math.round(
+            safePercent
+        ) +
+        "%";
+    progressText.textContent =
+        text ||
+        "";
+}
+/* =========================================================
+   MESSAGE
+========================================================= */
+function showMessage(
+    type,
+    text
+) {
+    message.className =
+        "message show " +
+        type;
+    message.textContent =
+        text;
+}
 function clearMessage() {
-
-  message.className = "message";
-
-  message.textContent = "";
-
+    message.className =
+        "message";
+    message.textContent =
+        "";
 }
-
-
-
-function formatFileSize(bytes) {
-
-  if (!bytes) return "0 B";
-
-  const units = ["B", "KB", "MB", "GB"];
-
-  const i = Math.floor(Math.log(bytes) / Math.log(1024));
-
-  return (bytes / Math.pow(1024, i)).toFixed(2) + " " + units[i];
-
+/* =========================================================
+   PAPER ID
+========================================================= */
+function createPaperId() {
+    const now =
+        new Date();
+    const timestamp =
+        now
+            .toISOString()
+            .replace(
+                /[-:.TZ]/g,
+                ""
+            );
+    const random =
+        Math.random()
+            .toString(36)
+            .substring(
+                2,
+                8
+            )
+            .toUpperCase();
+    return (
+        "PAPER-" +
+        timestamp +
+        "-" +
+        random
+    );
 }
-
+/* =========================================================
+   REMOVE PDF EXTENSION
+========================================================= */
+function removePdfExtension(
+    filename
+) {
+    return String(
+        filename || ""
+    )
+        .replace(
+            /\.pdf$/i,
+            ""
+        );
+}
+/* =========================================================
+   FILE SIZE
+========================================================= */
+function formatFileSize(
+    bytes
+) {
+    if (!bytes) {
+        return "0 B";
+    }
+    const units = [
+        "B",
+        "KB",
+        "MB",
+        "GB"
+    ];
+    const index =
+        Math.floor(
+            Math.log(bytes) /
+            Math.log(1024)
+        );
+    const safeIndex =
+        Math.min(
+            index,
+            units.length - 1
+        );
+    return (
+        bytes /
+        Math.pow(
+            1024,
+            safeIndex
+        )
+    ).toFixed(2)
+    +
+    " "
+    +
+    units[safeIndex];
+}
+/* =========================================================
+   TEXT LENGTH
+========================================================= */
+function formatTextLength(
+    length
+) {
+    if (
+        length < 1000
+    ) {
+        return (
+            length +
+            " chars"
+        );
+    }
+    if (
+        length < 1000000
+    ) {
+        return (
+            (
+                length /
+                1000
+            )
+                .toFixed(1)
+            +
+            "k chars"
+        );
+    }
+    return (
+        (
+            length /
+            1000000
+        )
+            .toFixed(2)
+        +
+        "M chars"
+    );
+}
+/* =========================================================
+   NAVIGATION
+========================================================= */
+document.querySelectorAll(
+    ".nav a"
+).forEach(
+    function(link) {
+        link.addEventListener(
+            "click",
+            function() {
+                document
+                    .querySelectorAll(
+                        ".nav a"
+                    )
+                    .forEach(
+                        function(item) {
+                            item.classList.remove(
+                                "active"
+                            );
+                        }
+                    );
+                link.classList.add(
+                    "active"
+                );
+            }
+        );
+    }
+);
+/* =========================================================
+   KEYBOARD
+========================================================= */
+document.addEventListener(
+    "keydown",
+    function(event) {
+        if (
+            event.key === "Escape"
+        ) {
+            clearMessage();
+        }
+    }
+);
 </script>
-
 </body>
-
-</html> 
-
+</html>
