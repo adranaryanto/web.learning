@@ -1,1020 +1,1020 @@
 <!DOCTYPE html>
 <html lang="id">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Input Papers - Paper</title>
-
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
-
-  <style>
-    * {
-      box-sizing: border-box;
-      margin: 0;
-      padding: 0;
-    }
-
-    :root {
-      --primary: #2563eb;
-      --primary-dark: #1d4ed8;
-      --bg: #f5f7fb;
-      --card: #ffffff;
-      --border: #e5e7eb;
-      --text: #111827;
-      --muted: #6b7280;
-      --success: #16a34a;
-      --danger: #dc2626;
-      --warning: #d97706;
-    }
-
-    body {
-      font-family: Arial, Helvetica, sans-serif;
-      background: var(--bg);
-      color: var(--text);
-      min-height: 100vh;
-    }
-
-    /* SIDEBAR */
-    .sidebar {
-      position: fixed;
-      left: 0;
-      top: 0;
-      width: 250px;
-      height: 100vh;
-      background: #111827;
-      color: white;
-      display: flex;
-      flex-direction: column;
-      z-index: 1000;
-    }
-
-    .sidebar-header {
-      height: 80px;
-      display: flex;
-      align-items: center;
-      padding: 0 22px;
-      border-bottom: 1px solid rgba(255,255,255,.08);
-    }
-
-    .sidebar-title {
-      font-size: 20px;
-      font-weight: 700;
-    }
-
-    .sidebar-title span {
-      color: #60a5fa;
-    }
-
-    .nav {
-      padding: 20px 12px;
-      flex: 1;
-    }
-
-    .nav-title {
-      font-size: 11px;
-      font-weight: 700;
-      color: #6b7280;
-      text-transform: uppercase;
-      letter-spacing: 1px;
-      padding: 0 12px 10px;
-    }
-
-    .nav a {
-      display: flex;
-      align-items: center;
-      gap: 12px;
-      color: #d1d5db;
-      text-decoration: none;
-      padding: 11px 12px;
-      border-radius: 8px;
-      margin-bottom: 4px;
-      font-size: 14px;
-      transition: .2s;
-    }
-
-    .nav a:hover {
-      background: #1f2937;
-      color: white;
-    }
-
-    .nav a.active {
-      background: var(--primary);
-      color: white;
-    }
-
-    .nav-icon {
-      width: 20px;
-      text-align: center;
-    }
-
-    .sidebar-bottom {
-      padding: 15px;
-      border-top: 1px solid rgba(255,255,255,.08);
-    }
-
-    .version {
-      font-size: 11px;
-      color: #9ca3af;
-    }
-
-    /* MAIN */
-    .main {
-      margin-left: 250px;
-      min-height: 100vh;
-    }
-
-    .topbar {
-      height: 80px;
-      background: white;
-      border-bottom: 1px solid var(--border);
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      padding: 0 35px;
-    }
-
-    .topbar-left {
-      display: flex;
-      align-items: center;
-      gap: 15px;
-    }
-
-    .topbar h1 {
-      font-size: 22px;
-    }
-
-    .topbar-right {
-      display: flex;
-      align-items: center;
-      gap: 18px;
-    }
-
-    .back-menu-button {
-      display: inline-flex;
-      align-items: center;
-      gap: 8px;
-      height: 37px;
-      padding: 0 14px;
-      border: 1px solid #d1d5db;
-      border-radius: 8px;
-      background: white;
-      color: #374151;
-      text-decoration: none;
-      font-size: 12px;
-      font-weight: 600;
-      cursor: pointer;
-      transition: all .2s ease;
-    }
-
-    .back-menu-button:hover {
-      background: #f3f6fb;
-      border-color: #2563eb;
-      color: #2563eb;
-      transform: translateY(-1px);
-    }
-
-    .server-status {
-      display: flex;
-      align-items: center;
-      gap: 8px;
-      font-size: 12px;
-      color: var(--muted);
-    }
-
-    .status-dot {
-      width: 9px;
-      height: 9px;
-      border-radius: 50%;
-      background: var(--success);
-    }
-
-    /* CONTENT */
-    .content {
-      padding: 30px 35px 50px;
-      max-width: 1250px;
-    }
-
-    .page-header {
-      margin-bottom: 25px;
-    }
-
-    .page-header h2 {
-      font-size: 26px;
-      margin-bottom: 7px;
-    }
-
-    .page-header p {
-      font-size: 14px;
-      color: var(--muted);
-    }
-
-    .card {
-      background: var(--card);
-      border: 1px solid var(--border);
-      border-radius: 14px;
-      padding: 28px;
-      margin-bottom: 25px;
-      box-shadow: 0 3px 12px rgba(0,0,0,.03);
-    }
-
-    .card-title {
-      font-size: 17px;
-      font-weight: 700;
-      margin-bottom: 6px;
-    }
-
-    .card-description {
-      font-size: 13px;
-      color: var(--muted);
-      margin-bottom: 22px;
-    }
-
-    /* UPLOAD DROPZONE */
-    .dropzone {
-      border: 2px dashed #cbd5e1;
-      border-radius: 14px;
-      padding: 48px 25px;
-      text-align: center;
-      background: #f8fafc;
-      cursor: pointer;
-      transition: .2s;
-    }
-
-    .dropzone:hover,
-    .dropzone.dragover {
-      border-color: var(--primary);
-      background: #eff6ff;
-    }
-
-    .upload-icon {
-      width: 65px;
-      height: 65px;
-      border-radius: 50%;
-      background: #dbeafe;
-      color: var(--primary);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      margin: 0 auto 16px;
-      font-size: 27px;
-    }
-
-    .dropzone h3 {
-      font-size: 18px;
-      margin-bottom: 7px;
-    }
-
-    .dropzone p {
-      color: var(--muted);
-      font-size: 13px;
-      margin-bottom: 18px;
-    }
-
-    .browse-btn {
-      display: inline-block;
-      background: var(--primary);
-      color: white;
-      border-radius: 8px;
-      padding: 10px 20px;
-      font-size: 13px;
-      font-weight: 600;
-      cursor: pointer;
-    }
-
-    .browse-btn:hover {
-      background: var(--primary-dark);
-    }
-
-    #fileInput {
-      display: none;
-    }
-
-    /* FILE INFO */
-    .file-info {
-      display: none;
-      margin-top: 20px;
-      border: 1px solid #dbeafe;
-      background: #eff6ff;
-      border-radius: 10px;
-      padding: 16px;
-    }
-
-    .file-info.show {
-      display: block;
-    }
-
-    .file-row {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: 15px;
-    }
-
-    .file-left {
-      display: flex;
-      align-items: center;
-      gap: 12px;
-      min-width: 0;
-    }
-
-    .pdf-icon {
-      width: 44px;
-      height: 44px;
-      background: var(--danger);
-      color: white;
-      border-radius: 8px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 12px;
-      font-weight: bold;
-      flex-shrink: 0;
-    }
-
-    .file-name {
-      font-size: 14px;
-      font-weight: 600;
-      overflow: hidden;
-      text-overflow: ellipsis;
-      white-space: nowrap;
-    }
-
-    .file-size {
-      font-size: 12px;
-      color: var(--muted);
-      margin-top: 3px;
-    }
-
-    .remove-btn {
-      border: none;
-      background: transparent;
-      color: var(--danger);
-      cursor: pointer;
-      font-size: 13px;
-      font-weight: 600;
-    }
-
-    /* TITLE INPUT */
-    .title-field {
-      margin-top: 20px;
-    }
-
-    .title-field label {
-      display: block;
-      font-size: 13px;
-      font-weight: 600;
-      margin-bottom: 7px;
-    }
-
-    .title-input {
-      width: 100%;
-      border: 1px solid #d1d5db;
-      border-radius: 8px;
-      padding: 11px 13px;
-      font-size: 14px;
-      outline: none;
-    }
-
-    .title-input:focus {
-      border-color: var(--primary);
-    }
-
-    /* PREVIEWS & RESULTS */
-    .preview-section {
-      display: none;
-      margin-top: 25px;
-    }
-
-    .preview-section.show {
-      display: block;
-    }
-
-    .section-title {
-      font-size: 15px;
-      font-weight: 700;
-      margin-bottom: 12px;
-    }
-
-    .pdf-preview {
-      width: 100%;
-      height: 500px;
-      border: 1px solid var(--border);
-      border-radius: 10px;
-      background: #f3f4f6;
-    }
-
-    .extraction-box {
-      display: none;
-      margin-top: 20px;
-      border: 1px solid var(--border);
-      border-radius: 10px;
-      overflow: hidden;
-    }
-
-    .extraction-box.show {
-      display: block;
-    }
-
-    .extraction-header {
-      background: #f8fafc;
-      padding: 13px 15px;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      border-bottom: 1px solid var(--border);
-    }
-
-    .extraction-header strong {
-      font-size: 13px;
-    }
-
-    .extraction-stat {
-      font-size: 12px;
-      color: var(--muted);
-    }
-
-    .full-text-preview {
-      height: 250px;
-      overflow: auto;
-      padding: 15px;
-      font-family: Consolas, monospace;
-      font-size: 12px;
-      line-height: 1.6;
-      white-space: pre-wrap;
-      background: #fff;
-    }
-
-    /* FILE OUTPUT INFO */
-    .output-info {
-      display: none;
-      margin-top: 20px;
-      border: 1px solid #dbeafe;
-      border-radius: 10px;
-      background: #f8fbff;
-      padding: 15px;
-    }
-
-    .output-info.show {
-      display: block;
-    }
-
-    .output-title {
-      font-size: 13px;
-      font-weight: 700;
-      margin-bottom: 10px;
-    }
-
-    .output-item {
-      display: flex;
-      align-items: center;
-      gap: 10px;
-      padding: 7px 0;
-      font-size: 13px;
-      color: #374151;
-    }
-
-    .output-item span:first-child {
-      width: 28px;
-    }
-
-    /* PROGRESS */
-    .progress-wrapper {
-      display: none;
-      margin-top: 22px;
-    }
-
-    .progress-wrapper.show {
-      display: block;
-    }
-
-    .progress-info {
-      display: flex;
-      justify-content: space-between;
-      font-size: 12px;
-      color: var(--muted);
-      margin-bottom: 7px;
-    }
-
-    .progress-bar {
-      height: 8px;
-      background: #e5e7eb;
-      border-radius: 999px;
-      overflow: hidden;
-    }
-
-    .progress-fill {
-      width: 0%;
-      height: 100%;
-      background: var(--primary);
-      transition: width .2s;
-    }
-
-    /* ACTIONS */
-    .actions {
-      display: flex;
-      justify-content: flex-end;
-      gap: 10px;
-      margin-top: 22px;
-    }
-
-    .btn {
-      border: none;
-      border-radius: 8px;
-      padding: 11px 20px;
-      font-size: 13px;
-      font-weight: 600;
-      cursor: pointer;
-      transition: .2s;
-    }
-
-    .btn-secondary {
-      background: #e5e7eb;
-      color: #374151;
-    }
-
-    .btn-secondary:hover {
-      background: #d1d5db;
-    }
-
-    .btn-primary {
-      background: var(--primary);
-      color: white;
-    }
-
-    .btn-primary:hover {
-      background: var(--primary-dark);
-    }
-
-    .btn:disabled {
-      opacity: 0.6;
-      cursor: not-allowed;
-    }
-
-    /* MESSAGE */
-    .message {
-      display: none;
-      margin-top: 18px;
-      padding: 13px 15px;
-      border-radius: 9px;
-      font-size: 13px;
-      white-space: pre-wrap;
-    }
-
-    .message.show {
-      display: block;
-    }
-
-    .message.success {
-      background: #dcfce7;
-      color: #166534;
-      border: 1px solid #bbf7d0;
-    }
-
-    .message.error {
-      background: #fee2e2;
-      color: #991b1b;
-      border: 1px solid #fecaca;
-    }
-
-    /* RESPONSIVE */
-    @media (max-width: 850px) {
-      .sidebar {
-        width: 210px;
-      }
-
-      .main {
-        margin-left: 210px;
-      }
-
-      .content {
-        padding: 22px;
-      }
-    }
-
-    @media (max-width: 650px) {
-      .sidebar {
-        position: static;
-        width: 100%;
-        height: auto;
-      }
-
-      .sidebar-header {
-        height: 65px;
-      }
-
-      .nav {
-        display: flex;
-        padding: 10px 12px;
-      }
-
-      .nav-title,
-      .sidebar-bottom {
-        display: none;
-      }
-
-      .nav a {
-        flex: 1;
-        justify-content: center;
-        margin: 0 3px;
-      }
-
-      .main {
-        margin-left: 0;
-      }
-
-      .topbar {
-        padding: 0 20px;
-        height: 65px;
-      }
-
-      .topbar h1 {
-        font-size: 18px;
-      }
-
-      .server-status {
-        display: none;
-      }
-
-      .content {
-        padding: 18px;
-      }
-
-      .card {
-        padding: 20px;
-      }
-
-      .actions {
-        flex-direction: column;
-      }
-
-      .btn {
-        width: 100%;
-      }
-    }
-  </style>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Input Papers - Paper</title>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
+
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    :root {
+      --primary: #2563eb;
+      --primary-dark: #1d4ed8;
+      --bg: #f5f7fb;
+      --card: #ffffff;
+      --border: #e5e7eb;
+      --text: #111827;
+      --muted: #6b7280;
+      --success: #16a34a;
+      --danger: #dc2626;
+      --warning: #d97706;
+    }
+
+    body {
+      font-family: Arial, Helvetica, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      min-height: 100vh;
+    }
+
+    /* SIDEBAR */
+    .sidebar {
+      position: fixed;
+      left: 0;
+      top: 0;
+      width: 250px;
+      height: 100vh;
+      background: #111827;
+      color: white;
+      display: flex;
+      flex-direction: column;
+      z-index: 1000;
+    }
+
+    .sidebar-header {
+      height: 80px;
+      display: flex;
+      align-items: center;
+      padding: 0 22px;
+      border-bottom: 1px solid rgba(255,255,255,.08);
+    }
+
+    .sidebar-title {
+      font-size: 20px;
+      font-weight: 700;
+    }
+
+    .sidebar-title span {
+      color: #60a5fa;
+    }
+
+    .nav {
+      padding: 20px 12px;
+      flex: 1;
+    }
+
+    .nav-title {
+      font-size: 11px;
+      font-weight: 700;
+      color: #6b7280;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      padding: 0 12px 10px;
+    }
+
+    .nav a {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      color: #d1d5db;
+      text-decoration: none;
+      padding: 11px 12px;
+      border-radius: 8px;
+      margin-bottom: 4px;
+      font-size: 14px;
+      transition: .2s;
+    }
+
+    .nav a:hover {
+      background: #1f2937;
+      color: white;
+    }
+
+    .nav a.active {
+      background: var(--primary);
+      color: white;
+    }
+
+    .nav-icon {
+      width: 20px;
+      text-align: center;
+    }
+
+    .sidebar-bottom {
+      padding: 15px;
+      border-top: 1px solid rgba(255,255,255,.08);
+    }
+
+    .version {
+      font-size: 11px;
+      color: #9ca3af;
+    }
+
+    /* MAIN */
+    .main {
+      margin-left: 250px;
+      min-height: 100vh;
+    }
+
+    .topbar {
+      height: 80px;
+      background: white;
+      border-bottom: 1px solid var(--border);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 35px;
+    }
+
+    .topbar-left {
+      display: flex;
+      align-items: center;
+      gap: 15px;
+    }
+
+    .topbar h1 {
+      font-size: 22px;
+    }
+
+    .topbar-right {
+      display: flex;
+      align-items: center;
+      gap: 18px;
+    }
+
+    .back-menu-button {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      height: 37px;
+      padding: 0 14px;
+      border: 1px solid #d1d5db;
+      border-radius: 8px;
+      background: white;
+      color: #374151;
+      text-decoration: none;
+      font-size: 12px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all .2s ease;
+    }
+
+    .back-menu-button:hover {
+      background: #f3f6fb;
+      border-color: #2563eb;
+      color: #2563eb;
+      transform: translateY(-1px);
+    }
+
+    .server-status {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 12px;
+      color: var(--muted);
+    }
+
+    .status-dot {
+      width: 9px;
+      height: 9px;
+      border-radius: 50%;
+      background: var(--success);
+    }
+
+    /* CONTENT */
+    .content {
+      padding: 30px 35px 50px;
+      max-width: 1250px;
+    }
+
+    .page-header {
+      margin-bottom: 25px;
+    }
+
+    .page-header h2 {
+      font-size: 26px;
+      margin-bottom: 7px;
+    }
+
+    .page-header p {
+      font-size: 14px;
+      color: var(--muted);
+    }
+
+    .card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      padding: 28px;
+      margin-bottom: 25px;
+      box-shadow: 0 3px 12px rgba(0,0,0,.03);
+    }
+
+    .card-title {
+      font-size: 17px;
+      font-weight: 700;
+      margin-bottom: 6px;
+    }
+
+    .card-description {
+      font-size: 13px;
+      color: var(--muted);
+      margin-bottom: 22px;
+    }
+
+    /* UPLOAD DROPZONE */
+    .dropzone {
+      border: 2px dashed #cbd5e1;
+      border-radius: 14px;
+      padding: 48px 25px;
+      text-align: center;
+      background: #f8fafc;
+      cursor: pointer;
+      transition: .2s;
+    }
+
+    .dropzone:hover,
+    .dropzone.dragover {
+      border-color: var(--primary);
+      background: #eff6ff;
+    }
+
+    .upload-icon {
+      width: 65px;
+      height: 65px;
+      border-radius: 50%;
+      background: #dbeafe;
+      color: var(--primary);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin: 0 auto 16px;
+      font-size: 27px;
+    }
+
+    .dropzone h3 {
+      font-size: 18px;
+      margin-bottom: 7px;
+    }
+
+    .dropzone p {
+      color: var(--muted);
+      font-size: 13px;
+      margin-bottom: 18px;
+    }
+
+    .browse-btn {
+      display: inline-block;
+      background: var(--primary);
+      color: white;
+      border-radius: 8px;
+      padding: 10px 20px;
+      font-size: 13px;
+      font-weight: 600;
+      cursor: pointer;
+    }
+
+    .browse-btn:hover {
+      background: var(--primary-dark);
+    }
+
+    #fileInput {
+      display: none;
+    }
+
+    /* FILE INFO */
+    .file-info {
+      display: none;
+      margin-top: 20px;
+      border: 1px solid #dbeafe;
+      background: #eff6ff;
+      border-radius: 10px;
+      padding: 16px;
+    }
+
+    .file-info.show {
+      display: block;
+    }
+
+    .file-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 15px;
+    }
+
+    .file-left {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      min-width: 0;
+    }
+
+    .pdf-icon {
+      width: 44px;
+      height: 44px;
+      background: var(--danger);
+      color: white;
+      border-radius: 8px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 12px;
+      font-weight: bold;
+      flex-shrink: 0;
+    }
+
+    .file-name {
+      font-size: 14px;
+      font-weight: 600;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+
+    .file-size {
+      font-size: 12px;
+      color: var(--muted);
+      margin-top: 3px;
+    }
+
+    .remove-btn {
+      border: none;
+      background: transparent;
+      color: var(--danger);
+      cursor: pointer;
+      font-size: 13px;
+      font-weight: 600;
+    }
+
+    /* TITLE INPUT */
+    .title-field {
+      margin-top: 20px;
+    }
+
+    .title-field label {
+      display: block;
+      font-size: 13px;
+      font-weight: 600;
+      margin-bottom: 7px;
+    }
+
+    .title-input {
+      width: 100%;
+      border: 1px solid #d1d5db;
+      border-radius: 8px;
+      padding: 11px 13px;
+      font-size: 14px;
+      outline: none;
+    }
+
+    .title-input:focus {
+      border-color: var(--primary);
+    }
+
+    /* PREVIEWS & RESULTS */
+    .preview-section {
+      display: none;
+      margin-top: 25px;
+    }
+
+    .preview-section.show {
+      display: block;
+    }
+
+    .section-title {
+      font-size: 15px;
+      font-weight: 700;
+      margin-bottom: 12px;
+    }
+
+    .pdf-preview {
+      width: 100%;
+      height: 500px;
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      background: #f3f4f6;
+    }
+
+    .extraction-box {
+      display: none;
+      margin-top: 20px;
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      overflow: hidden;
+    }
+
+    .extraction-box.show {
+      display: block;
+    }
+
+    .extraction-header {
+      background: #f8fafc;
+      padding: 13px 15px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .extraction-header strong {
+      font-size: 13px;
+    }
+
+    .extraction-stat {
+      font-size: 12px;
+      color: var(--muted);
+    }
+
+    .full-text-preview {
+      height: 250px;
+      overflow: auto;
+      padding: 15px;
+      font-family: Consolas, monospace;
+      font-size: 12px;
+      line-height: 1.6;
+      white-space: pre-wrap;
+      background: #fff;
+    }
+
+    /* FILE OUTPUT INFO */
+    .output-info {
+      display: none;
+      margin-top: 20px;
+      border: 1px solid #dbeafe;
+      border-radius: 10px;
+      background: #f8fbff;
+      padding: 15px;
+    }
+
+    .output-info.show {
+      display: block;
+    }
+
+    .output-title {
+      font-size: 13px;
+      font-weight: 700;
+      margin-bottom: 10px;
+    }
+
+    .output-item {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 7px 0;
+      font-size: 13px;
+      color: #374151;
+    }
+
+    .output-item span:first-child {
+      width: 28px;
+    }
+
+    /* PROGRESS */
+    .progress-wrapper {
+      display: none;
+      margin-top: 22px;
+    }
+
+    .progress-wrapper.show {
+      display: block;
+    }
+
+    .progress-info {
+      display: flex;
+      justify-content: space-between;
+      font-size: 12px;
+      color: var(--muted);
+      margin-bottom: 7px;
+    }
+
+    .progress-bar {
+      height: 8px;
+      background: #e5e7eb;
+      border-radius: 999px;
+      overflow: hidden;
+    }
+
+    .progress-fill {
+      width: 0%;
+      height: 100%;
+      background: var(--primary);
+      transition: width .2s;
+    }
+
+    /* ACTIONS */
+    .actions {
+      display: flex;
+      justify-content: flex-end;
+      gap: 10px;
+      margin-top: 22px;
+    }
+
+    .btn {
+      border: none;
+      border-radius: 8px;
+      padding: 11px 20px;
+      font-size: 13px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: .2s;
+    }
+
+    .btn-secondary {
+      background: #e5e7eb;
+      color: #374151;
+    }
+
+    .btn-secondary:hover {
+      background: #d1d5db;
+    }
+
+    .btn-primary {
+      background: var(--primary);
+      color: white;
+    }
+
+    .btn-primary:hover {
+      background: var(--primary-dark);
+    }
+
+    .btn:disabled {
+      opacity: 0.6;
+      cursor: not-allowed;
+    }
+
+    /* MESSAGE */
+    .message {
+      display: none;
+      margin-top: 18px;
+      padding: 13px 15px;
+      border-radius: 9px;
+      font-size: 13px;
+      white-space: pre-wrap;
+    }
+
+    .message.show {
+      display: block;
+    }
+
+    .message.success {
+      background: #dcfce7;
+      color: #166534;
+      border: 1px solid #bbf7d0;
+    }
+
+    .message.error {
+      background: #fee2e2;
+      color: #991b1b;
+      border: 1px solid #fecaca;
+    }
+
+    /* RESPONSIVE */
+    @media (max-width: 850px) {
+      .sidebar {
+        width: 210px;
+      }
+
+      .main {
+        margin-left: 210px;
+      }
+
+      .content {
+        padding: 22px;
+      }
+    }
+
+    @media (max-width: 650px) {
+      .sidebar {
+        position: static;
+        width: 100%;
+        height: auto;
+      }
+
+      .sidebar-header {
+        height: 65px;
+      }
+
+      .nav {
+        display: flex;
+        padding: 10px 12px;
+      }
+
+      .nav-title,
+      .sidebar-bottom {
+        display: none;
+      }
+
+      .nav a {
+        flex: 1;
+        justify-content: center;
+        margin: 0 3px;
+      }
+
+      .main {
+        margin-left: 0;
+      }
+
+      .topbar {
+        padding: 0 20px;
+        height: 65px;
+      }
+
+      .topbar h1 {
+        font-size: 18px;
+      }
+
+      .server-status {
+        display: none;
+      }
+
+      .content {
+        padding: 18px;
+      }
+
+      .card {
+        padding: 20px;
+      }
+
+      .actions {
+        flex-direction: column;
+      }
+
+      .btn {
+        width: 100%;
+      }
+    }
+  </style>
 </head>
 
 <body>
 
 <aside class="sidebar">
 
-  <div class="sidebar-header">
-    <div class="sidebar-title">
-      Paper <span>ML</span>
-    </div>
-  </div>
+  <div class="sidebar-header">
+    <div class="sidebar-title">
+      Paper <span>ML</span>
+    </div>
+  </div>
 
-  <nav class="nav">
+  <nav class="nav">
 
-    <div class="nav-title">
-      Library
-    </div>
+    <div class="nav-title">
+      Library
+    </div>
 
-    <a href="input_paper.html" class="active">
-      <span class="nav-icon">📄</span>
-      Input Paper
-    </a>
+    <a href="input_paper.html" class="active">
+      <span class="nav-icon">📄</span>
+      Input Paper
+    </a>
 
-    <a href="library.html">
-      <span class="nav-icon">📚</span>
-      Paper Library
-    </a>
+    <a href="library.html">
+      <span class="nav-icon">📚</span>
+      Paper Library
+    </a>
 
-  </nav>
+  </nav>
 
-  <div class="sidebar-bottom">
-    <div class="version">
-      Paper Client · V.1.0.0 (No Backend)
-    </div>
-  </div>
+  <div class="sidebar-bottom">
+    <div class="version">
+      Paper Client · V.1.0.0 (No Backend)
+    </div>
+  </div>
 
 </aside>
 
 
 <main class="main">
 
-  <header class="topbar">
+  <header class="topbar">
 
-    <div class="topbar-left">
-      <h1>Input Papers</h1>
-    </div>
+    <div class="topbar-left">
+      <h1>Input Papers</h1>
+    </div>
 
-    <div class="topbar-right">
+    <div class="topbar-right">
 
-      <a
-        href="menu.html"
-        class="back-menu-button"
-        title="Kembali ke Menu Utama"
-      >
-        <span class="back-menu-icon">←</span>
-        <span>Kembali ke Menu Utama</span>
-      </a>
+      <a
+        href="menu.html"
+        class="back-menu-button"
+        title="Kembali ke Menu Utama"
+      >
+        <span class="back-menu-icon">←</span>
+        <span>Kembali ke Menu Utama</span>
+      </a>
 
-      <div class="server-status">
-        <span class="status-dot"></span>
-        <span>Client-Side Mode (Online)</span>
-      </div>
+      <div class="server-status">
+        <span class="status-dot"></span>
+        <span>Client-Side Mode (Online)</span>
+      </div>
 
-    </div>
+    </div>
 
-  </header>
+  </header>
 
 
-  <div class="content">
+  <div class="content">
 
-    <div class="page-header" id="upload">
+    <div class="page-header" id="upload">
 
-      <h2>
-        Upload Research Paper
-      </h2>
+      <h2>
+        Upload Research Paper
+      </h2>
 
-      <p>
-        Upload PDF, ekstrak seluruh teks langsung di browser,
-        lalu simpan PDF asli, CSV, dan RIS ke Google Drive.
-      </p>
+      <p>
+        Upload PDF, ekstrak seluruh teks langsung di browser,
+        lalu simpan PDF asli, CSV, dan RIS ke Google Drive.
+      </p>
 
-    </div>
+    </div>
 
 
-    <section class="card">
+    <section class="card">
 
-      <div class="card-title">
-        Add New Paper
-      </div>
+      <div class="card-title">
+        Add New Paper
+      </div>
 
-      <div class="card-description">
-        Satu file PDF akan diproses menjadi tiga file:
-        PDF asli, CSV hasil ekstraksi teks, dan RIS untuk reference manager.
-      </div>
+      <div class="card-description">
+        Satu file PDF akan diproses menjadi tiga file:
+        PDF asli, CSV hasil ekstraksi teks, dan RIS untuk reference manager.
+      </div>
 
 
-      <!-- DROPZONE -->
+      <!-- DROPZONE -->
 
-      <div id="dropzone" class="dropzone">
+      <div id="dropzone" class="dropzone">
 
-        <div class="upload-icon">
-          ↑
-        </div>
+        <div class="upload-icon">
+          ↑
+        </div>
 
-        <h3>
-          Drag & Drop PDF
-        </h3>
+        <h3>
+          Drag & Drop PDF
+        </h3>
 
-        <p>
-          atau klik tombol di bawah untuk memilih file
-        </p>
+        <p>
+          atau klik tombol di bawah untuk memilih file
+        </p>
 
-        <label
-          for="fileInput"
-          class="browse-btn"
-        >
-          Browse PDF
-        </label>
+        <label
+          for="fileInput"
+          class="browse-btn"
+        >
+          Browse PDF
+        </label>
 
-      </div>
+      </div>
 
 
-      <input
-        type="file"
-        id="fileInput"
-        accept="application/pdf,.pdf"
-      >
+      <input
+        type="file"
+        id="fileInput"
+        accept="application/pdf,.pdf"
+      >
 
 
-      <!-- FILE INFO -->
+      <!-- FILE INFO -->
 
-      <div id="fileInfo" class="file-info">
+      <div id="fileInfo" class="file-info">
 
-        <div class="file-row">
+        <div class="file-row">
 
-          <div class="file-left">
+          <div class="file-left">
 
-            <div class="pdf-icon">
-              PDF
-            </div>
+            <div class="pdf-icon">
+              PDF
+            </div>
 
-            <div>
+            <div>
 
-              <div
-                id="fileName"
-                class="file-name"
-              >
-                -
-              </div>
+              <div
+                id="fileName"
+                class="file-name"
+              >
+                -
+              </div>
 
-              <div
-                id="fileSize"
-                class="file-size"
-              >
-                -
-              </div>
+              <div
+                id="fileSize"
+                class="file-size"
+              >
+                -
+              </div>
 
-            </div>
+            </div>
 
-          </div>
+          </div>
 
-          <button
-            type="button"
-            id="removeBtn"
-            class="remove-btn"
-          >
-            Remove
-          </button>
+          <button
+            type="button"
+            id="removeBtn"
+            class="remove-btn"
+          >
+            Remove
+          </button>
 
-        </div>
+        </div>
 
-      </div>
+      </div>
 
 
-      <!-- TITLE -->
+      <!-- TITLE -->
 
-      <div
-        id="titleField"
-        class="title-field"
-        style="display:none;"
-      >
+      <div
+        id="titleField"
+        class="title-field"
+        style="display:none;"
+      >
 
-        <label for="paperTitle">
-          Paper Title
-        </label>
+        <label for="paperTitle">
+          Paper Title
+        </label>
 
-        <input
-          id="paperTitle"
-          class="title-input"
-          type="text"
-          placeholder="Judul paper"
-        >
+        <input
+          id="paperTitle"
+          class="title-input"
+          type="text"
+          placeholder="Judul paper"
+        >
 
-      </div>
+      </div>
 
 
-      <!-- PREVIEW -->
+      <!-- PREVIEW -->
 
-      <div
-        id="previewSection"
-        class="preview-section"
-      >
+      <div
+        id="previewSection"
+        class="preview-section"
+      >
 
-        <div class="section-title">
-          PDF Preview
-        </div>
+        <div class="section-title">
+          PDF Preview
+        </div>
 
-        <iframe
-          id="pdfPreview"
-          class="pdf-preview"
-        ></iframe>
+        <iframe
+          id="pdfPreview"
+          class="pdf-preview"
+        ></iframe>
 
-      </div>
+      </div>
 
 
-      <!-- EXTRACTION -->
+      <!-- EXTRACTION -->
 
-      <div
-        id="extractionBox"
-        class="extraction-box"
-      >
+      <div
+        id="extractionBox"
+        class="extraction-box"
+      >
 
-        <div class="extraction-header">
+        <div class="extraction-header">
 
-          <strong>
-            Extracted Full Text
-          </strong>
+          <strong>
+            Extracted Full Text
+          </strong>
 
-          <span
-            id="extractionStat"
-            class="extraction-stat"
-          >
-            -
-          </span>
+          <span
+            id="extractionStat"
+            class="extraction-stat"
+          >
+            -
+          </span>
 
-        </div>
+        </div>
 
-        <div
-          id="fullTextPreview"
-          class="full-text-preview"
-        ></div>
+        <div
+          id="fullTextPreview"
+          class="full-text-preview"
+        ></div>
 
-      </div>
+      </div>
 
 
-      <!-- OUTPUT FILE INFO -->
+      <!-- OUTPUT FILE INFO -->
 
-      <div
-        id="outputInfo"
-        class="output-info"
-      >
+      <div
+        id="outputInfo"
+        class="output-info"
+      >
 
-        <div class="output-title">
-          File yang akan dibuat di Google Drive
-        </div>
+        <div class="output-title">
+          File yang akan dibuat di Google Drive
+        </div>
 
-        <div class="output-item">
-          <span>📄</span>
-          <span id="outputPdfName">
-            -
-          </span>
-        </div>
+        <div class="output-item">
+          <span>📄</span>
+          <span id="outputPdfName">
+            -
+          </span>
+        </div>
 
-        <div class="output-item">
-          <span>📊</span>
-          <span id="outputCsvName">
-            -
-          </span>
-        </div>
+        <div class="output-item">
+          <span>📊</span>
+          <span id="outputCsvName">
+            -
+          </span>
+        </div>
 
-        <div class="output-item">
-          <span>📚</span>
-          <span id="outputRisName">
-            -
-          </span>
-        </div>
+        <div class="output-item">
+          <span>📚</span>
+          <span id="outputRisName">
+            -
+          </span>
+        </div>
 
-      </div>
+      </div>
 
 
-      <!-- PROGRESS -->
+      <!-- PROGRESS -->
 
-      <div
-        id="progressWrapper"
-        class="progress-wrapper"
-      >
+      <div
+        id="progressWrapper"
+        class="progress-wrapper"
+      >
 
-        <div class="progress-info">
+        <div class="progress-info">
 
-          <span id="progressText">
-            Ready
-          </span>
+          <span id="progressText">
+            Ready
+          </span>
 
-          <span id="progressPercent">
-            0%
-          </span>
+          <span id="progressPercent">
+            0%
+          </span>
 
-        </div>
+        </div>
 
-        <div class="progress-bar">
+        <div class="progress-bar">
 
-          <div
-            id="progressFill"
-            class="progress-fill"
-          ></div>
+          <div
+            id="progressFill"
+            class="progress-fill"
+          ></div>
 
-        </div>
+        </div>
 
-      </div>
+      </div>
 
 
-      <!-- MESSAGE -->
+      <!-- MESSAGE -->
 
-      <div
-        id="message"
-        class="message"
-      ></div>
+      <div
+        id="message"
+        class="message"
+      ></div>
 
 
-      <!-- ACTIONS -->
+      <!-- ACTIONS -->
 
-      <div class="actions">
+      <div class="actions">
 
-        <button
-          type="button"
-          id="resetBtn"
-          class="btn btn-secondary"
-        >
-          Reset
-        </button>
+        <button
+          type="button"
+          id="resetBtn"
+          class="btn btn-secondary"
+        >
+          Reset
+        </button>
 
-        <button
-          type="button"
-          id="downloadCsvBtn"
-          class="btn btn-secondary"
-          disabled
-        >
-          Download CSV
-        </button>
+        <button
+          type="button"
+          id="downloadCsvBtn"
+          class="btn btn-secondary"
+          disabled
+        >
+          Download CSV
+        </button>
 
-        <button
-          type="button"
-          id="downloadRisBtn"
-          class="btn btn-secondary"
-          disabled
-        >
-          Download RIS
-        </button>
+        <button
+          type="button"
+          id="downloadRisBtn"
+          class="btn btn-secondary"
+          disabled
+        >
+          Download RIS
+        </button>
 
-        <button
-          type="button"
-          id="uploadBtn"
-          class="btn btn-primary"
-          disabled
-        >
-          Proses & Upload
-        </button>
+        <button
+          type="button"
+          id="uploadBtn"
+          class="btn btn-primary"
+          disabled
+        >
+          Proses & Upload
+        </button>
 
-      </div>
+      </div>
 
-    </section>
+    </section>
 
-  </div>
+  </div>
 
 </main>
 
@@ -1025,30 +1025,30 @@
 
 
 /* =========================================================
-   CONFIG
+   CONFIG
 ========================================================= */
 
 const CONFIG = {
 
-  GOOGLE_SCRIPT_URL:
-    "https://script.google.com/macros/s/AKfycbxeatGVs5HUcaY8FTxAfTsqQ8KqoiF1nQDmDs3Lc_BBEedlYdXxZ2wg5VpSiOiONPem/exec",
+  GOOGLE_SCRIPT_URL:
+    "https://script.google.com/macros/s/AKfycbxeatGVs5HUcaY8FTxAfTsqQ8KqoiF1nQDmDs3Lc_BBEedlYdXxZ2wg5VpSiOiONPem/exec",
 
-  PDF_WORKER_URL:
-    "https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js"
+  PDF_WORKER_URL:
+    "https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js"
 
 };
 
 
 if (window.pdfjsLib) {
 
-  pdfjsLib.GlobalWorkerOptions.workerSrc =
-    CONFIG.PDF_WORKER_URL;
+  pdfjsLib.GlobalWorkerOptions.workerSrc =
+    CONFIG.PDF_WORKER_URL;
 
 }
 
 
 /* =========================================================
-   STATE
+   STATE
 ========================================================= */
 
 let selectedFile = null;
@@ -1065,707 +1065,707 @@ let generatedRisBlob = null;
 
 
 /* =========================================================
-   DOM ELEMENTS
+   DOM ELEMENTS
 ========================================================= */
 
 const fileInput =
-  document.getElementById("fileInput");
+  document.getElementById("fileInput");
 
 const dropzone =
-  document.getElementById("dropzone");
+  document.getElementById("dropzone");
 
 const fileInfo =
-  document.getElementById("fileInfo");
+  document.getElementById("fileInfo");
 
 const fileName =
-  document.getElementById("fileName");
+  document.getElementById("fileName");
 
 const fileSize =
-  document.getElementById("fileSize");
+  document.getElementById("fileSize");
 
 const removeBtn =
-  document.getElementById("removeBtn");
+  document.getElementById("removeBtn");
 
 const titleField =
-  document.getElementById("titleField");
+  document.getElementById("titleField");
 
 const paperTitle =
-  document.getElementById("paperTitle");
+  document.getElementById("paperTitle");
 
 const previewSection =
-  document.getElementById("previewSection");
+  document.getElementById("previewSection");
 
 const pdfPreview =
-  document.getElementById("pdfPreview");
+  document.getElementById("pdfPreview");
 
 const extractionBox =
-  document.getElementById("extractionBox");
+  document.getElementById("extractionBox");
 
 const extractionStat =
-  document.getElementById("extractionStat");
+  document.getElementById("extractionStat");
 
 const fullTextPreview =
-  document.getElementById("fullTextPreview");
+  document.getElementById("fullTextPreview");
 
 const uploadBtn =
-  document.getElementById("uploadBtn");
+  document.getElementById("uploadBtn");
 
 const downloadCsvBtn =
-  document.getElementById("downloadCsvBtn");
+  document.getElementById("downloadCsvBtn");
 
 const downloadRisBtn =
-  document.getElementById("downloadRisBtn");
+  document.getElementById("downloadRisBtn");
 
 const resetBtn =
-  document.getElementById("resetBtn");
+  document.getElementById("resetBtn");
 
 const progressWrapper =
-  document.getElementById("progressWrapper");
+  document.getElementById("progressWrapper");
 
 const progressFill =
-  document.getElementById("progressFill");
+  document.getElementById("progressFill");
 
 const progressText =
-  document.getElementById("progressText");
+  document.getElementById("progressText");
 
 const progressPercent =
-  document.getElementById("progressPercent");
+  document.getElementById("progressPercent");
 
 const message =
-  document.getElementById("message");
+  document.getElementById("message");
 
 const outputInfo =
-  document.getElementById("outputInfo");
+  document.getElementById("outputInfo");
 
 const outputPdfName =
-  document.getElementById("outputPdfName");
+  document.getElementById("outputPdfName");
 
 const outputCsvName =
-  document.getElementById("outputCsvName");
+  document.getElementById("outputCsvName");
 
 const outputRisName =
-  document.getElementById("outputRisName");
+  document.getElementById("outputRisName");
 
 
 /* =========================================================
-   EVENT LISTENERS
+   EVENT LISTENERS
 ========================================================= */
 
 fileInput.addEventListener(
-  "change",
-  (e) => {
+  "change",
+  (e) => {
 
-    if (e.target.files[0]) {
+    if (e.target.files[0]) {
 
-      handleSelectedFile(
-        e.target.files[0]
-      );
+      handleSelectedFile(
+        e.target.files[0]
+      );
 
-    }
+    }
 
-  }
+  }
 );
 
 
 dropzone.addEventListener(
-  "dragover",
-  (e) => {
+  "dragover",
+  (e) => {
 
-    e.preventDefault();
+    e.preventDefault();
 
-    dropzone.classList.add(
-      "dragover"
-    );
+    dropzone.classList.add(
+      "dragover"
+    );
 
-  }
+  }
 );
 
 
 dropzone.addEventListener(
-  "dragleave",
-  () => {
+  "dragleave",
+  () => {
 
-    dropzone.classList.remove(
-      "dragover"
-    );
+    dropzone.classList.remove(
+      "dragover"
+    );
 
-  }
+  }
 );
 
 
 dropzone.addEventListener(
-  "drop",
-  (e) => {
+  "drop",
+  (e) => {
 
-    e.preventDefault();
+    e.preventDefault();
 
-    dropzone.classList.remove(
-      "dragover"
-    );
+    dropzone.classList.remove(
+      "dragover"
+    );
 
-    if (
-      e.dataTransfer.files[0]
-    ) {
+    if (
+      e.dataTransfer.files[0]
+    ) {
 
-      handleSelectedFile(
-        e.dataTransfer.files[0]
-      );
+      handleSelectedFile(
+        e.dataTransfer.files[0]
+      );
 
-    }
+    }
 
-  }
+  }
 );
 
 
 dropzone.addEventListener(
-  "click",
-  (e) => {
+  "click",
+  (e) => {
 
-    if (
-      e.target.closest("label")
-    ) {
+    if (
+      e.target.closest("label")
+    ) {
 
-      return;
+      return;
 
-    }
+    }
 
-    fileInput.click();
+    fileInput.click();
 
-  }
+  }
 );
 
 
 removeBtn.addEventListener(
-  "click",
-  resetAll
+  "click",
+  resetAll
 );
 
 
 resetBtn.addEventListener(
-  "click",
-  resetAll
+  "click",
+  resetAll
 );
 
 
 downloadCsvBtn.addEventListener(
-  "click",
-  triggerCsvDownload
+  "click",
+  triggerCsvDownload
 );
 
 
 downloadRisBtn.addEventListener(
-  "click",
-  triggerRisDownload
+  "click",
+  triggerRisDownload
 );
 
 
 uploadBtn.addEventListener(
-  "click",
-  runPipeline
+  "click",
+  runPipeline
 );
 
 
 /* =========================================================
-   HANDLE FILE
+   HANDLE FILE
 ========================================================= */
 
 async function handleSelectedFile(file) {
 
-  clearMessage();
+  clearMessage();
 
-  if (
-    file.type !== "application/pdf" &&
-    !file.name
-      .toLowerCase()
-      .endsWith(".pdf")
-  ) {
+  if (
+    file.type !== "application/pdf" &&
+    !file.name
+      .toLowerCase()
+      .endsWith(".pdf")
+  ) {
 
-    showMessage(
-      "error",
-      "File harus berekstensi PDF."
-    );
+    showMessage(
+      "error",
+      "File harus berekstensi PDF."
+    );
 
-    return;
+    return;
 
-  }
-
-
-  selectedFile = file;
-
-  fileName.textContent =
-    file.name;
-
-  fileSize.textContent =
-    formatFileSize(file.size);
-
-  fileInfo.classList.add("show");
-
-  titleField.style.display =
-    "block";
-
-  paperTitle.value =
-    file.name.replace(
-      /\.pdf$/i,
-      ""
-    );
+  }
 
 
-  uploadBtn.disabled = true;
+  selectedFile = file;
 
-  downloadCsvBtn.disabled = true;
+  fileName.textContent =
+    file.name;
 
-  downloadRisBtn.disabled = true;
+  fileSize.textContent =
+    formatFileSize(file.size);
 
+  fileInfo.classList.add("show");
 
-  extractedText = "";
+  titleField.style.display =
+    "block";
 
-  extractedPages = [];
-
-  generatedCsvBlob = null;
-
-  generatedRisBlob = null;
-
-
-  extractionBox.classList.remove(
-    "show"
-  );
-
-  outputInfo.classList.remove(
-    "show"
-  );
+  paperTitle.value =
+    file.name.replace(
+      /\.pdf$/i,
+      ""
+    );
 
 
-  if (previewUrl) {
+  uploadBtn.disabled = true;
 
-    URL.revokeObjectURL(
-      previewUrl
-    );
+  downloadCsvBtn.disabled = true;
 
-  }
+  downloadRisBtn.disabled = true;
 
 
-  previewUrl =
-    URL.createObjectURL(file);
+  extractedText = "";
 
-  pdfPreview.src =
-    previewUrl;
+  extractedPages = [];
 
-  previewSection.classList.add(
-    "show"
-  );
+  generatedCsvBlob = null;
+
+  generatedRisBlob = null;
 
 
-  try {
+  extractionBox.classList.remove(
+    "show"
+  );
 
-    await extractPdfText(file);
+  outputInfo.classList.remove(
+    "show"
+  );
 
-    uploadBtn.disabled = false;
 
-  } catch (error) {
+  if (previewUrl) {
 
-    console.error(
-      "Extraction error:",
-      error
-    );
+    URL.revokeObjectURL(
+      previewUrl
+    );
 
-    showMessage(
-      "error",
-      "Gagal mengekstrak teks PDF: " +
-      error.message
-    );
+  }
 
-    uploadBtn.disabled = true;
 
-  }
+  previewUrl =
+    URL.createObjectURL(file);
+
+  pdfPreview.src =
+    previewUrl;
+
+  previewSection.classList.add(
+    "show"
+  );
+
+
+  try {
+
+    await extractPdfText(file);
+
+    uploadBtn.disabled = false;
+
+  } catch (error) {
+
+    console.error(
+      "Extraction error:",
+      error
+    );
+
+    showMessage(
+      "error",
+      "Gagal mengekstrak teks PDF: " +
+      error.message
+    );
+
+    uploadBtn.disabled = true;
+
+  }
 
 }
 
 
 /* =========================================================
-   EXTRACT PDF TEXT
+   EXTRACT PDF TEXT
 ========================================================= */
 
 async function extractPdfText(file) {
 
-  setProgress(
-    10,
-    "Membaca file PDF..."
-  );
+  setProgress(
+    10,
+    "Membaca file PDF..."
+  );
 
 
-  const arrayBuffer =
-    await file.arrayBuffer();
+  const arrayBuffer =
+    await file.arrayBuffer();
 
 
-  const pdf =
-    await pdfjsLib
-      .getDocument({
-        data: arrayBuffer
-      })
-      .promise;
+  const pdf =
+    await pdfjsLib
+      .getDocument({
+        data: arrayBuffer
+      })
+      .promise;
 
 
-  const totalPages =
-    pdf.numPages;
+  const totalPages =
+    pdf.numPages;
 
-  const pageTexts = [];
-
-
-  for (
-    let i = 1;
-    i <= totalPages;
-    i++
-  ) {
-
-    const page =
-      await pdf.getPage(i);
+  const pageTexts = [];
 
 
-    const content =
-      await page.getTextContent();
+  for (
+    let i = 1;
+    i <= totalPages;
+    i++
+  ) {
+
+    const page =
+      await pdf.getPage(i);
 
 
-    const cleanText =
-      content.items
-        .map(
-          item => item.str || ""
-        )
-        .join(" ")
-        .replace(/\s+/g, " ")
-        .trim();
+    const content =
+      await page.getTextContent();
 
 
-    extractedPages.push({
-      page: i,
-      text: cleanText
-    });
+    const cleanText =
+      content.items
+        .map(
+          item => item.str || ""
+        )
+        .join(" ")
+        .replace(/\s+/g, " ")
+        .trim();
 
 
-    pageTexts.push(
-      `[PAGE ${i}]\n` +
-      cleanText
-    );
+    extractedPages.push({
+      page: i,
+      text: cleanText
+    });
 
 
-    const percent =
-      10 +
-      Math.round(
-        (i / totalPages) * 40
-      );
+    pageTexts.push(
+      `[PAGE ${i}]\n` +
+      cleanText
+    );
 
 
-    setProgress(
-      percent,
-      `Mengekstrak teks halaman ${i} / ${totalPages}...`
-    );
-
-  }
-
-
-  extractedText =
-    pageTexts.join(
-      "\n\n"
-    ).trim();
+    const percent =
+      10 +
+      Math.round(
+        (i / totalPages) * 40
+      );
 
 
-  if (!extractedText) {
+    setProgress(
+      percent,
+      `Mengekstrak teks halaman ${i} / ${totalPages}...`
+    );
 
-    throw new Error(
-      "PDF kosong atau berupa hasil scan/gambar."
-    );
-
-  }
-
-
-  extractionStat.textContent =
-    `${totalPages} halaman · ${extractedText.length} karakter`;
+  }
 
 
-  fullTextPreview.textContent =
-    extractedText;
+  extractedText =
+    pageTexts.join(
+      "\n\n"
+    ).trim();
 
 
-  extractionBox.classList.add(
-    "show"
-  );
+  if (!extractedText) {
+
+    throw new Error(
+      "PDF kosong atau berupa hasil scan/gambar."
+    );
+
+  }
 
 
-  updateOutputNames();
+  extractionStat.textContent =
+    `${totalPages} halaman · ${extractedText.length} karakter`;
 
 
-  setProgress(
-    50,
-    "Teks siap diproses."
-  );
+  fullTextPreview.textContent =
+    extractedText;
+
+
+  extractionBox.classList.add(
+    "show"
+  );
+
+
+  updateOutputNames();
+
+
+  setProgress(
+    50,
+    "Teks siap diproses."
+  );
 
 }
 
 
 /* =========================================================
-   MAIN PIPELINE
+   MAIN PIPELINE
 ========================================================= */
 
 async function runPipeline() {
 
-  if (
-    !selectedFile ||
-    !extractedText
-  ) {
+  if (
+    !selectedFile ||
+    !extractedText
+  ) {
 
-    return;
+    return;
 
-  }
+  }
 
 
-  uploadBtn.disabled = true;
+  uploadBtn.disabled = true;
 
-  resetBtn.disabled = true;
+  resetBtn.disabled = true;
 
-  clearMessage();
+  clearMessage();
 
 
-  try {
+  try {
 
-    const title =
-      paperTitle.value.trim() ||
-      selectedFile.name.replace(
-        /\.pdf$/i,
-        ""
-      );
+    const title =
+      paperTitle.value.trim() ||
+      selectedFile.name.replace(
+        /\.pdf$/i,
+        ""
+      );
 
 
-    const paperId =
-      "PAPER-" +
-      Date.now();
+    const paperId =
+      "PAPER-" +
+      Date.now();
 
 
-    /* =========================================
-       1. GENERATE CSV
-    ========================================= */
+    /* =========================================
+       1. GENERATE CSV
+    ========================================= */
 
-    setProgress(
-      58,
-      "Membuat file CSV..."
-    );
+    setProgress(
+      58,
+      "Membuat file CSV..."
+    );
 
 
-    generateCsvBlob(
-      paperId,
-      title,
-      selectedFile.name,
-      extractedText
-    );
+    generateCsvBlob(
+      paperId,
+      title,
+      selectedFile.name,
+      extractedText
+    );
 
 
-    downloadCsvBtn.disabled =
-      false;
+    downloadCsvBtn.disabled =
+      false;
 
 
-    /* =========================================
-       2. GENERATE RIS
-    ========================================= */
+    /* =========================================
+       2. GENERATE RIS
+    ========================================= */
 
-    setProgress(
-      64,
-      "Membuat file RIS..."
-    );
+    setProgress(
+      64,
+      "Membuat file RIS..."
+    );
 
 
-    generateRisBlob(
-      paperId,
-      title,
-      selectedFile.name,
-      extractedText
-    );
+    generateRisBlob(
+      paperId,
+      title,
+      selectedFile.name,
+      extractedText
+    );
 
 
-    downloadRisBtn.disabled =
-      false;
+    downloadRisBtn.disabled =
+      false;
 
 
-    /* =========================================
-       3. PDF → BASE64
-    ========================================= */
+    /* =========================================
+       3. PDF → BASE64
+    ========================================= */
 
-    setProgress(
-      70,
-      "Menyiapkan PDF asli..."
-    );
+    setProgress(
+      70,
+      "Menyiapkan PDF asli..."
+    );
 
 
-    const pdfBase64 =
-      await fileToBase64(
-        selectedFile
-      );
+    const pdfBase64 =
+      await fileToBase64(
+        selectedFile
+      );
 
 
-    /* =========================================
-       4. CSV → BASE64
-    ========================================= */
+    /* =========================================
+       4. CSV → BASE64
+    ========================================= */
 
-    setProgress(
-      74,
-      "Menyiapkan CSV..."
-    );
+    setProgress(
+      74,
+      "Menyiapkan CSV..."
+    );
 
 
-    const csvBase64 =
-      await blobToBase64(
-        generatedCsvBlob
-      );
+    const csvBase64 =
+      await blobToBase64(
+        generatedCsvBlob
+      );
 
 
-    /* =========================================
-       5. RIS → BASE64
-    ========================================= */
+    /* =========================================
+       5. RIS → BASE64
+    ========================================= */
 
-    setProgress(
-      78,
-      "Menyiapkan RIS..."
-    );
+    setProgress(
+      78,
+      "Menyiapkan RIS..."
+    );
 
 
-    const risBase64 =
-      await blobToBase64(
-        generatedRisBlob
-      );
+    const risBase64 =
+      await blobToBase64(
+        generatedRisBlob
+      );
 
 
-    /* =========================================
-       6. PAYLOAD
-    ========================================= */
+    /* =========================================
+       6. PAYLOAD
+    ========================================= */
 
-    const pdfFileName =
-      selectedFile.name;
+    const pdfFileName =
+      selectedFile.name;
 
 
-    const csvFileName =
-      selectedFile.name.replace(
-        /\.pdf$/i,
-        ""
-      ) +
-      "_extracted.csv";
+    const csvFileName =
+      selectedFile.name.replace(
+        /\.pdf$/i,
+        ""
+      ) +
+      "_extracted.csv";
 
 
-    const risFileName =
-      selectedFile.name.replace(
-        /\.pdf$/i,
-        ""
-      ) +
-      ".ris";
+    const risFileName =
+      selectedFile.name.replace(
+        /\.pdf$/i,
+        ""
+      ) +
+      ".ris";
 
 
-    const payload = {
+    const payload = {
 
-      action:
-        "uploadPaper",
+      action:
+        "uploadPaper",
 
 
-      paperId:
-        paperId,
+      paperId:
+        paperId,
 
 
-      title:
-        title,
+      title:
+        title,
 
 
-      pageCount:
-        extractedPages.length,
+      pageCount:
+        extractedPages.length,
 
 
-      /* PDF ASLI */
+      /* PDF ASLI */
 
-      pdf: {
+      pdf: {
 
-        fileName:
-          pdfFileName,
+        fileName:
+          pdfFileName,
 
-        mimeType:
-          "application/pdf",
+        mimeType:
+          "application/pdf",
 
-        base64:
-          pdfBase64
+        base64:
+          pdfBase64
 
-      },
+      },
 
 
-      /* CSV */
+      /* CSV */
 
-      csv: {
+      csv: {
 
-        fileName:
-          csvFileName,
+        fileName:
+          csvFileName,
 
-        mimeType:
-          "text/csv",
+        mimeType:
+          "text/csv",
 
-        base64:
-          csvBase64
+        base64:
+          csvBase64
 
-      },
+      },
 
 
-      /* RIS */
+      /* RIS */
 
-      ris: {
+      ris: {
 
-        fileName:
-          risFileName,
+        fileName:
+          risFileName,
 
-        mimeType:
-          "application/x-research-info-systems",
+        mimeType:
+          "application/x-research-info-systems",
 
-        base64:
-          risBase64
+        base64:
+          risBase64
 
-      }
+      }
 
-    };
+    };
 
 
-    /* =========================================
-       7. UPLOAD 3 FILE
-    ========================================= */
+    /* =========================================
+       7. UPLOAD 3 FILE
+    ========================================= */
 
-    setProgress(
-      82,
-      "Mengunggah 3 file ke Google Drive..."
-    );
+    setProgress(
+      82,
+      "Mengunggah 3 file ke Google Drive..."
+    );
 
 
-    const googleResult =
-      await postGoogleScript(
-        payload
-      );
+    const googleResult =
+      await postGoogleScript(
+        payload
+      );
 
 
-    if (
-      !googleResult ||
-      googleResult.success !== true
-    ) {
+    if (
+      !googleResult ||
+      googleResult.success !== true
+    ) {
 
-      throw new Error(
-        googleResult?.message ||
-        "Gagal menyimpan file ke Google Drive."
-      );
+      throw new Error(
+        googleResult?.message ||
+        "Gagal menyimpan file ke Google Drive."
+      );
 
-    }
+    }
 
 
-    /* =========================================
-       8. FINISH
-    ========================================= */
+    /* =========================================
+       8. FINISH
+    ========================================= */
 
-    setProgress(
-      100,
-      "Selesai!"
-    );
+    setProgress(
+      100,
+      "Selesai!"
+    );
 
 
-    showMessage(
-      "success",
+    showMessage(
+      "success",
 
-      `Berhasil diproses!
+      `Berhasil diproses!
 
 ✓ PDF asli tersimpan di Google Drive
 ✓ CSV hasil ekstraksi tersimpan di Google Drive
@@ -1779,796 +1779,796 @@ ${googleResult.csvUrl || "Tersimpan"}
 
 RIS:
 ${googleResult.risUrl || "Tersimpan"}`
-    );
+    );
 
 
-  } catch (error) {
+  } catch (error) {
 
-    console.error(
-      "Pipeline error:",
-      error
-    );
-
-
-    setProgress(
-      0,
-      "Proses gagal."
-    );
+    console.error(
+      "Pipeline error:",
+      error
+    );
 
 
-    showMessage(
-      "error",
-      "Terjadi kesalahan:\n" +
-      error.message
-    );
+    setProgress(
+      0,
+      "Proses gagal."
+    );
 
 
-    uploadBtn.disabled =
-      false;
+    showMessage(
+      "error",
+      "Terjadi kesalahan:\n" +
+      error.message
+    );
 
-  } finally {
 
-    resetBtn.disabled =
-      false;
+    uploadBtn.disabled =
+      false;
 
-  }
+  } finally {
+
+    resetBtn.disabled =
+      false;
+
+  }
 
 }
 
 
 /* =========================================================
-   GENERATE CSV
+   GENERATE CSV
 ========================================================= */
 
 function generateCsvBlob(
-  id,
-  title,
-  filename,
-  text
+  id,
+  title,
+  filename,
+  text
 ) {
 
-  const escapeCsv =
-    (str) => {
+  const escapeCsv =
+    (str) => {
 
-      return `"${String(
-        str || ""
-      ).replace(
-        /"/g,
-        '""'
-      )}"`;
+      return `"${String(
+        str || ""
+      ).replace(
+        /"/g,
+        '""'
+      )}"`;
 
-    };
-
-
-  const headers = [
-    "id",
-    "title",
-    "filename",
-    "full_text",
-    "created_at"
-  ];
+    };
 
 
-  const row = [
-
-    escapeCsv(id),
-
-    escapeCsv(title),
-
-    escapeCsv(filename),
-
-    escapeCsv(text),
-
-    escapeCsv(
-      new Date().toISOString()
-    )
-
-  ];
+  const headers = [
+    "id",
+    "title",
+    "filename",
+    "full_text",
+    "created_at"
+  ];
 
 
-  const csvContent =
-    "\uFEFF" +
-    headers.join(",") +
-    "\n" +
-    row.join(",");
+  const row = [
+
+    escapeCsv(id),
+
+    escapeCsv(title),
+
+    escapeCsv(filename),
+
+    escapeCsv(text),
+
+    escapeCsv(
+      new Date().toISOString()
+    )
+
+  ];
 
 
-  generatedCsvBlob =
-    new Blob(
-      [csvContent],
-      {
-        type:
-          "text/csv;charset=utf-8;"
-      }
-    );
+  const csvContent =
+    "\uFEFF" +
+    headers.join(",") +
+    "\n" +
+    row.join(",");
+
+
+  generatedCsvBlob =
+    new Blob(
+      [csvContent],
+      {
+        type:
+          "text/csv;charset=utf-8;"
+      }
+    );
 
 }
 
 
 /* =========================================================
-   GENERATE RIS
+   GENERATE RIS
 ========================================================= */
 
 function generateRisBlob(
-  id,
-  title,
-  filename,
-  text
+  id,
+  title,
+  filename,
+  text
 ) {
 
-  /*
-   * RIS standar minimal.
-   *
-   * TY = JOUR
-   * ID = Paper ID
-   * TI = Title
-   * N1 = informasi tambahan
-   * ER = End Record
-   */
+  /*
+   * RIS standar minimal.
+   *
+   * TY = JOUR
+   * ID = Paper ID
+   * TI = Title
+   * N1 = informasi tambahan
+   * ER = End Record
+   */
 
-  const cleanTitle =
-    String(title || "")
-      .replace(/\r?\n/g, " ")
-      .trim();
-
-
-  const cleanFilename =
-    String(filename || "")
-      .replace(/\r?\n/g, " ")
-      .trim();
+  const cleanTitle =
+    String(title || "")
+      .replace(/\r?\n/g, " ")
+      .trim();
 
 
-  const abstractText =
-    extractAbstract(
-      text
-    );
+  const cleanFilename =
+    String(filename || "")
+      .replace(/\r?\n/g, " ")
+      .trim();
 
 
-  const risLines = [];
+  const abstractText =
+    extractAbstract(
+      text
+    );
 
 
-  risLines.push(
-    "TY  - JOUR"
-  );
+  const risLines = [];
 
 
-  risLines.push(
-    "ID  - " + id
-  );
+  risLines.push(
+    "TY  - JOUR"
+  );
 
 
-  risLines.push(
-    "TI  - " + cleanTitle
-  );
+  risLines.push(
+    "ID  - " + id
+  );
 
 
-  if (abstractText) {
-
-    risLines.push(
-      "AB  - " +
-      abstractText
-    );
-
-  }
+  risLines.push(
+    "TI  - " + cleanTitle
+  );
 
 
-  risLines.push(
-    "N1  - Original file: " +
-    cleanFilename
-  );
+  if (abstractText) {
+
+    risLines.push(
+      "AB  - " +
+      abstractText
+    );
+
+  }
 
 
-  risLines.push(
-    "N1  - Imported from Paper ML"
-  );
+  risLines.push(
+    "N1  - Original file: " +
+    cleanFilename
+  );
 
 
-  risLines.push(
-    "ER  - "
-  );
+  risLines.push(
+    "N1  - Imported from Paper ML"
+  );
 
 
-  const risContent =
-    risLines.join("\r\n") +
-    "\r\n";
+  risLines.push(
+    "ER  - "
+  );
 
 
-  generatedRisBlob =
-    new Blob(
-      [risContent],
-      {
-        type:
-          "application/x-research-info-systems;charset=utf-8"
-      }
-    );
+  const risContent =
+    risLines.join("\r\n") +
+    "\r\n";
+
+
+  generatedRisBlob =
+    new Blob(
+      [risContent],
+      {
+        type:
+          "application/x-research-info-systems;charset=utf-8"
+      }
+    );
 
 }
 
 
 /* =========================================================
-   EXTRACT ABSTRACT
+   EXTRACT ABSTRACT
 ========================================================= */
 
 function extractAbstract(text) {
 
-  if (!text) {
-    return "";
-  }
+  if (!text) {
+    return "";
+  }
 
 
-  const normalized =
-    String(text)
-      .replace(/\r/g, " ")
-      .replace(/\n/g, " ")
-      .replace(/\s+/g, " ")
-      .trim();
+  const normalized =
+    String(text)
+      .replace(/\r/g, " ")
+      .replace(/\n/g, " ")
+      .replace(/\s+/g, " ")
+      .trim();
 
 
-  /*
-   * Coba mengambil bagian Abstract.
-   */
+  /*
+   * Coba mengambil bagian Abstract.
+   */
 
-  const match =
-    normalized.match(
-      /(?:abstract)\s*[:.]?\s*(.*?)(?=\s+(?:keywords?|introduction|1\.?\s+introduction)\b)/i
-    );
-
-
-  if (match && match[1]) {
-
-    return match[1]
-      .trim()
-      .substring(0, 5000);
-
-  }
+  const match =
+    normalized.match(
+      /(?:abstract)\s*[:.]?\s*(.*?)(?=\s+(?:keywords?|introduction|1\.?\s+introduction)\b)/i
+    );
 
 
-  return "";
+  if (match && match[1]) {
+
+    return match[1]
+      .trim()
+      .substring(0, 5000);
+
+  }
+
+
+  return "";
 
 }
 
 
 /* =========================================================
-   DOWNLOAD CSV
+   DOWNLOAD CSV
 ========================================================= */
 
 function triggerCsvDownload() {
 
-  if (!generatedCsvBlob) {
-    return;
-  }
+  if (!generatedCsvBlob) {
+    return;
+  }
 
 
-  const url =
-    URL.createObjectURL(
-      generatedCsvBlob
-    );
+  const url =
+    URL.createObjectURL(
+      generatedCsvBlob
+    );
 
 
-  const a =
-    document.createElement("a");
+  const a =
+    document.createElement("a");
 
 
-  a.href = url;
+  a.href = url;
 
 
-  a.download =
-    selectedFile
-      ? selectedFile.name.replace(
-          /\.pdf$/i,
-          ""
-        ) +
-        "_extracted.csv"
+  a.download =
+    selectedFile
+      ? selectedFile.name.replace(
+          /\.pdf$/i,
+          ""
+        ) +
+        "_extracted.csv"
 
-      : "paper_extracted.csv";
-
-
-  document.body.appendChild(a);
-
-  a.click();
-
-  a.remove();
+      : "paper_extracted.csv";
 
 
-  setTimeout(
-    () => {
-      URL.revokeObjectURL(url);
-    },
-    1000
-  );
+  document.body.appendChild(a);
+
+  a.click();
+
+  a.remove();
+
+
+  setTimeout(
+    () => {
+      URL.revokeObjectURL(url);
+    },
+    1000
+  );
 
 }
 
 
 /* =========================================================
-   DOWNLOAD RIS
+   DOWNLOAD RIS
 ========================================================= */
 
 function triggerRisDownload() {
 
-  if (!generatedRisBlob) {
-    return;
-  }
+  if (!generatedRisBlob) {
+    return;
+  }
 
 
-  const url =
-    URL.createObjectURL(
-      generatedRisBlob
-    );
+  const url =
+    URL.createObjectURL(
+      generatedRisBlob
+    );
 
 
-  const a =
-    document.createElement("a");
+  const a =
+    document.createElement("a");
 
 
-  a.href = url;
+  a.href = url;
 
 
-  a.download =
-    selectedFile
-      ? selectedFile.name.replace(
-          /\.pdf$/i,
-          ""
-        ) +
-        ".ris"
+  a.download =
+    selectedFile
+      ? selectedFile.name.replace(
+          /\.pdf$/i,
+          ""
+        ) +
+        ".ris"
 
-      : "paper.ris";
-
-
-  document.body.appendChild(a);
-
-  a.click();
-
-  a.remove();
+      : "paper.ris";
 
 
-  setTimeout(
-    () => {
-      URL.revokeObjectURL(url);
-    },
-    1000
-  );
+  document.body.appendChild(a);
+
+  a.click();
+
+  a.remove();
+
+
+  setTimeout(
+    () => {
+      URL.revokeObjectURL(url);
+    },
+    1000
+  );
 
 }
 
 
 /* =========================================================
-   FILE → BASE64
+   FILE → BASE64
 ========================================================= */
 
 function fileToBase64(file) {
 
-  return new Promise(
-    (resolve, reject) => {
+  return new Promise(
+    (resolve, reject) => {
 
-      const reader =
-        new FileReader();
-
-
-      reader.onload = () => {
-
-        const res =
-          reader.result;
+      const reader =
+        new FileReader();
 
 
-        const comma =
-          res.indexOf(",");
+      reader.onload = () => {
+
+        const res =
+          reader.result;
 
 
-        resolve(
-          comma === -1
-            ? res
-            : res.substring(
-                comma + 1
-              )
-        );
-
-      };
+        const comma =
+          res.indexOf(",");
 
 
-      reader.onerror = () => {
+        resolve(
+          comma === -1
+            ? res
+            : res.substring(
+                comma + 1
+              )
+        );
 
-        reject(
-          new Error(
-            "Gagal membaca file fisik."
-          )
-        );
-
-      };
+      };
 
 
-      reader.readAsDataURL(
-        file
-      );
+      reader.onerror = () => {
 
-    }
-  );
+        reject(
+          new Error(
+            "Gagal membaca file fisik."
+          )
+        );
+
+      };
+
+
+      reader.readAsDataURL(
+        file
+      );
+
+    }
+  );
 
 }
 
 
 /* =========================================================
-   BLOB → BASE64
+   BLOB → BASE64
 ========================================================= */
 
 function blobToBase64(blob) {
 
-  return new Promise(
-    (resolve, reject) => {
+  return new Promise(
+    (resolve, reject) => {
 
-      const reader =
-        new FileReader();
-
-
-      reader.onload = () => {
-
-        const result =
-          reader.result;
+      const reader =
+        new FileReader();
 
 
-        const comma =
-          result.indexOf(",");
+      reader.onload = () => {
+
+        const result =
+          reader.result;
 
 
-        resolve(
-          comma === -1
-            ? result
-            : result.substring(
-                comma + 1
-              )
-        );
-
-      };
+        const comma =
+          result.indexOf(",");
 
 
-      reader.onerror = () => {
+        resolve(
+          comma === -1
+            ? result
+            : result.substring(
+                comma + 1
+              )
+        );
 
-        reject(
-          new Error(
-            "Gagal membaca file."
-          )
-        );
-
-      };
+      };
 
 
-      reader.readAsDataURL(
-        blob
-      );
+      reader.onerror = () => {
 
-    }
-  );
+        reject(
+          new Error(
+            "Gagal membaca file."
+          )
+        );
+
+      };
+
+
+      reader.readAsDataURL(
+        blob
+      );
+
+    }
+  );
 
 }
 
 
 /* =========================================================
-   POST GOOGLE APPS SCRIPT
+   POST GOOGLE APPS SCRIPT
 ========================================================= */
 
 async function postGoogleScript(
-  payload
+  payload
 ) {
 
-  const response =
-    await fetch(
-      CONFIG.GOOGLE_SCRIPT_URL,
-      {
+  const response =
+    await fetch(
+      CONFIG.GOOGLE_SCRIPT_URL,
+      {
 
-        method:
-          "POST",
+        method:
+          "POST",
 
-        mode:
-          "cors",
+        mode:
+          "cors",
 
-        redirect:
-          "follow",
+        redirect:
+          "follow",
 
-        headers: {
-          "Content-Type":
-            "text/plain;charset=utf-8"
-        },
+        headers: {
+          "Content-Type":
+            "text/plain;charset=utf-8"
+        },
 
-        body:
-          JSON.stringify(
-            payload
-          )
+        body:
+          JSON.stringify(
+            payload
+          )
 
-      }
-    );
-
-
-  const responseText =
-    await response.text();
+      }
+    );
 
 
-  try {
-
-    return JSON.parse(
-      responseText
-    );
-
-  } catch (e) {
-
-    console.error(
-      "Raw Google response:",
-      responseText
-    );
+  const responseText =
+    await response.text();
 
 
-    throw new Error(
-      "Respon Google Script bukan format JSON yang valid.\n\n" +
-      responseText
-    );
+  try {
 
-  }
+    return JSON.parse(
+      responseText
+    );
+
+  } catch (e) {
+
+    console.error(
+      "Raw Google response:",
+      responseText
+    );
+
+
+    throw new Error(
+      "Respon Google Script bukan format JSON yang valid.\n\n" +
+      responseText
+    );
+
+  }
 
 }
 
 
 /* =========================================================
-   UPDATE OUTPUT NAMES
+   UPDATE OUTPUT NAMES
 ========================================================= */
 
 function updateOutputNames() {
 
-  if (!selectedFile) {
-    return;
-  }
+  if (!selectedFile) {
+    return;
+  }
 
 
-  const baseName =
-    selectedFile.name.replace(
-      /\.pdf$/i,
-      ""
-    );
+  const baseName =
+    selectedFile.name.replace(
+      /\.pdf$/i,
+      ""
+    );
 
 
-  outputPdfName.textContent =
-    baseName + ".pdf";
+  outputPdfName.textContent =
+    baseName + ".pdf";
 
 
-  outputCsvName.textContent =
-    baseName +
-    "_extracted.csv";
+  outputCsvName.textContent =
+    baseName +
+    "_extracted.csv";
 
 
-  outputRisName.textContent =
-    baseName +
-    ".ris";
+  outputRisName.textContent =
+    baseName +
+    ".ris";
 
 
-  outputInfo.classList.add(
-    "show"
-  );
+  outputInfo.classList.add(
+    "show"
+  );
 
 }
 
 
 /* =========================================================
-   RESET
+   RESET
 ========================================================= */
 
 function resetAll() {
 
-  selectedFile = null;
+  selectedFile = null;
 
-  extractedText = "";
+  extractedText = "";
 
-  extractedPages = [];
+  extractedPages = [];
 
-  generatedCsvBlob = null;
+  generatedCsvBlob = null;
 
-  generatedRisBlob = null;
-
-
-  if (previewUrl) {
-
-    URL.revokeObjectURL(
-      previewUrl
-    );
-
-    previewUrl = null;
-
-  }
+  generatedRisBlob = null;
 
 
-  fileInput.value = "";
+  if (previewUrl) {
+
+    URL.revokeObjectURL(
+      previewUrl
+    );
+
+    previewUrl = null;
+
+  }
 
 
-  fileName.textContent =
-    "-";
+  fileInput.value = "";
 
 
-  fileSize.textContent =
-    "-";
+  fileName.textContent =
+    "-";
 
 
-  paperTitle.value =
-    "";
+  fileSize.textContent =
+    "-";
 
 
-  fileInfo.classList.remove(
-    "show"
-  );
+  paperTitle.value =
+    "";
 
 
-  titleField.style.display =
-    "none";
+  fileInfo.classList.remove(
+    "show"
+  );
 
 
-  previewSection.classList.remove(
-    "show"
-  );
+  titleField.style.display =
+    "none";
 
 
-  extractionBox.classList.remove(
-    "show"
-  );
+  previewSection.classList.remove(
+    "show"
+  );
 
 
-  outputInfo.classList.remove(
-    "show"
-  );
+  extractionBox.classList.remove(
+    "show"
+  );
 
 
-  pdfPreview.removeAttribute(
-    "src"
-  );
+  outputInfo.classList.remove(
+    "show"
+  );
 
 
-  fullTextPreview.textContent =
-    "";
+  pdfPreview.removeAttribute(
+    "src"
+  );
 
 
-  extractionStat.textContent =
-    "-";
+  fullTextPreview.textContent =
+    "";
 
 
-  outputPdfName.textContent =
-    "-";
+  extractionStat.textContent =
+    "-";
 
 
-  outputCsvName.textContent =
-    "-";
+  outputPdfName.textContent =
+    "-";
 
 
-  outputRisName.textContent =
-    "-";
+  outputCsvName.textContent =
+    "-";
 
 
-  uploadBtn.disabled =
-    true;
+  outputRisName.textContent =
+    "-";
 
 
-  downloadCsvBtn.disabled =
-    true;
+  uploadBtn.disabled =
+    true;
 
 
-  downloadRisBtn.disabled =
-    true;
+  downloadCsvBtn.disabled =
+    true;
 
 
-  clearMessage();
+  downloadRisBtn.disabled =
+    true;
 
 
-  progressWrapper.classList.remove(
-    "show"
-  );
+  clearMessage();
 
 
-  setProgress(
-    0,
-    "Ready"
-  );
+  progressWrapper.classList.remove(
+    "show"
+  );
+
+
+  setProgress(
+    0,
+    "Ready"
+  );
 
 }
 
 
 /* =========================================================
-   PROGRESS
+   PROGRESS
 ========================================================= */
 
 function setProgress(
-  percent,
-  text
+  percent,
+  text
 ) {
 
-  progressWrapper.classList.add(
-    "show"
-  );
+  progressWrapper.classList.add(
+    "show"
+  );
 
 
-  const p =
-    Math.max(
-      0,
-      Math.min(
-        100,
-        Number(percent) || 0
-      )
-    );
+  const p =
+    Math.max(
+      0,
+      Math.min(
+        100,
+        Number(percent) || 0
+      )
+    );
 
 
-  progressFill.style.width =
-    p + "%";
+  progressFill.style.width =
+    p + "%";
 
 
-  progressPercent.textContent =
-    p + "%";
+  progressPercent.textContent =
+    p + "%";
 
 
-  progressText.textContent =
-    text || "";
+  progressText.textContent =
+    text || "";
 
 }
 
 
 /* =========================================================
-   MESSAGE
+   MESSAGE
 ========================================================= */
 
 function showMessage(
-  type,
-  text
+  type,
+  text
 ) {
 
-  message.className =
-    "message show " +
-    type;
+  message.className =
+    "message show " +
+    type;
 
 
-  message.textContent =
-    text;
+  message.textContent =
+    text;
 
 }
 
 
 function clearMessage() {
 
-  message.className =
-    "message";
+  message.className =
+    "message";
 
 
-  message.textContent =
-    "";
+  message.textContent =
+    "";
 
 }
 
 
 /* =========================================================
-   FILE SIZE
+   FILE SIZE
 ========================================================= */
 
 function formatFileSize(
-  bytes
+  bytes
 ) {
 
-  if (!bytes) {
-    return "0 B";
-  }
+  if (!bytes) {
+    return "0 B";
+  }
 
 
-  const units = [
-    "B",
-    "KB",
-    "MB",
-    "GB"
-  ];
+  const units = [
+    "B",
+    "KB",
+    "MB",
+    "GB"
+  ];
 
 
-  const i =
-    Math.floor(
-      Math.log(bytes) /
-      Math.log(1024)
-    );
+  const i =
+    Math.floor(
+      Math.log(bytes) /
+      Math.log(1024)
+    );
 
 
-  return (
-    bytes /
-    Math.pow(1024, i)
-  ).toFixed(2) +
-  " " +
-  units[i];
+  return (
+    bytes /
+    Math.pow(1024, i)
+  ).toFixed(2) +
+  " " +
+  units[i];
 
 }
 
