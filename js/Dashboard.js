@@ -3,17 +3,6 @@
  * RESEARCH PAPER MANAGER
  * DASHBOARD.JS
  * ============================================================
- *
- * Fungsi:
- * - Mengatur dashboard
- * - Mengambil data statistik
- * - Menampilkan jumlah paper
- * - Menampilkan jumlah summary
- * - Menampilkan jumlah mini review
- * - Menampilkan jumlah research gap
- * - Mengatur welcome section
- *
- * ============================================================
  */
 
 (function () {
@@ -22,21 +11,18 @@
 
 
     /* ========================================================
-       DASHBOARD STATE
+       STATE
     ======================================================== */
 
-    const dashboardState = {
+    const state = {
 
         initialized: false,
 
         statistics: {
 
             papers: 0,
-
             summaries: 0,
-
             miniReviews: 0,
-
             researchGaps: 0
 
         }
@@ -45,69 +31,41 @@
 
 
     /* ========================================================
-       DOM ELEMENTS
+       ELEMENTS
     ======================================================== */
 
     let elements = {};
 
 
-    /**
-     * Mengambil elemen dashboard
-     */
     function initializeElements() {
 
         elements = {
 
-            dashboardPage:
-                document.getElementById(
-                    "dashboard-page"
-                ),
-
             totalPapers:
-                document.getElementById(
-                    "total-papers"
-                ),
+                document.getElementById("total-papers"),
 
             totalSummaries:
-                document.getElementById(
-                    "total-summaries"
-                ),
+                document.getElementById("total-summaries"),
 
             totalMiniReviews:
-                document.getElementById(
-                    "total-mini-reviews"
-                ),
+                document.getElementById("total-mini-reviews"),
 
             totalResearchGaps:
-                document.getElementById(
-                    "total-research-gaps"
-                ),
+                document.getElementById("total-research-gaps"),
 
-            dashboardWelcome:
-                document.getElementById(
-                    "dashboard-welcome"
-                )
+            papersProgress:
+                document.getElementById("papers-progress"),
+
+            summariesProgress:
+                document.getElementById("summaries-progress"),
+
+            miniReviewsProgress:
+                document.getElementById("mini-reviews-progress"),
+
+            researchGapsProgress:
+                document.getElementById("research-gaps-progress")
 
         };
-
-    }
-
-
-    /* ========================================================
-       INITIALIZATION
-    ======================================================== */
-
-    function initializeDashboard() {
-
-        initializeElements();
-
-        updateDashboard();
-
-        dashboardState.initialized = true;
-
-        console.log(
-            "Dashboard initialized."
-        );
 
     }
 
@@ -116,155 +74,55 @@
        DATA
     ======================================================== */
 
-    /**
-     * Mengambil data paper.
-     *
-     * Untuk tahap awal kita menggunakan
-     * localStorage sebagai data sementara.
-     *
-     * Nantinya fungsi ini dapat dihubungkan
-     * dengan storage.js / papers.json.
-     */
-    function getStoredData() {
-
-        let papers = [];
-
-        let summaries = [];
-
-        let miniReviews = [];
-
-        let researchGaps = [];
-
+    function getArrayFromStorage(key) {
 
         try {
 
-            const storedPapers =
-                localStorage.getItem(
-                    "rpm_papers"
-                );
+            const data =
+                localStorage.getItem(key);
 
-            if (storedPapers) {
+            if (!data) {
 
-                const parsed =
-                    JSON.parse(storedPapers);
-
-                if (Array.isArray(parsed)) {
-
-                    papers = parsed;
-
-                }
+                return [];
 
             }
+
+            const parsed =
+                JSON.parse(data);
+
+            return Array.isArray(parsed)
+                ? parsed
+                : [];
 
         } catch (error) {
 
             console.warn(
-                "Gagal membaca data papers:",
+                `Unable to read ${key}:`,
                 error
             );
 
-        }
-
-
-        try {
-
-            const storedSummaries =
-                localStorage.getItem(
-                    "rpm_summaries"
-                );
-
-            if (storedSummaries) {
-
-                const parsed =
-                    JSON.parse(storedSummaries);
-
-                if (Array.isArray(parsed)) {
-
-                    summaries = parsed;
-
-                }
-
-            }
-
-        } catch (error) {
-
-            console.warn(
-                "Gagal membaca data summaries:",
-                error
-            );
+            return [];
 
         }
 
-
-        try {
-
-            const storedMiniReviews =
-                localStorage.getItem(
-                    "rpm_mini_reviews"
-                );
-
-            if (storedMiniReviews) {
-
-                const parsed =
-                    JSON.parse(storedMiniReviews);
-
-                if (Array.isArray(parsed)) {
-
-                    miniReviews = parsed;
-
-                }
-
-            }
-
-        } catch (error) {
-
-            console.warn(
-                "Gagal membaca data mini reviews:",
-                error
-            );
-
-        }
+    }
 
 
-        try {
-
-            const storedResearchGaps =
-                localStorage.getItem(
-                    "rpm_research_gaps"
-                );
-
-            if (storedResearchGaps) {
-
-                const parsed =
-                    JSON.parse(storedResearchGaps);
-
-                if (Array.isArray(parsed)) {
-
-                    researchGaps = parsed;
-
-                }
-
-            }
-
-        } catch (error) {
-
-            console.warn(
-                "Gagal membaca data research gaps:",
-                error
-            );
-
-        }
-
+    function getDashboardData() {
 
         return {
 
-            papers,
+            papers:
+                getArrayFromStorage("rpm_papers"),
 
-            summaries,
+            summaries:
+                getArrayFromStorage("rpm_summaries"),
 
-            miniReviews,
+            miniReviews:
+                getArrayFromStorage("rpm_mini_reviews"),
 
-            researchGaps
+            researchGaps:
+                getArrayFromStorage("rpm_research_gaps")
 
         };
 
@@ -278,10 +136,10 @@
     function calculateStatistics() {
 
         const data =
-            getStoredData();
+            getDashboardData();
 
 
-        dashboardState.statistics = {
+        state.statistics = {
 
             papers:
                 data.papers.length,
@@ -298,54 +156,72 @@
         };
 
 
-        return dashboardState.statistics;
+        return state.statistics;
 
     }
 
 
     /* ========================================================
-       UPDATE DASHBOARD
+       RENDER
     ======================================================== */
 
-    function updateDashboard() {
+    function renderStatistics() {
 
         const statistics =
             calculateStatistics();
 
 
-        updateStatistic(
+        setNumber(
             elements.totalPapers,
             statistics.papers
         );
 
 
-        updateStatistic(
+        setNumber(
             elements.totalSummaries,
             statistics.summaries
         );
 
 
-        updateStatistic(
+        setNumber(
             elements.totalMiniReviews,
             statistics.miniReviews
         );
 
 
-        updateStatistic(
+        setNumber(
             elements.totalResearchGaps,
+            statistics.researchGaps
+        );
+
+
+        updateProgress(
+            elements.papersProgress,
+            statistics.papers
+        );
+
+
+        updateProgress(
+            elements.summariesProgress,
+            statistics.summaries
+        );
+
+
+        updateProgress(
+            elements.miniReviewsProgress,
+            statistics.miniReviews
+        );
+
+
+        updateProgress(
+            elements.researchGapsProgress,
             statistics.researchGaps
         );
 
     }
 
 
-    /**
-     * Mengupdate angka statistik.
-     */
-    function updateStatistic(
-        element,
-        value
-    ) {
+    function setNumber(element, value) {
 
         if (!element) {
             return;
@@ -353,30 +229,80 @@
 
 
         element.textContent =
-            formatNumber(value);
+            Number(value).toLocaleString();
 
     }
 
 
-    /**
-     * Format angka.
-     */
-    function formatNumber(value) {
+    function updateProgress(element, value) {
 
-        const number =
-            Number(value);
-
-
-        if (Number.isNaN(number)) {
-
-            return "0";
-
+        if (!element) {
+            return;
         }
 
 
-        return number.toLocaleString(
-            "en-US"
-        );
+        const percentage =
+            Math.min(
+                Number(value) * 10,
+                100
+            );
+
+
+        element.style.width =
+            `${percentage}%`;
+
+    }
+
+
+    /* ========================================================
+       NAVIGATION
+    ======================================================== */
+
+    function navigate(page) {
+
+        if (
+            window.App &&
+            typeof window.App.navigateTo === "function"
+        ) {
+
+            window.App.navigateTo(page);
+
+        }
+
+    }
+
+
+    function openInputPaper() {
+
+        navigate("input-paper");
+
+    }
+
+
+    function openPapers() {
+
+        navigate("papers");
+
+    }
+
+
+    function openSummary() {
+
+        navigate("summary");
+
+    }
+
+
+    function openMiniReview() {
+
+        navigate("mini-review");
+
+    }
+
+
+    function openResearchGap() {
+
+        navigate("research-gap");
 
     }
 
@@ -385,73 +311,34 @@
        REFRESH
     ======================================================== */
 
-    /**
-     * Refresh dashboard.
-     *
-     * Bisa dipanggil dari file lain:
-     *
-     * Dashboard.refresh();
-     */
-    function refreshDashboard() {
+    function refresh() {
 
-        if (!dashboardState.initialized) {
-
-            initializeDashboard();
-
-            return;
-
-        }
-
-
-        updateDashboard();
+        renderStatistics();
 
     }
 
 
     /* ========================================================
-       NAVIGATION SHORTCUT
+       INITIALIZATION
     ======================================================== */
 
-    /**
-     * Membuka halaman Input Paper.
-     */
-    function openInputPaper() {
+    function initialize() {
 
-        if (
-            window.App &&
-            typeof window.App.navigateTo === "function"
-        ) {
+        initializeElements();
 
-            window.App.navigateTo(
-                "input-paper"
-            );
+        renderStatistics();
 
-        }
+        state.initialized = true;
 
-    }
-
-
-    /**
-     * Membuka halaman Papers.
-     */
-    function openPapers() {
-
-        if (
-            window.App &&
-            typeof window.App.navigateTo === "function"
-        ) {
-
-            window.App.navigateTo(
-                "papers"
-            );
-
-        }
+        console.log(
+            "Dashboard initialized."
+        );
 
     }
 
 
     /* ========================================================
-       APP PAGE CHANGE EVENT
+       PAGE CHANGE
     ======================================================== */
 
     document.addEventListener(
@@ -459,20 +346,12 @@
         function (event) {
 
             if (
-                !event ||
-                !event.detail
-            ) {
-
-                return;
-
-            }
-
-
-            if (
+                event &&
+                event.detail &&
                 event.detail.page === "dashboard"
             ) {
 
-                refreshDashboard();
+                refresh();
 
             }
 
@@ -486,26 +365,27 @@
 
     window.Dashboard = {
 
-        initialize:
-            initializeDashboard,
+        initialize,
 
-        refresh:
-            refreshDashboard,
+        refresh,
 
-        getStatistics:
-            function () {
+        openInputPaper,
 
-                return {
-                    ...dashboardState.statistics
-                };
+        openPapers,
 
-            },
+        openSummary,
 
-        openInputPaper:
-            openInputPaper,
+        openMiniReview,
 
-        openPapers:
-            openPapers
+        openResearchGap,
+
+        getStatistics: function () {
+
+            return {
+                ...state.statistics
+            };
+
+        }
 
     };
 
@@ -520,12 +400,12 @@
 
         document.addEventListener(
             "DOMContentLoaded",
-            initializeDashboard
+            initialize
         );
 
     } else {
 
-        initializeDashboard();
+        initialize();
 
     }
 
