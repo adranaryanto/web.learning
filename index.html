@@ -1,935 +1,820 @@
-<!DOCTYPE html>
-<html lang="id">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Input Papers - Paper</title>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
-  <style>
-    * {
-      box-sizing: border-box;
-      margin: 0;
-      padding: 0;
-    }
-    :root {
-      --primary: #2563eb;
-      --primary-dark: #1d4ed8;
-      --bg: #f5f7fb;
-      --card: #ffffff;
-      --border: #e5e7eb;
-      --text: #111827;
-      --muted: #6b7280;
-      --success: #16a34a;
-      --danger: #dc2626;
-      --warning: #d97706;
-    }
-    body {
-      font-family: Arial, Helvetica, sans-serif;
-      background: var(--bg);
-      color: var(--text);
-      min-height: 100vh;
-    }
-
-    /* SIDEBAR */
-    .sidebar {
-      position: fixed;
-      left: 0;
-      top: 0;
-      width: 250px;
-      height: 100vh;
-      background: #111827;
-      color: white;
-      display: flex;
-      flex-direction: column;
-      z-index: 1000;
-    }
-    .sidebar-header {
-      height: 80px;
-      display: flex;
-      align-items: center;
-      padding: 0 22px;
-      border-bottom: 1px solid rgba(255,255,255,.08);
-    }
-    .sidebar-title {
-      font-size: 20px;
-      font-weight: 700;
-    }
-    .sidebar-title span {
-      color: #60a5fa;
-    }
-    .nav {
-      padding: 20px 12px;
-      flex: 1;
-    }
-    .nav-title {
-      font-size: 11px;
-      font-weight: 700;
-      color: #6b7280;
-      text-transform: uppercase;
-      letter-spacing: 1px;
-      padding: 0 12px 10px;
-    }
-    .nav a {
-      display: flex;
-      align-items: center;
-      gap: 12px;
-      color: #d1d5db;
-      text-decoration: none;
-      padding: 11px 12px;
-      border-radius: 8px;
-      margin-bottom: 4px;
-      font-size: 14px;
-      transition: .2s;
-    }
-    .nav a:hover {
-      background: #1f2937;
-      color: white;
-    }
-    .nav a.active {
-      background: var(--primary);
-      color: white;
-    }
-    .nav-icon {
-      width: 20px;
-      text-align: center;
-    }
-    .sidebar-bottom {
-      padding: 15px;
-      border-top: 1px solid rgba(255,255,255,.08);
-    }
-    .version {
-      font-size: 11px;
-      color: #9ca3af;
-    }
-
-    /* MAIN */
-    .main {
-      margin-left: 250px;
-      min-height: 100vh;
-    }
-    .topbar {
-      height: 80px;
-      background: white;
-      border-bottom: 1px solid var(--border);
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      padding: 0 35px;
-    }
-    .topbar-left {
-      display: flex;
-      align-items: center;
-      gap: 15px;
-    }
-    .topbar h1 {
-      font-size: 22px;
-    }
-    .topbar-right {
-      display: flex;
-      align-items: center;
-      gap: 18px;
-    }
-
-    .back-menu-button {
-      display: inline-flex;
-      align-items: center;
-      gap: 8px;
-      height: 37px;
-      padding: 0 14px;
-      border: 1px solid #d1d5db;
-      border-radius: 8px;
-      background: white;
-      color: #374151;
-      text-decoration: none;
-      font-size: 12px;
-      font-weight: 600;
-      cursor: pointer;
-      transition: all .2s ease;
-    }
-    .back-menu-button:hover {
-      background: #f3f6fb;
-      border-color: #2563eb;
-      color: #2563eb;
-      transform: translateY(-1px);
-    }
-
-    .server-status {
-      display: flex;
-      align-items: center;
-      gap: 8px;
-      font-size: 12px;
-      color: var(--muted);
-    }
-    .status-dot {
-      width: 9px;
-      height: 9px;
-      border-radius: 50%;
-      background: var(--success);
-    }
-
-    /* CONTENT */
-    .content {
-      padding: 30px 35px 50px;
-      max-width: 1250px;
-    }
-    .page-header {
-      margin-bottom: 25px;
-    }
-    .page-header h2 {
-      font-size: 26px;
-      margin-bottom: 7px;
-    }
-    .page-header p {
-      font-size: 14px;
-      color: var(--muted);
-    }
-
-    .card {
-      background: var(--card);
-      border: 1px solid var(--border);
-      border-radius: 14px;
-      padding: 28px;
-      margin-bottom: 25px;
-      box-shadow: 0 3px 12px rgba(0,0,0,.03);
-    }
-    .card-title {
-      font-size: 17px;
-      font-weight: 700;
-      margin-bottom: 6px;
-    }
-    .card-description {
-      font-size: 13px;
-      color: var(--muted);
-      margin-bottom: 22px;
-    }
-
-    /* DROPZONE */
-    .dropzone {
-      border: 2px dashed #cbd5e1;
-      border-radius: 14px;
-      padding: 48px 25px;
-      text-align: center;
-      background: #f8fafc;
-      cursor: pointer;
-      transition: .2s;
-    }
-    .dropzone:hover,
-    .dropzone.dragover {
-      border-color: var(--primary);
-      background: #eff6ff;
-    }
-    .upload-icon {
-      width: 65px;
-      height: 65px;
-      border-radius: 50%;
-      background: #dbeafe;
-      color: var(--primary);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      margin: 0 auto 16px;
-      font-size: 27px;
-    }
-    .dropzone h3 {
-      font-size: 18px;
-      margin-bottom: 7px;
-    }
-    .dropzone p {
-      color: var(--muted);
-      font-size: 13px;
-      margin-bottom: 18px;
-    }
-    .browse-btn {
-      display: inline-block;
-      background: var(--primary);
-      color: white;
-      border-radius: 8px;
-      padding: 10px 20px;
-      font-size: 13px;
-      font-weight: 600;
-      cursor: pointer;
-    }
-    .browse-btn:hover {
-      background: var(--primary-dark);
-    }
-    #fileInput {
-      display: none;
-    }
-
-    /* FILE INFO */
-    .file-info {
-      display: none;
-      margin-top: 20px;
-      border: 1px solid #dbeafe;
-      background: #eff6ff;
-      border-radius: 10px;
-      padding: 16px;
-    }
-    .file-info.show {
-      display: block;
-    }
-    .file-row {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: 15px;
-    }
-    .file-left {
-      display: flex;
-      align-items: center;
-      gap: 12px;
-      min-width: 0;
-    }
-    .pdf-icon {
-      width: 44px;
-      height: 44px;
-      background: var(--danger);
-      color: white;
-      border-radius: 8px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 12px;
-      font-weight: bold;
-      flex-shrink: 0;
-    }
-    .file-name {
-      font-size: 14px;
-      font-weight: 600;
-      overflow: hidden;
-      text-overflow: ellipsis;
-      white-space: nowrap;
-    }
-    .file-size {
-      font-size: 12px;
-      color: var(--muted);
-      margin-top: 3px;
-    }
-    .remove-btn {
-      border: none;
-      background: transparent;
-      color: var(--danger);
-      cursor: pointer;
-      font-size: 13px;
-      font-weight: 600;
-    }
-
-    /* TITLE FIELD */
-    .title-field {
-      margin-top: 20px;
-    }
-    .title-field label {
-      display: block;
-      font-size: 13px;
-      font-weight: 600;
-      margin-bottom: 7px;
-    }
-    .title-input {
-      width: 100%;
-      border: 1px solid #d1d5db;
-      border-radius: 8px;
-      padding: 11px 13px;
-      font-size: 14px;
-      outline: none;
-    }
-    .title-input:focus {
-      border-color: var(--primary);
-    }
-
-    /* PREVIEW & EXTRACTION */
-    .preview-section {
-      display: none;
-      margin-top: 25px;
-    }
-    .preview-section.show {
-      display: block;
-    }
-    .section-title {
-      font-size: 15px;
-      font-weight: 700;
-      margin-bottom: 12px;
-    }
-    .pdf-preview {
-      width: 100%;
-      height: 480px;
-      border: 1px solid var(--border);
-      border-radius: 10px;
-      background: #f3f4f6;
-    }
-
-    .extraction-box {
-      display: none;
-      margin-top: 20px;
-      border: 1px solid var(--border);
-      border-radius: 10px;
-      overflow: hidden;
-    }
-    .extraction-box.show {
-      display: block;
-    }
-    .extraction-header {
-      background: #f8fafc;
-      padding: 13px 15px;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      border-bottom: 1px solid var(--border);
-    }
-    .extraction-header strong {
-      font-size: 13px;
-    }
-    .extraction-stat {
-      font-size: 12px;
-      color: var(--muted);
-    }
-    .full-text-preview {
-      height: 220px;
-      overflow: auto;
-      padding: 15px;
-      font-family: Consolas, monospace;
-      font-size: 12px;
-      line-height: 1.6;
-      white-space: pre-wrap;
-      background: #fff;
-    }
-
-    /* PROGRESS */
-    .progress-wrapper {
-      display: none;
-      margin-top: 22px;
-    }
-    .progress-wrapper.show {
-      display: block;
-    }
-    .progress-info {
-      display: flex;
-      justify-content: space-between;
-      font-size: 12px;
-      color: var(--muted);
-      margin-bottom: 7px;
-    }
-    .progress-bar {
-      height: 8px;
-      background: #e5e7eb;
-      border-radius: 999px;
-      overflow: hidden;
-    }
-    .progress-fill {
-      width: 0%;
-      height: 100%;
-      background: var(--primary);
-      transition: width .2s;
-    }
-
-    /* ACTIONS */
-    .actions {
-      display: flex;
-      justify-content: flex-end;
-      gap: 10px;
-      margin-top: 22px;
-    }
-    .btn {
-      border: none;
-      border-radius: 8px;
-      padding: 11px 20px;
-      font-size: 13px;
-      font-weight: 600;
-      cursor: pointer;
-      transition: .2s;
-    }
-    .btn-secondary {
-      background: #e5e7eb;
-      color: #374151;
-    }
-    .btn-secondary:hover {
-      background: #d1d5db;
-    }
-    .btn-primary {
-      background: var(--primary);
-      color: white;
-    }
-    .btn-primary:hover {
-      background: var(--primary-dark);
-    }
-    .btn:disabled {
-      opacity: 0.6;
-      cursor: not-allowed;
-    }
-
-    /* MESSAGE */
-    .message {
-      display: none;
-      margin-top: 18px;
-      padding: 13px 15px;
-      border-radius: 9px;
-      font-size: 13px;
-      white-space: pre-wrap;
-    }
-    .message.show {
-      display: block;
-    }
-    .message.success {
-      background: #dcfce7;
-      color: #166534;
-      border: 1px solid #bbf7d0;
-    }
-    .message.error {
-      background: #fee2e2;
-      color: #991b1b;
-      border: 1px solid #fecaca;
-    }
-
-    /* RESPONSIVE */
-    @media (max-width: 850px) {
-      .sidebar { width: 210px; }
-      .main { margin-left: 210px; }
-      .content { padding: 22px; }
-    }
-    @media (max-width: 650px) {
-      .sidebar { position: static; width: 100%; height: auto; }
-      .sidebar-header { height: 65px; }
-      .nav { display: flex; padding: 10px 12px; }
-      .nav-title, .sidebar-bottom { display: none; }
-      .nav a { flex: 1; justify-content: center; margin: 0 3px; }
-      .main { margin-left: 0; }
-      .topbar { padding: 0 20px; height: 65px; }
-      .topbar h1 { font-size: 18px; }
-      .server-status { display: none; }
-      .content { padding: 18px; }
-      .card { padding: 20px; }
-      .actions { flex-direction: column; }
-      .btn { width: 100%; }
-    }
-  </style>
-</head>
-<body>
-
-<aside class="sidebar">
-  <div class="sidebar-header">
-    <div class="sidebar-title">Paper <span>ML</span></div>
-  </div>
-  <nav class="nav">
-    <div class="nav-title">Library</div>
-    <a href="input_paper.html" class="active">
-      <span class="nav-icon">📄</span> Input Paper
-    </a>
-    <a href="library.html">
-      <span class="nav-icon">📚</span> Paper Library
-    </a>
-  </nav>
-  <div class="sidebar-bottom">
-    <div class="version">Paper · V.1.0.0 (GitHub Direct)</div>
-  </div>
-</aside>
-
-<main class="main">
-  <header class="topbar">
-    <div class="topbar-left">
-      <h1>Input Papers</h1>
-    </div>
-    <div class="topbar-right">
-      <a href="menu_utama.html" class="back-menu-button" title="Kembali ke Menu Utama">
-        <span class="back-menu-icon">←</span>
-        <span>Kembali ke Menu Utama</span>
-      </a>
-      <div class="server-status">
-        <span class="status-dot"></span>
-        <span>GitHub Sync Active</span>
-      </div>
-    </div>
-  </header>
-
-  <div class="content">
-    <div class="page-header" id="upload">
-      <h2>Upload Research Paper</h2>
-      <p>Upload PDF, ekstrak teks secara instan, simpan ke GitHub data.csv, dan simpan file asli ke Google Drive.</p>
-    </div>
-
-    <section class="card">
-      <div class="card-title">Add New Paper</div>
-      <div class="card-description">
-        File PDF akan di-split: PDF dikirim ke Google Drive dan teks lengkap otomatis di-append ke file data.csv di repository GitHub.
-      </div>
-
-      <div id="dropzone" class="dropzone">
-        <div class="upload-icon">↑</div>
-        <h3>Drag & Drop PDF</h3>
-        <p>atau klik tombol di bawah untuk memilih file</p>
-        <label for="fileInput" class="browse-btn">Browse PDF</label>
-      </div>
-      <input type="file" id="fileInput" accept="application/pdf,.pdf">
-
-      <div id="fileInfo" class="file-info">
-        <div class="file-row">
-          <div class="file-left">
-            <div class="pdf-icon">PDF</div>
-            <div>
-              <div id="fileName" class="file-name">-</div>
-              <div id="fileSize" class="file-size">-</div>
-            </div>
-          </div>
-          <button type="button" id="removeBtn" class="remove-btn">Remove</button>
-        </div>
-      </div>
-
-      <div id="titleField" class="title-field" style="display:none;">
-        <label for="paperTitle">Paper Title</label>
-        <input id="paperTitle" class="title-input" type="text" placeholder="Judul paper">
-      </div>
-
-      <div id="previewSection" class="preview-section">
-        <div class="section-title">PDF Preview</div>
-        <iframe id="pdfPreview" class="pdf-preview"></iframe>
-      </div>
-
-      <div id="extractionBox" class="extraction-box">
-        <div class="extraction-header">
-          <strong>Extracted Full Text</strong>
-          <span id="extractionStat" class="extraction-stat">-</span>
-        </div>
-        <div id="fullTextPreview" class="full-text-preview"></div>
-      </div>
-
-      <div id="progressWrapper" class="progress-wrapper">
-        <div class="progress-info">
-          <span id="progressText">Ready</span>
-          <span id="progressPercent">0%</span>
-        </div>
-        <div class="progress-bar">
-          <div id="progressFill" class="progress-fill"></div>
-        </div>
-      </div>
-
-      <div id="message" class="message"></div>
-
-      <div class="actions">
-        <button type="button" id="resetBtn" class="btn btn-secondary">Reset</button>
-        <button type="button" id="uploadBtn" class="btn btn-primary" disabled>Upload & Simpan ke GitHub</button>
-      </div>
-    </section>
-  </div>
-</main>
-
 <script>
 "use strict";
 
-// Token tersambung langsung
-const _p1 = "ghp_J8p1C9PfbRy3";
-const _p2 = "kCk9BXAM1tk8ktp3KB04uwxV";
-const GH_TOKEN = _p1 + _p2;
+/* =========================================================
+   CONFIG
+   ========================================================= */
 
 const CONFIG = {
-  GITHUB_OWNER: "adranaryanto",
-  GITHUB_REPO: "web_machine-learning",
-  GITHUB_BRANCH: "main",
-  FILE_PATH: "data.csv",
-  GOOGLE_SCRIPT_URL: "https://script.google.com/macros/s/AKfycbxeatGVs5HUcaY8FTxAfTsqQ8KqoiF1nQDmDs3Lc_BBEedlYdXxZ2wg5VpSiOiONPem/exec",
-  PDF_WORKER_URL: "https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js"
+  GOOGLE_SCRIPT_URL:
+    "https://script.google.com/macros/s/AKfycbxeatGVs5HUcaY8FTxAfTsqQ8KqoiF1nQDmDs3Lc_BBEedlYdXxZ2wg5VpSiOiONPem/exec",
+
+  PDF_WORKER_URL:
+    "https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js"
 };
 
+
+/* =========================================================
+   PDF.JS
+   ========================================================= */
+
 if (window.pdfjsLib) {
-  pdfjsLib.GlobalWorkerOptions.workerSrc = CONFIG.PDF_WORKER_URL;
+  pdfjsLib.GlobalWorkerOptions.workerSrc =
+    CONFIG.PDF_WORKER_URL;
 }
+
+
+/* =========================================================
+   STATE
+   ========================================================= */
 
 let selectedFile = null;
 let previewUrl = null;
 let extractedText = "";
 let extractedPages = [];
 
-const fileInput = document.getElementById("fileInput");
-const dropzone = document.getElementById("dropzone");
-const fileInfo = document.getElementById("fileInfo");
-const fileName = document.getElementById("fileName");
-const fileSize = document.getElementById("fileSize");
-const removeBtn = document.getElementById("removeBtn");
-const titleField = document.getElementById("titleField");
-const paperTitle = document.getElementById("paperTitle");
-const previewSection = document.getElementById("previewSection");
-const pdfPreview = document.getElementById("pdfPreview");
-const extractionBox = document.getElementById("extractionBox");
-const extractionStat = document.getElementById("extractionStat");
-const fullTextPreview = document.getElementById("fullTextPreview");
-const uploadBtn = document.getElementById("uploadBtn");
-const resetBtn = document.getElementById("resetBtn");
-const progressWrapper = document.getElementById("progressWrapper");
-const progressFill = document.getElementById("progressFill");
-const progressText = document.getElementById("progressText");
-const progressPercent = document.getElementById("progressPercent");
-const message = document.getElementById("message");
+
+/* =========================================================
+   ELEMENTS
+   ========================================================= */
+
+const fileInput =
+  document.getElementById("fileInput");
+
+const dropzone =
+  document.getElementById("dropzone");
+
+const fileInfo =
+  document.getElementById("fileInfo");
+
+const fileName =
+  document.getElementById("fileName");
+
+const fileSize =
+  document.getElementById("fileSize");
+
+const removeBtn =
+  document.getElementById("removeBtn");
+
+const titleField =
+  document.getElementById("titleField");
+
+const paperTitle =
+  document.getElementById("paperTitle");
+
+const previewSection =
+  document.getElementById("previewSection");
+
+const pdfPreview =
+  document.getElementById("pdfPreview");
+
+const extractionBox =
+  document.getElementById("extractionBox");
+
+const extractionStat =
+  document.getElementById("extractionStat");
+
+const fullTextPreview =
+  document.getElementById("fullTextPreview");
+
+const uploadBtn =
+  document.getElementById("uploadBtn");
+
+const resetBtn =
+  document.getElementById("resetBtn");
+
+const progressWrapper =
+  document.getElementById("progressWrapper");
+
+const progressFill =
+  document.getElementById("progressFill");
+
+const progressText =
+  document.getElementById("progressText");
+
+const progressPercent =
+  document.getElementById("progressPercent");
+
+const message =
+  document.getElementById("message");
+
+
+/* =========================================================
+   EVENTS
+   ========================================================= */
 
 fileInput.addEventListener("change", (e) => {
-  if (e.target.files[0]) handleSelectedFile(e.target.files[0]);
+
+  if (e.target.files[0]) {
+    handleSelectedFile(e.target.files[0]);
+  }
+
 });
+
 
 dropzone.addEventListener("dragover", (e) => {
+
   e.preventDefault();
+
   dropzone.classList.add("dragover");
+
 });
 
-dropzone.addEventListener("dragleave", () => dropzone.classList.remove("dragover"));
+
+dropzone.addEventListener("dragleave", () => {
+
+  dropzone.classList.remove("dragover");
+
+});
+
 
 dropzone.addEventListener("drop", (e) => {
+
   e.preventDefault();
+
   dropzone.classList.remove("dragover");
-  if (e.dataTransfer.files[0]) handleSelectedFile(e.dataTransfer.files[0]);
+
+  if (e.dataTransfer.files[0]) {
+
+    handleSelectedFile(
+      e.dataTransfer.files[0]
+    );
+
+  }
+
 });
+
 
 dropzone.addEventListener("click", (e) => {
-  if (e.target.closest("label")) return;
-  fileInput.click();
-});
 
-removeBtn.addEventListener("click", resetAll);
-resetBtn.addEventListener("click", resetAll);
-uploadBtn.addEventListener("click", runPipeline);
-
-async function handleSelectedFile(file) {
-  clearMessage();
-
-  if (file.type !== "application/pdf" && !file.name.toLowerCase().endsWith(".pdf")) {
-    showMessage("error", "File harus berformat PDF.");
+  if (e.target.closest("label")) {
     return;
   }
 
-  selectedFile = file;
-  fileName.textContent = file.name;
-  fileSize.textContent = (file.size / (1024 * 1024)).toFixed(2) + " MB";
-  fileInfo.classList.add("show");
-  titleField.style.display = "block";
-  paperTitle.value = file.name.replace(/\.pdf$/i, "");
-  uploadBtn.disabled = true;
-  extractedText = "";
-  extractedPages = [];
-  extractionBox.classList.remove("show");
+  fileInput.click();
 
-  if (previewUrl) URL.revokeObjectURL(previewUrl);
-  previewUrl = URL.createObjectURL(file);
-  pdfPreview.src = previewUrl;
-  previewSection.classList.add("show");
+});
+
+
+removeBtn.addEventListener(
+  "click",
+  resetAll
+);
+
+
+resetBtn.addEventListener(
+  "click",
+  resetAll
+);
+
+
+uploadBtn.addEventListener(
+  "click",
+  runPipeline
+);
+
+
+/* =========================================================
+   SELECT PDF
+   ========================================================= */
+
+async function handleSelectedFile(file) {
+
+  clearMessage();
+
+  if (
+    file.type !== "application/pdf" &&
+    !file.name.toLowerCase().endsWith(".pdf")
+  ) {
+
+    showMessage(
+      "error",
+      "File harus berformat PDF."
+    );
+
+    return;
+  }
+
+
+  selectedFile = file;
+
+  fileName.textContent =
+    file.name;
+
+  fileSize.textContent =
+    (file.size / (1024 * 1024)).toFixed(2)
+    + " MB";
+
+
+  fileInfo.classList.add("show");
+
+  titleField.style.display =
+    "block";
+
+
+  paperTitle.value =
+    file.name.replace(
+      /\.pdf$/i,
+      ""
+    );
+
+
+  uploadBtn.disabled = true;
+
+  extractedText = "";
+
+  extractedPages = [];
+
+  extractionBox.classList.remove(
+    "show"
+  );
+
+
+  if (previewUrl) {
+
+    URL.revokeObjectURL(
+      previewUrl
+    );
+
+  }
+
+
+  previewUrl =
+    URL.createObjectURL(file);
+
+  pdfPreview.src =
+    previewUrl;
+
+  previewSection.classList.add(
+    "show"
+  );
+
 
   try {
-    setProgress(15, "Mengekstrak teks PDF...");
-    const buffer = await file.arrayBuffer();
-    const pdf = await pdfjsLib.getDocument({ data: buffer }).promise;
-    const totalPages = pdf.numPages;
+
+    setProgress(
+      15,
+      "Mengekstrak teks PDF..."
+    );
+
+
+    const buffer =
+      await file.arrayBuffer();
+
+
+    const pdf =
+      await pdfjsLib
+        .getDocument({
+          data: buffer
+        })
+        .promise;
+
+
+    const totalPages =
+      pdf.numPages;
+
+
     let pageTexts = [];
 
-    for (let i = 1; i <= totalPages; i++) {
-      const page = await pdf.getPage(i);
-      const content = await page.getTextContent();
-      const txt = content.items.map(item => item.str || "").join(" ").replace(/\s+/g, " ").trim();
-      extractedPages.push({ page: i, text: txt });
-      pageTexts.push(`[PAGE ${i}]\n` + txt);
 
-      const percent = 15 + Math.round((i / totalPages) * 35);
-      setProgress(percent, `Mengekstrak halaman ${i} / ${totalPages}...`);
+    for (
+      let i = 1;
+      i <= totalPages;
+      i++
+    ) {
+
+      const page =
+        await pdf.getPage(i);
+
+
+      const content =
+        await page.getTextContent();
+
+
+      const txt =
+        content.items
+          .map(
+            item =>
+              item.str || ""
+          )
+          .join(" ")
+          .replace(/\s+/g, " ")
+          .trim();
+
+
+      extractedPages.push({
+        page: i,
+        text: txt
+      });
+
+
+      pageTexts.push(
+        `[PAGE ${i}]\n${txt}`
+      );
+
+
+      const percent =
+        15 +
+        Math.round(
+          (i / totalPages) * 35
+        );
+
+
+      setProgress(
+        percent,
+        `Mengekstrak halaman ${i} / ${totalPages}...`
+      );
+
     }
 
-    extractedText = pageTexts.join("\n\n").trim();
-    if (!extractedText) throw new Error("PDF kosong atau berupa scan gambar.");
 
-    extractionStat.textContent = `${totalPages} halaman · ${extractedText.length} karakter`;
-    fullTextPreview.textContent = extractedText;
-    extractionBox.classList.add("show");
+    extractedText =
+      pageTexts
+        .join("\n\n")
+        .trim();
+
+
+    if (!extractedText) {
+
+      throw new Error(
+        "PDF kosong atau berupa scan gambar."
+      );
+
+    }
+
+
+    extractionStat.textContent =
+      `${totalPages} halaman · ${extractedText.length} karakter`;
+
+
+    fullTextPreview.textContent =
+      extractedText;
+
+
+    extractionBox.classList.add(
+      "show"
+    );
+
+
     uploadBtn.disabled = false;
-    setProgress(50, "Full text siap disimpan.");
+
+
+    setProgress(
+      50,
+      "Full text siap disimpan."
+    );
+
+
   } catch (error) {
-    console.error("PDF Extraction error:", error);
-    showMessage("error", "Gagal membaca PDF: " + error.message);
+
+    console.error(
+      "PDF Extraction error:",
+      error
+    );
+
+
+    showMessage(
+      "error",
+      "Gagal membaca PDF: " +
+      error.message
+    );
+
   }
+
 }
+
+
+/* =========================================================
+   MAIN PIPELINE
+   ========================================================= */
 
 async function runPipeline() {
-  if (!selectedFile || !extractedText) return;
+
+  if (
+    !selectedFile ||
+    !extractedText
+  ) {
+
+    return;
+
+  }
+
 
   uploadBtn.disabled = true;
+
   resetBtn.disabled = true;
+
   clearMessage();
 
+
   try {
-    const title = paperTitle.value.trim() || selectedFile.name.replace(/\.pdf$/i, "");
-    const paperId = "PAPER-" + Date.now();
 
-    // 1. Upload file PDF ke Google Drive
-    setProgress(60, "Mengunggah PDF ke Google Drive...");
-    const base64Data = await fileToBase64(selectedFile);
+    const title =
+      paperTitle.value.trim() ||
+      selectedFile.name.replace(
+        /\.pdf$/i,
+        ""
+      );
 
-    const googlePayload = {
-      action: "uploadPaper",
-      fileName: selectedFile.name,
-      mimeType: "application/pdf",
-      base64: base64Data,
+
+    const paperId =
+      "PAPER-" +
+      Date.now();
+
+
+    /* -----------------------------------------------------
+       STEP 1
+       Convert PDF -> Base64
+       ----------------------------------------------------- */
+
+    setProgress(
+      55,
+      "Menyiapkan PDF..."
+    );
+
+
+    const base64Data =
+      await fileToBase64(
+        selectedFile
+      );
+
+
+    /* -----------------------------------------------------
+       STEP 2
+       Send everything to Google Apps Script
+       ----------------------------------------------------- */
+
+    setProgress(
+      65,
+      "Mengirim paper ke server..."
+    );
+
+
+    const payload = {
+
+      action: "savePaper",
+
+      paperId: paperId,
+
       title: title,
-      pageCount: extractedPages.length
+
+      fileName:
+        selectedFile.name,
+
+      mimeType:
+        "application/pdf",
+
+      base64:
+        base64Data,
+
+      pageCount:
+        extractedPages.length,
+
+      fullText:
+        extractedText
+
     };
 
-    const googleResult = await postGoogleScript(googlePayload);
-    if (!googleResult || googleResult.success !== true) {
-      throw new Error(googleResult?.message || "Google Drive menolak unggahan file.");
+
+    const result =
+      await postGoogleScript(
+        payload
+      );
+
+
+    if (
+      !result ||
+      result.success !== true
+    ) {
+
+      throw new Error(
+        result?.message ||
+        "Server gagal menyimpan paper."
+      );
+
     }
-    const gDriveUrl = googleResult.fileUrl || googleResult.driveUrl || "-";
 
-    // 2. Commit Full Text langsung ke data.csv di repository GitHub
-    setProgress(80, "Mengirim teks ke data.csv di GitHub...");
-    await appendToGitHubCsv({
-      id: paperId,
-      title: title,
-      filename: selectedFile.name,
-      driveUrl: gDriveUrl,
-      fullText: extractedText
-    });
 
-    setProgress(100, "Selesai!");
+    /* -----------------------------------------------------
+       SUCCESS
+       ----------------------------------------------------- */
+
+    setProgress(
+      100,
+      "Selesai!"
+    );
+
+
     showMessage(
       "success",
-      `Berhasil diproses!\n\n` +
-      `✓ File PDF asli tersimpan di Google Drive: ${gDriveUrl}\n` +
-      `✓ Full text berhasil disimpan ke baris baru data.csv di GitHub repository.`
+
+      "Berhasil diproses!\n\n" +
+
+      "✓ PDF asli tersimpan di Google Drive\n" +
+
+      "✓ Data paper berhasil ditambahkan ke data.csv\n" +
+
+      "✓ CSV tidak di-download ke komputer\n\n" +
+
+      (
+        result.fileUrl
+          ? "Google Drive:\n" +
+            result.fileUrl
+          : ""
+      )
+
     );
+
+
   } catch (err) {
-    console.error("Pipeline Error:", err);
-    setProgress(0, "Gagal memproses.");
-    showMessage("error", "Terjadi kesalahan:\n" + err.message);
+
+    console.error(
+      "Pipeline Error:",
+      err
+    );
+
+
+    setProgress(
+      0,
+      "Gagal memproses."
+    );
+
+
+    showMessage(
+      "error",
+
+      "Terjadi kesalahan:\n" +
+      err.message
+
+    );
+
+
     uploadBtn.disabled = false;
+
   } finally {
+
     resetBtn.disabled = false;
+
   }
+
 }
 
-async function appendToGitHubCsv(data) {
-  const url = `https://api.github.com/repos/${CONFIG.GITHUB_OWNER}/${CONFIG.GITHUB_REPO}/contents/${CONFIG.FILE_PATH}`;
 
-  const getRes = await fetch(url, {
-    headers: {
-      "Authorization": `Bearer ${GH_TOKEN}`,
-      "Accept": "application/vnd.github+json"
-    }
-  });
-
-  let sha = null;
-  let currentContent = "";
-
-  if (getRes.ok) {
-    const fileData = await getRes.json();
-    sha = fileData.sha;
-    // Decode base64 UTF-8 dari GitHub
-    currentContent = decodeURIComponent(escape(atob(fileData.content.replace(/\n/g, ""))));
-  } else if (getRes.status !== 404) {
-    throw new Error(`Gagal membaca data.csv dari GitHub (HTTP ${getRes.status})`);
-  }
-
-  // Siapkan header jika isi file data.csv masih kosong
-  if (!currentContent.trim()) {
-    currentContent = "id,title,filename,drive_url,full_text,created_at\n";
-  } else if (!currentContent.endsWith("\n")) {
-    currentContent += "\n";
-  }
-
-  // Format baris CSV
-  const esc = (s) => `"${String(s || "").replace(/"/g, '""')}"`;
-  const newRow = [
-    esc(data.id),
-    esc(data.title),
-    esc(data.filename),
-    esc(data.driveUrl),
-    esc(data.fullText),
-    esc(new Date().toISOString())
-  ].join(",") + "\n";
-
-  const updatedContent = currentContent + newRow;
-  const updatedBase64 = btoa(unescape(encodeURIComponent(updatedContent)));
-
-  const putRes = await fetch(url, {
-    method: "PUT",
-    headers: {
-      "Authorization": `Bearer ${GH_TOKEN}`,
-      "Accept": "application/vnd.github+json",
-      "Content-Type": "application/json"
-    },
-    body: JSON.stringify({
-      message: `Update data.csv: add paper ${data.id}`,
-      content: updatedBase64,
-      sha: sha || undefined,
-      branch: CONFIG.GITHUB_BRANCH
-    })
-  });
-
-  if (!putRes.ok) {
-    const errData = await putRes.json();
-    throw new Error(`GitHub API Error: ${errData.message || putRes.statusText}`);
-  }
-}
+/* =========================================================
+   GOOGLE APPS SCRIPT
+   ========================================================= */
 
 async function postGoogleScript(payload) {
-  const response = await fetch(CONFIG.GOOGLE_SCRIPT_URL, {
-    method: "POST",
-    mode: "cors",
-    redirect: "follow",
-    headers: { "Content-Type": "text/plain;charset=utf-8" },
-    body: JSON.stringify(payload)
-  });
 
-  const responseText = await response.text();
+  const response =
+    await fetch(
+      CONFIG.GOOGLE_SCRIPT_URL,
+      {
+
+        method: "POST",
+
+        mode: "cors",
+
+        redirect: "follow",
+
+        headers: {
+          "Content-Type":
+            "text/plain;charset=utf-8"
+        },
+
+        body:
+          JSON.stringify(payload)
+
+      }
+    );
+
+
+  const responseText =
+    await response.text();
+
+
   try {
-    return JSON.parse(responseText);
+
+    return JSON.parse(
+      responseText
+    );
+
   } catch (e) {
-    throw new Error("Respon Google Script bukan JSON yang valid.");
+
+    console.error(
+      "Raw server response:",
+      responseText
+    );
+
+
+    throw new Error(
+      "Respon Google Apps Script bukan JSON yang valid."
+    );
+
   }
+
 }
+
+
+/* =========================================================
+   FILE -> BASE64
+   ========================================================= */
 
 function fileToBase64(file) {
-  return new Promise((resolve, reject) => {
-    const reader = new FileReader();
-    reader.onload = () => {
-      const res = reader.result;
-      resolve(res.substring(res.indexOf(",") + 1));
-    };
-    reader.onerror = () => reject(new Error("Gagal membaca file fisik."));
-    reader.readAsDataURL(file);
-  });
+
+  return new Promise(
+    (resolve, reject) => {
+
+      const reader =
+        new FileReader();
+
+
+      reader.onload = () => {
+
+        const result =
+          reader.result;
+
+
+        resolve(
+          result.substring(
+            result.indexOf(",") + 1
+          )
+        );
+
+      };
+
+
+      reader.onerror = () => {
+
+        reject(
+          new Error(
+            "Gagal membaca file PDF."
+          )
+        );
+
+      };
+
+
+      reader.readAsDataURL(
+        file
+      );
+
+    }
+  );
+
 }
+
+
+/* =========================================================
+   RESET
+   ========================================================= */
 
 function resetAll() {
+
   selectedFile = null;
+
   extractedText = "";
+
   extractedPages = [];
-  if (previewUrl) URL.revokeObjectURL(previewUrl);
+
+
+  if (previewUrl) {
+
+    URL.revokeObjectURL(
+      previewUrl
+    );
+
+    previewUrl = null;
+
+  }
+
 
   fileInput.value = "";
+
   fileName.textContent = "-";
+
   fileSize.textContent = "-";
+
   paperTitle.value = "";
-  fileInfo.classList.remove("show");
-  titleField.style.display = "none";
-  previewSection.classList.remove("show");
-  extractionBox.classList.remove("show");
-  pdfPreview.removeAttribute("src");
-  fullTextPreview.textContent = "";
-  extractionStat.textContent = "-";
+
+
+  fileInfo.classList.remove(
+    "show"
+  );
+
+
+  titleField.style.display =
+    "none";
+
+
+  previewSection.classList.remove(
+    "show"
+  );
+
+
+  extractionBox.classList.remove(
+    "show"
+  );
+
+
+  pdfPreview.removeAttribute(
+    "src"
+  );
+
+
+  fullTextPreview.textContent =
+    "";
+
+
+  extractionStat.textContent =
+    "-";
+
+
   uploadBtn.disabled = true;
 
+
   clearMessage();
-  progressWrapper.classList.remove("show");
-  setProgress(0, "Ready");
+
+
+  progressWrapper.classList.remove(
+    "show"
+  );
+
+
+  setProgress(
+    0,
+    "Ready"
+  );
+
 }
 
-function setProgress(percent, text) {
-  progressWrapper.classList.add("show");
-  const p = Math.max(0, Math.min(100, Number(percent) || 0));
-  progressFill.style.width = p + "%";
-  progressPercent.textContent = p + "%";
-  progressText.textContent = text || "";
+
+/* =========================================================
+   PROGRESS
+   ========================================================= */
+
+function setProgress(
+  percent,
+  text
+) {
+
+  progressWrapper.classList.add(
+    "show"
+  );
+
+
+  const p =
+    Math.max(
+      0,
+      Math.min(
+        100,
+        Number(percent) || 0
+      )
+    );
+
+
+  progressFill.style.width =
+    p + "%";
+
+
+  progressPercent.textContent =
+    p + "%";
+
+
+  progressText.textContent =
+    text || "";
+
 }
 
-function showMessage(type, text) {
-  message.className = "message show " + type;
-  message.textContent = text;
+
+/* =========================================================
+   MESSAGE
+   ========================================================= */
+
+function showMessage(
+  type,
+  text
+) {
+
+  message.className =
+    "message show " + type;
+
+
+  message.textContent =
+    text;
+
 }
+
 
 function clearMessage() {
-  message.className = "message";
-  message.textContent = "";
+
+  message.className =
+    "message";
+
+
+  message.textContent =
+    "";
+
 }
+
 </script>
-</body>
-</html>
