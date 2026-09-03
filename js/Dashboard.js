@@ -15,31 +15,30 @@
     ======================================================== */
 
     const state = {
-
         initialized: false,
 
         statistics: {
-
             papers: 0,
             summaries: 0,
             miniReviews: 0,
             researchGaps: 0
-
         }
-
     };
 
 
     /* ========================================================
-       ELEMENTS
+       DOM
     ======================================================== */
 
     let elements = {};
 
 
-    function initializeElements() {
+    function cacheElements() {
 
         elements = {
+
+            dashboard:
+                document.getElementById("dashboard-page"),
 
             totalPapers:
                 document.getElementById("total-papers"),
@@ -53,17 +52,11 @@
             totalResearchGaps:
                 document.getElementById("total-research-gaps"),
 
-            papersProgress:
-                document.getElementById("papers-progress"),
+            paperProgress:
+                document.getElementById("paper-progress"),
 
-            summariesProgress:
-                document.getElementById("summaries-progress"),
-
-            miniReviewsProgress:
-                document.getElementById("mini-reviews-progress"),
-
-            researchGapsProgress:
-                document.getElementById("research-gaps-progress")
+            recentActivity:
+                document.getElementById("recent-activity")
 
         };
 
@@ -71,27 +64,25 @@
 
 
     /* ========================================================
-       DATA
+       STORAGE
     ======================================================== */
 
-    function getArrayFromStorage(key) {
+    function readArray(key) {
 
         try {
 
-            const data =
+            const raw =
                 localStorage.getItem(key);
 
-            if (!data) {
-
+            if (!raw) {
                 return [];
-
             }
 
-            const parsed =
-                JSON.parse(data);
+            const data =
+                JSON.parse(raw);
 
-            return Array.isArray(parsed)
-                ? parsed
+            return Array.isArray(data)
+                ? data
                 : [];
 
         } catch (error) {
@@ -108,50 +99,30 @@
     }
 
 
-    function getDashboardData() {
+    function getStatistics() {
 
-        return {
+        const papers =
+            readArray("rpm_papers");
 
-            papers:
-                getArrayFromStorage("rpm_papers"),
+        const summaries =
+            readArray("rpm_summaries");
 
-            summaries:
-                getArrayFromStorage("rpm_summaries"),
+        const miniReviews =
+            readArray("rpm_mini_reviews");
 
-            miniReviews:
-                getArrayFromStorage("rpm_mini_reviews"),
-
-            researchGaps:
-                getArrayFromStorage("rpm_research_gaps")
-
-        };
-
-    }
-
-
-    /* ========================================================
-       STATISTICS
-    ======================================================== */
-
-    function calculateStatistics() {
-
-        const data =
-            getDashboardData();
+        const researchGaps =
+            readArray("rpm_research_gaps");
 
 
         state.statistics = {
 
-            papers:
-                data.papers.length,
+            papers: papers.length,
 
-            summaries:
-                data.summaries.length,
+            summaries: summaries.length,
 
-            miniReviews:
-                data.miniReviews.length,
+            miniReviews: miniReviews.length,
 
-            researchGaps:
-                data.researchGaps.length
+            researchGaps: researchGaps.length
 
         };
 
@@ -162,103 +133,229 @@
 
 
     /* ========================================================
-       RENDER
+       STATISTIC COUNTER
     ======================================================== */
 
-    function renderStatistics() {
+    function animateNumber(element, target) {
 
-        const statistics =
-            calculateStatistics();
+        if (!element) {
+            return;
+        }
 
 
-        setNumber(
+        const duration = 600;
+
+        const startTime =
+            performance.now();
+
+
+        function update(currentTime) {
+
+            const elapsed =
+                currentTime - startTime;
+
+            const progress =
+                Math.min(
+                    elapsed / duration,
+                    1
+                );
+
+
+            const eased =
+                1 -
+                Math.pow(
+                    1 - progress,
+                    3
+                );
+
+
+            const value =
+                Math.round(
+                    target * eased
+                );
+
+
+            element.textContent =
+                value.toLocaleString();
+
+
+            if (progress < 1) {
+
+                requestAnimationFrame(
+                    update
+                );
+
+            }
+
+        }
+
+
+        requestAnimationFrame(update);
+
+    }
+
+
+    function updateStatistics() {
+
+        const stats =
+            getStatistics();
+
+
+        animateNumber(
             elements.totalPapers,
-            statistics.papers
+            stats.papers
         );
 
 
-        setNumber(
+        animateNumber(
             elements.totalSummaries,
-            statistics.summaries
+            stats.summaries
         );
 
 
-        setNumber(
+        animateNumber(
             elements.totalMiniReviews,
-            statistics.miniReviews
+            stats.miniReviews
         );
 
 
-        setNumber(
+        animateNumber(
             elements.totalResearchGaps,
-            statistics.researchGaps
+            stats.researchGaps
         );
-
-
-        updateProgress(
-            elements.papersProgress,
-            statistics.papers
-        );
-
-
-        updateProgress(
-            elements.summariesProgress,
-            statistics.summaries
-        );
-
-
-        updateProgress(
-            elements.miniReviewsProgress,
-            statistics.miniReviews
-        );
-
-
-        updateProgress(
-            elements.researchGapsProgress,
-            statistics.researchGaps
-        );
-
-    }
-
-
-    function setNumber(element, value) {
-
-        if (!element) {
-            return;
-        }
-
-
-        element.textContent =
-            Number(value).toLocaleString();
-
-    }
-
-
-    function updateProgress(element, value) {
-
-        if (!element) {
-            return;
-        }
-
-
-        const percentage =
-            Math.min(
-                Number(value) * 10,
-                100
-            );
-
-
-        element.style.width =
-            `${percentage}%`;
 
     }
 
 
     /* ========================================================
-       NAVIGATION
+       RECENT ACTIVITY
     ======================================================== */
 
-    function navigate(page) {
+    function getLatestPapers() {
+
+        const papers =
+            readArray("rpm_papers");
+
+
+        if (!papers.length) {
+
+            return [];
+
+        }
+
+
+        return papers
+            .slice()
+            .reverse()
+            .slice(0, 5);
+
+    }
+
+
+    function renderRecentActivity() {
+
+        if (!elements.recentActivity) {
+            return;
+        }
+
+
+        const papers =
+            getLatestPapers();
+
+
+        if (!papers.length) {
+
+            elements.recentActivity.innerHTML = `
+                <div class="empty-activity">
+
+                    <div class="empty-activity-icon">
+                        📚
+                    </div>
+
+                    <div>
+                        <strong>
+                            No papers yet
+                        </strong>
+
+                        <span>
+                            Add your first research paper
+                            to start building your library.
+                        </span>
+                    </div>
+
+                </div>
+            `;
+
+            return;
+
+        }
+
+
+        elements.recentActivity.innerHTML =
+            papers
+                .map(function (paper) {
+
+                    const title =
+                        paper.title ||
+                        paper.Title ||
+                        "Untitled Paper";
+
+
+                    const authors =
+                        paper.authors ||
+                        paper.Authors ||
+                        "Unknown author";
+
+
+                    return `
+                        <div class="activity-item">
+
+                            <div class="activity-icon">
+                                📄
+                            </div>
+
+                            <div class="activity-info">
+
+                                <strong>
+                                    ${escapeHTML(title)}
+                                </strong>
+
+                                <span>
+                                    ${escapeHTML(authors)}
+                                </span>
+
+                            </div>
+
+                        </div>
+                    `;
+
+                })
+                .join("");
+
+    }
+
+
+    /* ========================================================
+       HTML ESCAPE
+    ======================================================== */
+
+    function escapeHTML(value) {
+
+        return String(value)
+            .replace(/&/g, "&amp;")
+            .replace(/</g, "&lt;")
+            .replace(/>/g, "&gt;")
+            .replace(/"/g, "&quot;")
+            .replace(/'/g, "&#039;");
+
+    }
+
+
+    /* ========================================================
+       QUICK ACTIONS
+    ======================================================== */
+
+    function openPage(page) {
 
         if (
             window.App &&
@@ -272,37 +369,46 @@
     }
 
 
-    function openInputPaper() {
+    function bindQuickActions() {
 
-        navigate("input-paper");
-
-    }
-
-
-    function openPapers() {
-
-        navigate("papers");
-
-    }
+        const inputPaperButton =
+            document.getElementById(
+                "dashboard-add-paper"
+            );
 
 
-    function openSummary() {
-
-        navigate("summary");
-
-    }
-
-
-    function openMiniReview() {
-
-        navigate("mini-review");
-
-    }
+        const papersButton =
+            document.getElementById(
+                "dashboard-view-papers"
+            );
 
 
-    function openResearchGap() {
+        if (inputPaperButton) {
 
-        navigate("research-gap");
+            inputPaperButton.addEventListener(
+                "click",
+                function () {
+
+                    openPage("input-paper");
+
+                }
+            );
+
+        }
+
+
+        if (papersButton) {
+
+            papersButton.addEventListener(
+                "click",
+                function () {
+
+                    openPage("papers");
+
+                }
+            );
+
+        }
 
     }
 
@@ -313,7 +419,9 @@
 
     function refresh() {
 
-        renderStatistics();
+        updateStatistics();
+
+        renderRecentActivity();
 
     }
 
@@ -324,14 +432,27 @@
 
     function initialize() {
 
-        initializeElements();
+        if (state.initialized) {
 
-        renderStatistics();
+            refresh();
+
+            return;
+
+        }
+
+
+        cacheElements();
+
+        bindQuickActions();
+
+        refresh();
+
 
         state.initialized = true;
 
+
         console.log(
-            "Dashboard initialized."
+            "Research Paper Manager Dashboard initialized."
         );
 
     }
@@ -365,25 +486,27 @@
 
     window.Dashboard = {
 
-        initialize,
+        initialize: initialize,
 
-        refresh,
-
-        openInputPaper,
-
-        openPapers,
-
-        openSummary,
-
-        openMiniReview,
-
-        openResearchGap,
+        refresh: refresh,
 
         getStatistics: function () {
 
             return {
                 ...state.statistics
             };
+
+        },
+
+        openInputPaper: function () {
+
+            openPage("input-paper");
+
+        },
+
+        openPapers: function () {
+
+            openPage("papers");
 
         }
 
