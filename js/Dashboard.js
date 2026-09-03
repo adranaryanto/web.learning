@@ -1,9 +1,7 @@
-/**
- * ============================================================
- * RESEARCH PAPER MANAGER
- * DASHBOARD.JS
- * ============================================================
- */
+/* ============================================================
+   RESEARCH PAPER MANAGER
+   DASHBOARD.JS
+   ============================================================ */
 
 (function () {
 
@@ -11,68 +9,46 @@
 
 
     /* ========================================================
-       STATE
+       CONFIG
     ======================================================== */
 
-    const DashboardState = {
+    const CONFIG = {
 
-        initialized: false,
+        storageKeys: {
 
-        statistics: {
-            papers: 0,
-            summaries: 0,
-            miniReviews: 0,
-            researchGaps: 0
+            papers: [
+                "papers",
+                "rpm_papers",
+                "research_papers"
+            ],
+
+            summaries: [
+                "summaries",
+                "rpm_summaries"
+            ],
+
+            miniReviews: [
+                "miniReviews",
+                "mini_reviews",
+                "rpm_mini_reviews"
+            ],
+
+            researchGaps: [
+                "researchGaps",
+                "research_gaps",
+                "rpm_research_gaps"
+            ]
+
         }
 
     };
 
 
     /* ========================================================
-       DOM ELEMENTS
+       HELPERS
     ======================================================== */
 
-    let elements = {};
-
-
-    function cacheElements() {
-
-        elements = {
-
-            dashboard:
-                document.getElementById("dashboard-page"),
-
-            totalPapers:
-                document.getElementById("total-papers"),
-
-            totalSummaries:
-                document.getElementById("total-summaries"),
-
-            totalMiniReviews:
-                document.getElementById("total-mini-reviews"),
-
-            totalResearchGaps:
-                document.getElementById("total-research-gaps"),
-
-            recentActivity:
-                document.getElementById("recent-activity"),
-
-            addPaperButton:
-                document.getElementById("dashboard-add-paper"),
-
-            browsePapersButton:
-                document.getElementById("dashboard-view-papers")
-
-        };
-
-    }
-
-
-    /* ========================================================
-       STORAGE HELPER
-    ======================================================== */
-
-    function readStorageArray(key) {
+    function parseStorage(key) {
 
         try {
 
@@ -80,32 +56,26 @@
                 localStorage.getItem(key);
 
             if (!raw) {
-
                 return [];
-
             }
 
-
-            const parsed =
+            const data =
                 JSON.parse(raw);
 
-
-            if (!Array.isArray(parsed)) {
-
-                return [];
-
+            if (Array.isArray(data)) {
+                return data;
             }
 
+            if (
+                data &&
+                Array.isArray(data.items)
+            ) {
+                return data.items;
+            }
 
-            return parsed;
+            return [];
 
         } catch (error) {
-
-            console.warn(
-                "Dashboard storage error:",
-                key,
-                error
-            );
 
             return [];
 
@@ -114,120 +84,74 @@
     }
 
 
-    /* ========================================================
-       STATISTICS
-    ======================================================== */
+    function getFirstStorageArray(keys) {
 
-    function calculateStatistics() {
+        for (const key of keys) {
 
-        const papers =
-            readStorageArray("rpm_papers");
+            const result =
+                parseStorage(key);
 
+            if (result.length > 0) {
+                return result;
+            }
 
-        const summaries =
-            readStorageArray("rpm_summaries");
+        }
 
+        return [];
 
-        const miniReviews =
-            readStorageArray("rpm_mini_reviews");
-
-
-        const researchGaps =
-            readStorageArray("rpm_research_gaps");
+    }
 
 
-        DashboardState.statistics = {
+    function escapeHTML(value) {
 
-            papers:
-                papers.length,
-
-            summaries:
-                summaries.length,
-
-            miniReviews:
-                miniReviews.length,
-
-            researchGaps:
-                researchGaps.length
-
-        };
-
-
-        return DashboardState.statistics;
+        return String(value ?? "")
+            .replace(/&/g, "&amp;")
+            .replace(/</g, "&lt;")
+            .replace(/>/g, "&gt;")
+            .replace(/"/g, "&quot;")
+            .replace(/'/g, "&#039;");
 
     }
 
 
     /* ========================================================
-       NUMBER ANIMATION
+       STATISTICS
     ======================================================== */
 
-    function animateNumber(
-        element,
-        target
-    ) {
+    function getStatistics() {
 
-        if (!element) {
+        const papers =
+            getFirstStorageArray(
+                CONFIG.storageKeys.papers
+            );
 
-            return;
+        const summaries =
+            getFirstStorageArray(
+                CONFIG.storageKeys.summaries
+            );
 
-        }
+        const miniReviews =
+            getFirstStorageArray(
+                CONFIG.storageKeys.miniReviews
+            );
 
-
-        const finalValue =
-            Number(target) || 0;
-
-
-        const duration = 550;
-
-        const startTime =
-            performance.now();
-
-
-        function frame(currentTime) {
-
-            const elapsed =
-                currentTime - startTime;
+        const researchGaps =
+            getFirstStorageArray(
+                CONFIG.storageKeys.researchGaps
+            );
 
 
-            const progress =
-                Math.min(
-                    elapsed / duration,
-                    1
-                );
+        return {
 
+            papers: papers.length,
 
-            const easedProgress =
-                1 -
-                Math.pow(
-                    1 - progress,
-                    3
-                );
+            summaries: summaries.length,
 
+            miniReviews: miniReviews.length,
 
-            const currentValue =
-                Math.round(
-                    finalValue *
-                    easedProgress
-                );
+            researchGaps: researchGaps.length
 
-
-            element.textContent =
-                currentValue.toLocaleString(
-                    "en-US"
-                );
-
-
-            if (progress < 1) {
-
-                requestAnimationFrame(frame);
-
-            }
-
-        }
-
-
-        requestAnimationFrame(frame);
+        };
 
     }
 
@@ -235,31 +159,55 @@
     function updateStatistics() {
 
         const stats =
-            calculateStatistics();
+            getStatistics();
 
 
-        animateNumber(
-            elements.totalPapers,
-            stats.papers
-        );
+        const papers =
+            document.getElementById(
+                "total-papers"
+            );
 
 
-        animateNumber(
-            elements.totalSummaries,
-            stats.summaries
-        );
+        const summaries =
+            document.getElementById(
+                "total-summaries"
+            );
 
 
-        animateNumber(
-            elements.totalMiniReviews,
-            stats.miniReviews
-        );
+        const miniReviews =
+            document.getElementById(
+                "total-mini-reviews"
+            );
 
 
-        animateNumber(
-            elements.totalResearchGaps,
-            stats.researchGaps
-        );
+        const researchGaps =
+            document.getElementById(
+                "total-research-gaps"
+            );
+
+
+        if (papers) {
+            papers.textContent =
+                stats.papers;
+        }
+
+
+        if (summaries) {
+            summaries.textContent =
+                stats.summaries;
+        }
+
+
+        if (miniReviews) {
+            miniReviews.textContent =
+                stats.miniReviews;
+        }
+
+
+        if (researchGaps) {
+            researchGaps.textContent =
+                stats.researchGaps;
+        }
 
     }
 
@@ -271,7 +219,9 @@
     function getRecentPapers() {
 
         const papers =
-            readStorageArray("rpm_papers");
+            getFirstStorageArray(
+                CONFIG.storageKeys.papers
+            );
 
 
         return papers
@@ -282,19 +232,20 @@
     }
 
 
-    function getPaperTitle(paper) {
+    function getTitle(paper) {
 
         return (
             paper.title ||
             paper.Title ||
             paper.paperTitle ||
+            paper.name ||
             "Untitled Paper"
         );
 
     }
 
 
-    function getPaperAuthors(paper) {
+    function getAuthors(paper) {
 
         return (
             paper.authors ||
@@ -306,28 +257,16 @@
     }
 
 
-    function escapeHTML(value) {
-
-        return String(value)
-            .replace(/&/g, "&amp;")
-            .replace(/</g, "&lt;")
-            .replace(/>/g, "&gt;")
-            .replace(/"/g, "&quot;")
-            .replace(/'/g, "&#039;");
-
-    }
-
-
     function renderRecentPapers() {
 
         const container =
-            elements.recentActivity;
+            document.getElementById(
+                "recent-papers"
+            );
 
 
         if (!container) {
-
             return;
-
         }
 
 
@@ -339,21 +278,21 @@
 
             container.innerHTML = `
 
-                <div class="empty-activity">
+                <div class="empty-state">
 
-                    <div class="empty-activity-icon">
-                        <span>＋</span>
+                    <div class="empty-icon">
+                        ＋
                     </div>
 
-                    <div class="empty-activity-text">
+                    <div>
 
                         <strong>
                             No papers yet
                         </strong>
 
                         <span>
-                            Add your first paper to
-                            start building your library.
+                            Add your first research
+                            paper to begin.
                         </span>
 
                     </div>
@@ -368,89 +307,266 @@
 
 
         container.innerHTML =
-            papers
-                .map(function (paper) {
+            papers.map(function (paper) {
 
-                    const title =
-                        escapeHTML(
-                            getPaperTitle(paper)
-                        );
+                return `
 
+                    <div class="recent-item">
 
-                    const authors =
-                        escapeHTML(
-                            getPaperAuthors(paper)
-                        );
+                        <div class="recent-item-icon">
+                            ▤
+                        </div>
 
+                        <div class="recent-item-content">
 
-                    return `
-
-                        <div class="activity-item">
-
-                            <div class="activity-icon">
-                                <span>▤</span>
+                            <div class="recent-item-title">
+                                ${escapeHTML(
+                                    getTitle(paper)
+                                )}
                             </div>
 
-                            <div class="activity-info">
-
-                                <strong>
-                                    ${title}
-                                </strong>
-
-                                <span>
-                                    ${authors}
-                                </span>
-
-                            </div>
-
-                            <div class="activity-arrow">
-                                →
+                            <div class="recent-item-author">
+                                ${escapeHTML(
+                                    getAuthors(paper)
+                                )}
                             </div>
 
                         </div>
 
-                    `;
+                        <span>
+                            →
+                        </span>
 
-                })
-                .join("");
+                    </div>
+
+                `;
+
+            }).join("");
 
     }
 
 
     /* ========================================================
-       NAVIGATION
+       PAGE NAVIGATION
     ======================================================== */
 
-    function navigate(page) {
+    function showPage(pageName) {
 
-        if (
-            window.App &&
-            typeof window.App.navigateTo === "function"
-        ) {
+        const pages =
+            document.querySelectorAll(
+                ".page"
+            );
 
-            window.App.navigateTo(page);
 
-            return;
+        pages.forEach(function (page) {
+
+            page.classList.add(
+                "hidden-page"
+            );
+
+        });
+
+
+        const target =
+            document.getElementById(
+                pageName + "-page"
+            );
+
+
+        if (target) {
+
+            target.classList.remove(
+                "hidden-page"
+            );
 
         }
 
 
-        console.warn(
-            "App navigation controller belum tersedia."
+        const navItems =
+            document.querySelectorAll(
+                ".nav-item"
+            );
+
+
+        navItems.forEach(function (item) {
+
+            const isActive =
+                item.dataset.page === pageName;
+
+
+            item.classList.toggle(
+                "active",
+                isActive
+            );
+
+        });
+
+
+        const pageTitle =
+            document.getElementById(
+                "page-title"
+            );
+
+
+        const titles = {
+
+            dashboard:
+                "Dashboard",
+
+            papers:
+                "Papers",
+
+            "input-paper":
+                "Input Paper",
+
+            summary:
+                "Summary",
+
+            "mini-review":
+                "Mini Review",
+
+            "research-gap":
+                "Research Gap"
+
+        };
+
+
+        if (pageTitle) {
+
+            pageTitle.textContent =
+                titles[pageName] ||
+                "Research Paper Manager";
+
+        }
+
+
+        window.scrollTo({
+            top: 0,
+            behavior: "smooth"
+        });
+
+
+        document.dispatchEvent(
+            new CustomEvent(
+                "rpm:pagechange",
+                {
+                    detail: {
+                        page: pageName
+                    }
+                }
+            )
         );
 
     }
 
 
-    function bindNavigation() {
+    /* ========================================================
+       SIDEBAR
+    ======================================================== */
 
-        if (elements.addPaperButton) {
+    function initializeSidebar() {
 
-            elements.addPaperButton.addEventListener(
+        const toggle =
+            document.getElementById(
+                "sidebar-toggle"
+            );
+
+
+        if (!toggle) {
+            return;
+        }
+
+
+        toggle.addEventListener(
+            "click",
+            function () {
+
+                document.body.classList.toggle(
+                    "sidebar-visible"
+                );
+
+            }
+        );
+
+    }
+
+
+    /* ========================================================
+       NAVIGATION BUTTONS
+    ======================================================== */
+
+    function initializeNavigation() {
+
+        const navItems =
+            document.querySelectorAll(
+                ".nav-item"
+            );
+
+
+        navItems.forEach(function (item) {
+
+            item.addEventListener(
                 "click",
                 function () {
 
-                    navigate("input-paper");
+                    const page =
+                        item.dataset.page;
+
+
+                    if (!page) {
+                        return;
+                    }
+
+
+                    showPage(page);
+
+                }
+            );
+
+        });
+
+    }
+
+
+    /* ========================================================
+       DASHBOARD ACTIONS
+    ======================================================== */
+
+    function initializeActions() {
+
+        const addPaper =
+            document.getElementById(
+                "add-paper-button"
+            );
+
+
+        const quickAdd =
+            document.getElementById(
+                "quick-add-paper"
+            );
+
+
+        const browse =
+            document.getElementById(
+                "quick-browse-papers"
+            );
+
+
+        const viewAll =
+            document.getElementById(
+                "view-all-papers"
+            );
+
+
+        if (addPaper) {
+
+            addPaper.addEventListener(
+                "click",
+                function () {
+
+                    showPage(
+                        "input-paper"
+                    );
 
                 }
             );
@@ -458,13 +574,47 @@
         }
 
 
-        if (elements.browsePapersButton) {
+        if (quickAdd) {
 
-            elements.browsePapersButton.addEventListener(
+            quickAdd.addEventListener(
                 "click",
                 function () {
 
-                    navigate("papers");
+                    showPage(
+                        "input-paper"
+                    );
+
+                }
+            );
+
+        }
+
+
+        if (browse) {
+
+            browse.addEventListener(
+                "click",
+                function () {
+
+                    showPage(
+                        "papers"
+                    );
+
+                }
+            );
+
+        }
+
+
+        if (viewAll) {
+
+            viewAll.addEventListener(
+                "click",
+                function () {
+
+                    showPage(
+                        "papers"
+                    );
 
                 }
             );
@@ -478,14 +628,7 @@
        REFRESH
     ======================================================== */
 
-    function refresh() {
-
-        if (!elements.dashboard) {
-
-            return;
-
-        }
-
+    function refreshDashboard() {
 
         updateStatistics();
 
@@ -495,95 +638,44 @@
 
 
     /* ========================================================
-       INITIALIZE
-    ======================================================== */
-
-    function initialize() {
-
-        cacheElements();
-
-        bindNavigation();
-
-        refresh();
-
-
-        DashboardState.initialized =
-            true;
-
-
-        console.log(
-            "Dashboard initialized."
-        );
-
-    }
-
-
-    /* ========================================================
-       APP PAGE EVENT
-    ======================================================== */
-
-    document.addEventListener(
-        "app:pagechange",
-        function (event) {
-
-            if (
-                !event ||
-                !event.detail
-            ) {
-
-                return;
-
-            }
-
-
-            if (
-                event.detail.page === "dashboard"
-            ) {
-
-                refresh();
-
-            }
-
-        }
-    );
-
-
-    /* ========================================================
        PUBLIC API
     ======================================================== */
 
     window.Dashboard = {
 
-        initialize: initialize,
+        refresh:
+            refreshDashboard,
 
-        refresh: refresh,
+        showPage:
+            showPage,
 
-        getStatistics: function () {
-
-            return {
-                ...DashboardState.statistics
-            };
-
-        },
-
-        openInputPaper: function () {
-
-            navigate("input-paper");
-
-        },
-
-        openPapers: function () {
-
-            navigate("papers");
-
-        }
+        getStatistics:
+            getStatistics
 
     };
 
 
     /* ========================================================
-       START
+       INIT
     ======================================================== */
+
+    function initialize() {
+
+        initializeSidebar();
+
+        initializeNavigation();
+
+        initializeActions();
+
+        refreshDashboard();
+
+
+        console.log(
+            "Research Paper Manager Dashboard loaded."
+        );
+
+    }
+
 
     if (
         document.readyState === "loading"
@@ -599,5 +691,6 @@
         initialize();
 
     }
+
 
 })();
