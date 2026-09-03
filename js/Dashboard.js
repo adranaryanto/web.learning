@@ -1,6 +1,7 @@
 /* ============================================================
    RESEARCH PAPER MANAGER
    DASHBOARD.JS
+   FINAL VERSION 3
    ============================================================ */
 
 (function () {
@@ -9,107 +10,89 @@
 
 
     /* ========================================================
-       CONFIG
+       STORAGE
     ======================================================== */
 
-    const CONFIG = {
+    const STORAGE = {
 
-        storageKeys: {
+        papers: [
+            "papers",
+            "research_papers",
+            "rpm_papers"
+        ],
 
-            papers: [
-                "papers",
-                "rpm_papers",
-                "research_papers"
-            ],
+        summaries: [
+            "summaries",
+            "rpm_summaries"
+        ],
 
-            summaries: [
-                "summaries",
-                "rpm_summaries"
-            ],
+        miniReviews: [
+            "miniReviews",
+            "mini_reviews",
+            "rpm_mini_reviews"
+        ],
 
-            miniReviews: [
-                "miniReviews",
-                "mini_reviews",
-                "rpm_mini_reviews"
-            ],
-
-            researchGaps: [
-                "researchGaps",
-                "research_gaps",
-                "rpm_research_gaps"
-            ]
-
-        }
+        researchGaps: [
+            "researchGaps",
+            "research_gaps",
+            "rpm_research_gaps"
+        ]
 
     };
 
 
     /* ========================================================
-       HELPERS
+       STORAGE READER
     ======================================================== */
 
-    function parseStorage(key) {
-
-        try {
-
-            const raw =
-                localStorage.getItem(key);
-
-            if (!raw) {
-                return [];
-            }
-
-            const data =
-                JSON.parse(raw);
-
-            if (Array.isArray(data)) {
-                return data;
-            }
-
-            if (
-                data &&
-                Array.isArray(data.items)
-            ) {
-                return data.items;
-            }
-
-            return [];
-
-        } catch (error) {
-
-            return [];
-
-        }
-
-    }
-
-
-    function getFirstStorageArray(keys) {
+    function readArray(keys) {
 
         for (const key of keys) {
 
-            const result =
-                parseStorage(key);
+            try {
 
-            if (result.length > 0) {
-                return result;
+                const raw =
+                    localStorage.getItem(key);
+
+
+                if (!raw) {
+                    continue;
+                }
+
+
+                const parsed =
+                    JSON.parse(raw);
+
+
+                if (Array.isArray(parsed)) {
+
+                    return parsed;
+
+                }
+
+
+                if (
+                    parsed &&
+                    Array.isArray(parsed.items)
+                ) {
+
+                    return parsed.items;
+
+                }
+
+            } catch (error) {
+
+                console.warn(
+                    "Unable to read storage:",
+                    key
+                );
+
             }
 
         }
 
+
         return [];
-
-    }
-
-
-    function escapeHTML(value) {
-
-        return String(value ?? "")
-            .replace(/&/g, "&amp;")
-            .replace(/</g, "&lt;")
-            .replace(/>/g, "&gt;")
-            .replace(/"/g, "&quot;")
-            .replace(/'/g, "&#039;");
 
     }
 
@@ -118,121 +101,79 @@
        STATISTICS
     ======================================================== */
 
-    function getStatistics() {
+    function updateStatistics() {
 
         const papers =
-            getFirstStorageArray(
-                CONFIG.storageKeys.papers
+            readArray(
+                STORAGE.papers
             );
+
 
         const summaries =
-            getFirstStorageArray(
-                CONFIG.storageKeys.summaries
+            readArray(
+                STORAGE.summaries
             );
+
 
         const miniReviews =
-            getFirstStorageArray(
-                CONFIG.storageKeys.miniReviews
+            readArray(
+                STORAGE.miniReviews
             );
+
 
         const researchGaps =
-            getFirstStorageArray(
-                CONFIG.storageKeys.researchGaps
+            readArray(
+                STORAGE.researchGaps
             );
 
 
-        return {
+        setText(
+            "total-papers",
+            papers.length
+        );
 
-            papers: papers.length,
 
-            summaries: summaries.length,
+        setText(
+            "total-summaries",
+            summaries.length
+        );
 
-            miniReviews: miniReviews.length,
 
-            researchGaps: researchGaps.length
+        setText(
+            "total-mini-reviews",
+            miniReviews.length
+        );
 
-        };
+
+        setText(
+            "total-research-gaps",
+            researchGaps.length
+        );
 
     }
 
 
-    function updateStatistics() {
+    function setText(id, value) {
 
-        const stats =
-            getStatistics();
-
-
-        const papers =
-            document.getElementById(
-                "total-papers"
-            );
+        const element =
+            document.getElementById(id);
 
 
-        const summaries =
-            document.getElementById(
-                "total-summaries"
-            );
+        if (element) {
 
+            element.textContent =
+                String(value);
 
-        const miniReviews =
-            document.getElementById(
-                "total-mini-reviews"
-            );
-
-
-        const researchGaps =
-            document.getElementById(
-                "total-research-gaps"
-            );
-
-
-        if (papers) {
-            papers.textContent =
-                stats.papers;
-        }
-
-
-        if (summaries) {
-            summaries.textContent =
-                stats.summaries;
-        }
-
-
-        if (miniReviews) {
-            miniReviews.textContent =
-                stats.miniReviews;
-        }
-
-
-        if (researchGaps) {
-            researchGaps.textContent =
-                stats.researchGaps;
         }
 
     }
 
 
     /* ========================================================
-       RECENT PAPERS
+       PAPER DATA
     ======================================================== */
 
-    function getRecentPapers() {
-
-        const papers =
-            getFirstStorageArray(
-                CONFIG.storageKeys.papers
-            );
-
-
-        return papers
-            .slice()
-            .reverse()
-            .slice(0, 5);
-
-    }
-
-
-    function getTitle(paper) {
+    function paperTitle(paper) {
 
         return (
             paper.title ||
@@ -245,7 +186,7 @@
     }
 
 
-    function getAuthors(paper) {
+    function paperAuthors(paper) {
 
         return (
             paper.authors ||
@@ -256,6 +197,46 @@
 
     }
 
+
+    /* ========================================================
+       ESCAPE HTML
+    ======================================================== */
+
+    function escapeHTML(value) {
+
+        return String(value ?? "")
+
+            .replace(
+                /&/g,
+                "&amp;"
+            )
+
+            .replace(
+                /</g,
+                "&lt;"
+            )
+
+            .replace(
+                />/g,
+                "&gt;"
+            )
+
+            .replace(
+                /"/g,
+                "&quot;"
+            )
+
+            .replace(
+                /'/g,
+                "&#039;"
+            );
+
+    }
+
+
+    /* ========================================================
+       RECENT PAPERS
+    ======================================================== */
 
     function renderRecentPapers() {
 
@@ -271,10 +252,19 @@
 
 
         const papers =
-            getRecentPapers();
+            readArray(
+                STORAGE.papers
+            );
 
 
-        if (!papers.length) {
+        const recent =
+            papers
+                .slice()
+                .reverse()
+                .slice(0, 5);
+
+
+        if (!recent.length) {
 
             container.innerHTML = `
 
@@ -291,8 +281,9 @@
                         </strong>
 
                         <span>
-                            Add your first research
-                            paper to begin.
+                            Add your first paper
+                            to start building
+                            your library.
                         </span>
 
                     </div>
@@ -307,41 +298,43 @@
 
 
         container.innerHTML =
-            papers.map(function (paper) {
+            recent
+                .map(function (paper) {
 
-                return `
+                    return `
 
-                    <div class="recent-item">
+                        <div class="recent-item">
 
-                        <div class="recent-item-icon">
-                            ▤
-                        </div>
-
-                        <div class="recent-item-content">
-
-                            <div class="recent-item-title">
-                                ${escapeHTML(
-                                    getTitle(paper)
-                                )}
+                            <div class="recent-item-icon">
+                                ▤
                             </div>
 
-                            <div class="recent-item-author">
-                                ${escapeHTML(
-                                    getAuthors(paper)
-                                )}
+                            <div>
+
+                                <div class="recent-item-title">
+                                    ${escapeHTML(
+                                        paperTitle(paper)
+                                    )}
+                                </div>
+
+                                <div class="recent-item-author">
+                                    ${escapeHTML(
+                                        paperAuthors(paper)
+                                    )}
+                                </div>
+
                             </div>
+
+                            <span>
+                                →
+                            </span>
 
                         </div>
 
-                        <span>
-                            →
-                        </span>
+                    `;
 
-                    </div>
-
-                `;
-
-            }).join("");
+                })
+                .join("");
 
     }
 
@@ -350,7 +343,30 @@
        PAGE NAVIGATION
     ======================================================== */
 
-    function showPage(pageName) {
+    const PAGE_TITLES = {
+
+        dashboard:
+            "Dashboard",
+
+        papers:
+            "Papers",
+
+        "input-paper":
+            "Input Paper",
+
+        summary:
+            "Summary",
+
+        "mini-review":
+            "Mini Review",
+
+        "research-gap":
+            "Research Gap"
+
+    };
+
+
+    function navigate(page) {
 
         const pages =
             document.querySelectorAll(
@@ -358,86 +374,87 @@
             );
 
 
-        pages.forEach(function (page) {
+        pages.forEach(function (item) {
 
-            page.classList.add(
-                "hidden-page"
-            );
+            item.style.display =
+                "none";
 
         });
 
 
         const target =
             document.getElementById(
-                pageName + "-page"
+                page + "-page"
             );
 
 
         if (target) {
 
-            target.classList.remove(
-                "hidden-page"
-            );
+            target.style.display =
+                page === "dashboard"
+                    ? "block"
+                    : "block";
 
         }
 
 
-        const navItems =
+        const navigation =
             document.querySelectorAll(
                 ".nav-item"
             );
 
 
-        navItems.forEach(function (item) {
-
-            const isActive =
-                item.dataset.page === pageName;
-
+        navigation.forEach(function (item) {
 
             item.classList.toggle(
                 "active",
-                isActive
+                item.dataset.page === page
             );
 
         });
 
 
-        const pageTitle =
+        const title =
             document.getElementById(
                 "page-title"
             );
 
 
-        const titles = {
+        if (title) {
 
-            dashboard:
-                "Dashboard",
-
-            papers:
-                "Papers",
-
-            "input-paper":
-                "Input Paper",
-
-            summary:
-                "Summary",
-
-            "mini-review":
-                "Mini Review",
-
-            "research-gap":
-                "Research Gap"
-
-        };
-
-
-        if (pageTitle) {
-
-            pageTitle.textContent =
-                titles[pageName] ||
+            title.textContent =
+                PAGE_TITLES[page] ||
                 "Research Paper Manager";
 
         }
+
+
+        /*
+         * Tutup sidebar mobile setelah
+         * memilih menu.
+         */
+
+        document.body.classList.remove(
+            "sidebar-mobile-open"
+        );
+
+
+        /*
+         * Beritahu JS halaman lain.
+         */
+
+        document.dispatchEvent(
+
+            new CustomEvent(
+                "rpm:pagechange",
+                {
+                    detail: {
+                        page: page
+                    }
+                }
+            )
+
+        );
 
 
         window.scrollTo({
@@ -445,17 +462,35 @@
             behavior: "smooth"
         });
 
+    }
 
-        document.dispatchEvent(
-            new CustomEvent(
-                "rpm:pagechange",
-                {
-                    detail: {
-                        page: pageName
-                    }
+
+    /* ========================================================
+       NAVIGATION INIT
+    ======================================================== */
+
+    function initializeNavigation() {
+
+        const items =
+            document.querySelectorAll(
+                ".nav-item"
+            );
+
+
+        items.forEach(function (item) {
+
+            item.addEventListener(
+                "click",
+                function () {
+
+                    navigate(
+                        item.dataset.page
+                    );
+
                 }
-            )
-        );
+            );
+
+        });
 
     }
 
@@ -481,9 +516,21 @@
             "click",
             function () {
 
-                document.body.classList.toggle(
-                    "sidebar-visible"
-                );
+                if (
+                    window.innerWidth <= 800
+                ) {
+
+                    document.body.classList.toggle(
+                        "sidebar-mobile-open"
+                    );
+
+                } else {
+
+                    document.body.classList.toggle(
+                        "sidebar-collapsed"
+                    );
+
+                }
 
             }
         );
@@ -492,63 +539,32 @@
 
 
     /* ========================================================
-       NAVIGATION BUTTONS
-    ======================================================== */
-
-    function initializeNavigation() {
-
-        const navItems =
-            document.querySelectorAll(
-                ".nav-item"
-            );
-
-
-        navItems.forEach(function (item) {
-
-            item.addEventListener(
-                "click",
-                function () {
-
-                    const page =
-                        item.dataset.page;
-
-
-                    if (!page) {
-                        return;
-                    }
-
-
-                    showPage(page);
-
-                }
-            );
-
-        });
-
-    }
-
-
-    /* ========================================================
-       DASHBOARD ACTIONS
+       ACTION BUTTONS
     ======================================================== */
 
     function initializeActions() {
 
-        const addPaper =
+        const heroAdd =
             document.getElementById(
-                "add-paper-button"
-            );
-
-
-        const quickAdd =
-            document.getElementById(
-                "quick-add-paper"
+                "hero-add-paper"
             );
 
 
         const browse =
             document.getElementById(
-                "quick-browse-papers"
+                "browse-papers"
+            );
+
+
+        const summary =
+            document.getElementById(
+                "create-summary"
+            );
+
+
+        const gap =
+            document.getElementById(
+                "create-gap"
             );
 
 
@@ -558,29 +574,13 @@
             );
 
 
-        if (addPaper) {
+        if (heroAdd) {
 
-            addPaper.addEventListener(
+            heroAdd.addEventListener(
                 "click",
                 function () {
 
-                    showPage(
-                        "input-paper"
-                    );
-
-                }
-            );
-
-        }
-
-
-        if (quickAdd) {
-
-            quickAdd.addEventListener(
-                "click",
-                function () {
-
-                    showPage(
+                    navigate(
                         "input-paper"
                     );
 
@@ -596,8 +596,40 @@
                 "click",
                 function () {
 
-                    showPage(
+                    navigate(
                         "papers"
+                    );
+
+                }
+            );
+
+        }
+
+
+        if (summary) {
+
+            summary.addEventListener(
+                "click",
+                function () {
+
+                    navigate(
+                        "summary"
+                    );
+
+                }
+            );
+
+        }
+
+
+        if (gap) {
+
+            gap.addEventListener(
+                "click",
+                function () {
+
+                    navigate(
+                        "research-gap"
                     );
 
                 }
@@ -612,7 +644,7 @@
                 "click",
                 function () {
 
-                    showPage(
+                    navigate(
                         "papers"
                     );
 
@@ -628,7 +660,7 @@
        REFRESH
     ======================================================== */
 
-    function refreshDashboard() {
+    function refresh() {
 
         updateStatistics();
 
@@ -638,19 +670,31 @@
 
 
     /* ========================================================
+       LISTEN TO STORAGE CHANGES
+    ======================================================== */
+
+    window.addEventListener(
+        "storage",
+        function () {
+
+            refresh();
+
+        }
+    );
+
+
+    /* ========================================================
        PUBLIC API
     ======================================================== */
 
-    window.Dashboard = {
+    window.ResearchDashboard = {
 
-        refresh:
-            refreshDashboard,
+        refresh: refresh,
 
-        showPage:
-            showPage,
+        navigate: navigate,
 
-        getStatistics:
-            getStatistics
+        statistics:
+            updateStatistics
 
     };
 
@@ -659,19 +703,27 @@
        INIT
     ======================================================== */
 
-    function initialize() {
-
-        initializeSidebar();
+    function init() {
 
         initializeNavigation();
 
+        initializeSidebar();
+
         initializeActions();
 
-        refreshDashboard();
+        refresh();
+
+
+        /*
+         * Pastikan dashboard aktif
+         * ketika pertama kali dibuka.
+         */
+
+        navigate("dashboard");
 
 
         console.log(
-            "Research Paper Manager Dashboard loaded."
+            "Research Paper Manager Dashboard initialized."
         );
 
     }
@@ -683,12 +735,12 @@
 
         document.addEventListener(
             "DOMContentLoaded",
-            initialize
+            init
         );
 
     } else {
 
-        initialize();
+        init();
 
     }
 
