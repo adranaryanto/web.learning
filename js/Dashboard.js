@@ -14,7 +14,8 @@
        STATE
     ======================================================== */
 
-    const state = {
+    const DashboardState = {
+
         initialized: false,
 
         statistics: {
@@ -23,11 +24,12 @@
             miniReviews: 0,
             researchGaps: 0
         }
+
     };
 
 
     /* ========================================================
-       DOM
+       DOM ELEMENTS
     ======================================================== */
 
     let elements = {};
@@ -52,11 +54,14 @@
             totalResearchGaps:
                 document.getElementById("total-research-gaps"),
 
-            paperProgress:
-                document.getElementById("paper-progress"),
-
             recentActivity:
-                document.getElementById("recent-activity")
+                document.getElementById("recent-activity"),
+
+            addPaperButton:
+                document.getElementById("dashboard-add-paper"),
+
+            browsePapersButton:
+                document.getElementById("dashboard-view-papers")
 
         };
 
@@ -64,10 +69,10 @@
 
 
     /* ========================================================
-       STORAGE
+       STORAGE HELPER
     ======================================================== */
 
-    function readArray(key) {
+    function readStorageArray(key) {
 
         try {
 
@@ -75,20 +80,30 @@
                 localStorage.getItem(key);
 
             if (!raw) {
+
                 return [];
+
             }
 
-            const data =
+
+            const parsed =
                 JSON.parse(raw);
 
-            return Array.isArray(data)
-                ? data
-                : [];
+
+            if (!Array.isArray(parsed)) {
+
+                return [];
+
+            }
+
+
+            return parsed;
 
         } catch (error) {
 
             console.warn(
-                `Unable to read ${key}:`,
+                "Dashboard storage error:",
+                key,
                 error
             );
 
@@ -99,60 +114,81 @@
     }
 
 
-    function getStatistics() {
+    /* ========================================================
+       STATISTICS
+    ======================================================== */
+
+    function calculateStatistics() {
 
         const papers =
-            readArray("rpm_papers");
+            readStorageArray("rpm_papers");
+
 
         const summaries =
-            readArray("rpm_summaries");
+            readStorageArray("rpm_summaries");
+
 
         const miniReviews =
-            readArray("rpm_mini_reviews");
+            readStorageArray("rpm_mini_reviews");
+
 
         const researchGaps =
-            readArray("rpm_research_gaps");
+            readStorageArray("rpm_research_gaps");
 
 
-        state.statistics = {
+        DashboardState.statistics = {
 
-            papers: papers.length,
+            papers:
+                papers.length,
 
-            summaries: summaries.length,
+            summaries:
+                summaries.length,
 
-            miniReviews: miniReviews.length,
+            miniReviews:
+                miniReviews.length,
 
-            researchGaps: researchGaps.length
+            researchGaps:
+                researchGaps.length
 
         };
 
 
-        return state.statistics;
+        return DashboardState.statistics;
 
     }
 
 
     /* ========================================================
-       STATISTIC COUNTER
+       NUMBER ANIMATION
     ======================================================== */
 
-    function animateNumber(element, target) {
+    function animateNumber(
+        element,
+        target
+    ) {
 
         if (!element) {
+
             return;
+
         }
 
 
-        const duration = 600;
+        const finalValue =
+            Number(target) || 0;
+
+
+        const duration = 550;
 
         const startTime =
             performance.now();
 
 
-        function update(currentTime) {
+        function frame(currentTime) {
 
             const elapsed =
                 currentTime - startTime;
+
 
             const progress =
                 Math.min(
@@ -161,7 +197,7 @@
                 );
 
 
-            const eased =
+            const easedProgress =
                 1 -
                 Math.pow(
                     1 - progress,
@@ -169,28 +205,29 @@
                 );
 
 
-            const value =
+            const currentValue =
                 Math.round(
-                    target * eased
+                    finalValue *
+                    easedProgress
                 );
 
 
             element.textContent =
-                value.toLocaleString();
+                currentValue.toLocaleString(
+                    "en-US"
+                );
 
 
             if (progress < 1) {
 
-                requestAnimationFrame(
-                    update
-                );
+                requestAnimationFrame(frame);
 
             }
 
         }
 
 
-        requestAnimationFrame(update);
+        requestAnimationFrame(frame);
 
     }
 
@@ -198,7 +235,7 @@
     function updateStatistics() {
 
         const stats =
-            getStatistics();
+            calculateStatistics();
 
 
         animateNumber(
@@ -228,20 +265,13 @@
 
 
     /* ========================================================
-       RECENT ACTIVITY
+       RECENT PAPERS
     ======================================================== */
 
-    function getLatestPapers() {
+    function getRecentPapers() {
 
         const papers =
-            readArray("rpm_papers");
-
-
-        if (!papers.length) {
-
-            return [];
-
-        }
+            readStorageArray("rpm_papers");
 
 
         return papers
@@ -252,92 +282,29 @@
     }
 
 
-    function renderRecentActivity() {
+    function getPaperTitle(paper) {
 
-        if (!elements.recentActivity) {
-            return;
-        }
-
-
-        const papers =
-            getLatestPapers();
-
-
-        if (!papers.length) {
-
-            elements.recentActivity.innerHTML = `
-                <div class="empty-activity">
-
-                    <div class="empty-activity-icon">
-                        📚
-                    </div>
-
-                    <div>
-                        <strong>
-                            No papers yet
-                        </strong>
-
-                        <span>
-                            Add your first research paper
-                            to start building your library.
-                        </span>
-                    </div>
-
-                </div>
-            `;
-
-            return;
-
-        }
-
-
-        elements.recentActivity.innerHTML =
-            papers
-                .map(function (paper) {
-
-                    const title =
-                        paper.title ||
-                        paper.Title ||
-                        "Untitled Paper";
-
-
-                    const authors =
-                        paper.authors ||
-                        paper.Authors ||
-                        "Unknown author";
-
-
-                    return `
-                        <div class="activity-item">
-
-                            <div class="activity-icon">
-                                📄
-                            </div>
-
-                            <div class="activity-info">
-
-                                <strong>
-                                    ${escapeHTML(title)}
-                                </strong>
-
-                                <span>
-                                    ${escapeHTML(authors)}
-                                </span>
-
-                            </div>
-
-                        </div>
-                    `;
-
-                })
-                .join("");
+        return (
+            paper.title ||
+            paper.Title ||
+            paper.paperTitle ||
+            "Untitled Paper"
+        );
 
     }
 
 
-    /* ========================================================
-       HTML ESCAPE
-    ======================================================== */
+    function getPaperAuthors(paper) {
+
+        return (
+            paper.authors ||
+            paper.Authors ||
+            paper.author ||
+            "Unknown author"
+        );
+
+    }
+
 
     function escapeHTML(value) {
 
@@ -351,11 +318,110 @@
     }
 
 
+    function renderRecentPapers() {
+
+        const container =
+            elements.recentActivity;
+
+
+        if (!container) {
+
+            return;
+
+        }
+
+
+        const papers =
+            getRecentPapers();
+
+
+        if (!papers.length) {
+
+            container.innerHTML = `
+
+                <div class="empty-activity">
+
+                    <div class="empty-activity-icon">
+                        <span>＋</span>
+                    </div>
+
+                    <div class="empty-activity-text">
+
+                        <strong>
+                            No papers yet
+                        </strong>
+
+                        <span>
+                            Add your first paper to
+                            start building your library.
+                        </span>
+
+                    </div>
+
+                </div>
+
+            `;
+
+            return;
+
+        }
+
+
+        container.innerHTML =
+            papers
+                .map(function (paper) {
+
+                    const title =
+                        escapeHTML(
+                            getPaperTitle(paper)
+                        );
+
+
+                    const authors =
+                        escapeHTML(
+                            getPaperAuthors(paper)
+                        );
+
+
+                    return `
+
+                        <div class="activity-item">
+
+                            <div class="activity-icon">
+                                <span>▤</span>
+                            </div>
+
+                            <div class="activity-info">
+
+                                <strong>
+                                    ${title}
+                                </strong>
+
+                                <span>
+                                    ${authors}
+                                </span>
+
+                            </div>
+
+                            <div class="activity-arrow">
+                                →
+                            </div>
+
+                        </div>
+
+                    `;
+
+                })
+                .join("");
+
+    }
+
+
     /* ========================================================
-       QUICK ACTIONS
+       NAVIGATION
     ======================================================== */
 
-    function openPage(page) {
+    function navigate(page) {
 
         if (
             window.App &&
@@ -364,32 +430,27 @@
 
             window.App.navigateTo(page);
 
+            return;
+
         }
+
+
+        console.warn(
+            "App navigation controller belum tersedia."
+        );
 
     }
 
 
-    function bindQuickActions() {
+    function bindNavigation() {
 
-        const inputPaperButton =
-            document.getElementById(
-                "dashboard-add-paper"
-            );
+        if (elements.addPaperButton) {
 
-
-        const papersButton =
-            document.getElementById(
-                "dashboard-view-papers"
-            );
-
-
-        if (inputPaperButton) {
-
-            inputPaperButton.addEventListener(
+            elements.addPaperButton.addEventListener(
                 "click",
                 function () {
 
-                    openPage("input-paper");
+                    navigate("input-paper");
 
                 }
             );
@@ -397,13 +458,13 @@
         }
 
 
-        if (papersButton) {
+        if (elements.browsePapersButton) {
 
-            papersButton.addEventListener(
+            elements.browsePapersButton.addEventListener(
                 "click",
                 function () {
 
-                    openPage("papers");
+                    navigate("papers");
 
                 }
             );
@@ -419,47 +480,46 @@
 
     function refresh() {
 
-        updateStatistics();
-
-        renderRecentActivity();
-
-    }
-
-
-    /* ========================================================
-       INITIALIZATION
-    ======================================================== */
-
-    function initialize() {
-
-        if (state.initialized) {
-
-            refresh();
+        if (!elements.dashboard) {
 
             return;
 
         }
 
 
+        updateStatistics();
+
+        renderRecentPapers();
+
+    }
+
+
+    /* ========================================================
+       INITIALIZE
+    ======================================================== */
+
+    function initialize() {
+
         cacheElements();
 
-        bindQuickActions();
+        bindNavigation();
 
         refresh();
 
 
-        state.initialized = true;
+        DashboardState.initialized =
+            true;
 
 
         console.log(
-            "Research Paper Manager Dashboard initialized."
+            "Dashboard initialized."
         );
 
     }
 
 
     /* ========================================================
-       PAGE CHANGE
+       APP PAGE EVENT
     ======================================================== */
 
     document.addEventListener(
@@ -467,8 +527,16 @@
         function (event) {
 
             if (
-                event &&
-                event.detail &&
+                !event ||
+                !event.detail
+            ) {
+
+                return;
+
+            }
+
+
+            if (
                 event.detail.page === "dashboard"
             ) {
 
@@ -493,20 +561,20 @@
         getStatistics: function () {
 
             return {
-                ...state.statistics
+                ...DashboardState.statistics
             };
 
         },
 
         openInputPaper: function () {
 
-            openPage("input-paper");
+            navigate("input-paper");
 
         },
 
         openPapers: function () {
 
-            openPage("papers");
+            navigate("papers");
 
         }
 
