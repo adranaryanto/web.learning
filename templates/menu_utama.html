@@ -10,925 +10,1173 @@
         content="width=device-width, initial-scale=1.0"
     >
 
-    <title>Paper - Dashboard</title>
+    <title>
+        PaperLab — Research Workspace
+    </title>
 
 
-    <style>
+<style>
 
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
+/* =========================================================
+   RESET
+   ========================================================= */
 
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
 
-        body {
 
-            font-family:
-                "Segoe UI",
-                Arial,
-                sans-serif;
+:root {
 
-            background: #f5f7fb;
+    --background: #f7f7f5;
 
-            color: #202638;
+    --surface: #ffffff;
 
-            min-height: 100vh;
+    --surface-soft: #f1f1ee;
 
-        }
+    --border: #e6e6e1;
 
+    --text: #171717;
 
-        /* =====================================================
-           SIDEBAR
-        ===================================================== */
+    --text-secondary: #6f6f69;
 
-        .sidebar {
+    --text-muted: #999991;
 
-            position: fixed;
+    --success: #39734b;
 
-            left: 0;
-            top: 0;
-            bottom: 0;
+    --success-bg: #edf5ef;
 
-            width: 250px;
+    --warning: #9a681e;
 
-            background: #151a2d;
+    --warning-bg: #faf2df;
 
-            color: white;
+    --sidebar-width: 250px;
 
-            display: flex;
+    --radius: 12px;
+}
 
-            flex-direction: column;
 
-            z-index: 1000;
+body {
 
-            transition: 0.3s ease;
+    font-family:
+        Inter,
+        ui-sans-serif,
+        system-ui,
+        -apple-system,
+        BlinkMacSystemFont,
+        "Segoe UI",
+        sans-serif;
 
-        }
+    background: var(--background);
 
+    color: var(--text);
 
-        /* LOGO */
+    line-height: 1.5;
 
-        .sidebar-header {
+    -webkit-font-smoothing: antialiased;
+}
 
-            height: 82px;
 
-            display: flex;
+a {
 
-            align-items: center;
+    text-decoration: none;
 
-            padding: 0 22px;
+    color: inherit;
+}
 
-            border-bottom:
-                1px solid
-                rgba(255,255,255,0.06);
 
-        }
+button,
+input {
 
+    font: inherit;
+}
 
-        .sidebar-logo {
 
-            width: 42px;
+/* =========================================================
+   APP
+   ========================================================= */
 
-            height: 42px;
+.app {
 
-            object-fit: contain;
+    display: flex;
 
-            margin-right: 11px;
+    min-height: 100vh;
+}
 
-        }
 
+/* =========================================================
+   SIDEBAR
+   ========================================================= */
 
-        .brand-text {
+.sidebar {
 
-            display: flex;
+    width: var(--sidebar-width);
 
-            flex-direction: column;
+    min-height: 100vh;
 
-        }
+    position: fixed;
 
+    left: 0;
+    top: 0;
 
-        .brand-name {
+    background: var(--surface);
 
-            font-size: 18px;
+    border-right: 1px solid var(--border);
 
-            font-weight: 700;
+    padding: 27px 15px 20px;
 
-            letter-spacing: -0.3px;
+    display: flex;
 
-        }
+    flex-direction: column;
 
+    z-index: 100;
+}
 
-        .brand-version {
 
-            font-size: 9px;
+/* BRAND */
 
-            color: #7f88a7;
+.brand {
 
-            margin-top: 2px;
+    display: flex;
 
-        }
+    align-items: center;
 
+    gap: 11px;
 
-        /* NAVIGATION */
+    padding: 0 10px 30px;
+}
 
-        .sidebar-content {
 
-            flex: 1;
+.brand-logo {
 
-            overflow-y: auto;
+    width: 35px;
 
-            padding: 20px 13px;
+    height: 35px;
 
-        }
+    object-fit: contain;
 
+    border-radius: 8px;
+}
 
-        .nav-section {
 
-            margin-bottom: 23px;
+.brand-name {
 
-        }
+    font-size: 15px;
 
+    font-weight: 700;
 
-        .nav-title {
+    letter-spacing: -.3px;
+}
 
-            padding: 0 12px;
 
-            margin-bottom: 8px;
+.brand-subtitle {
 
-            color: #69728f;
+    display: block;
 
-            font-size: 10px;
+    margin-top: 1px;
 
-            font-weight: 700;
+    color: var(--text-muted);
 
-            letter-spacing: 1px;
+    font-size: 9px;
+}
 
-            text-transform: uppercase;
 
-        }
+/* NAV */
 
+.nav-section {
 
-        .nav-item {
+    margin-bottom: 24px;
+}
 
-            display: flex;
 
-            align-items: center;
+.nav-title {
 
-            width: 100%;
+    padding: 0 12px;
 
-            padding: 11px 12px;
+    margin-bottom: 7px;
 
-            margin-bottom: 3px;
+    font-size: 9px;
 
-            border-radius: 9px;
+    font-weight: 700;
 
-            color: #aeb5c9;
+    letter-spacing: 1.3px;
 
-            text-decoration: none;
+    color: var(--text-muted);
+}
 
-            font-size: 13px;
 
-            font-weight: 500;
+.nav-item {
 
-            transition: 0.2s ease;
+    display: flex;
 
-        }
+    align-items: center;
 
+    gap: 11px;
 
-        .nav-item:hover {
+    padding: 10px 12px;
 
-            background:
-                rgba(255,255,255,0.06);
+    margin: 2px 0;
 
-            color: white;
+    border-radius: 8px;
 
-        }
+    color: var(--text-secondary);
 
+    font-size: 13px;
 
-        .nav-item.active {
+    transition: .18s ease;
+}
 
-            background: #5667f2;
 
-            color: white;
+.nav-item:hover {
 
-            box-shadow:
-                0 6px 16px
-                rgba(86,103,242,0.22);
+    background: var(--surface-soft);
 
-        }
+    color: var(--text);
+}
 
 
-        .nav-icon {
+.nav-item.active {
 
-            width: 28px;
+    background: var(--text);
 
-            font-size: 16px;
+    color: white;
+}
 
-            text-align: center;
 
-            margin-right: 7px;
+.nav-icon {
 
-        }
+    width: 18px;
 
+    display: inline-flex;
 
-        /* USER */
+    justify-content: center;
 
-        .sidebar-user {
+    align-items: center;
 
-            padding: 15px;
+    font-size: 14px;
+}
 
-            border-top:
-                1px solid
-                rgba(255,255,255,0.06);
 
-        }
+.sidebar-bottom {
 
+    margin-top: auto;
+}
 
-        .user-card {
 
-            display: flex;
+/* =========================================================
+   MAIN
+   ========================================================= */
 
-            align-items: center;
+.main {
 
-            padding: 10px;
+    width: calc(100% - var(--sidebar-width));
 
-            border-radius: 10px;
+    margin-left: var(--sidebar-width);
 
-            background:
-                rgba(255,255,255,0.04);
+    min-height: 100vh;
+}
 
-        }
 
+/* =========================================================
+   TOPBAR
+   ========================================================= */
 
-        .user-avatar {
+.topbar {
 
-            width: 36px;
+    height: 72px;
 
-            height: 36px;
+    padding: 0 38px;
 
-            border-radius: 50%;
+    display: flex;
 
-            background: #5667f2;
+    align-items: center;
 
-            display: flex;
+    justify-content: space-between;
 
-            align-items: center;
+    background: rgba(247,247,245,.92);
 
-            justify-content: center;
+    border-bottom: 1px solid var(--border);
 
-            font-size: 14px;
+    position: sticky;
 
-            font-weight: 700;
+    top: 0;
 
-            margin-right: 10px;
+    z-index: 50;
 
-        }
+    backdrop-filter: blur(12px);
+}
 
 
-        .user-info {
+.location {
 
-            flex: 1;
+    font-size: 12px;
 
-        }
+    color: var(--text-muted);
+}
 
 
-        .user-name {
+.topbar-right {
 
-            font-size: 12px;
+    display: flex;
 
-            font-weight: 600;
+    align-items: center;
 
-            color: white;
+    gap: 12px;
+}
 
-        }
 
+.search {
 
-        .user-role {
+    width: 220px;
 
-            font-size: 10px;
+    height: 36px;
 
-            color: #78819c;
+    display: flex;
 
-            margin-top: 2px;
+    align-items: center;
 
-        }
+    gap: 8px;
 
+    padding: 0 10px;
 
-        .logout-button {
+    border: 1px solid var(--border);
 
-            color: #8e96ad;
+    background: var(--surface);
 
-            text-decoration: none;
+    border-radius: 8px;
 
-            font-size: 16px;
+    color: var(--text-muted);
+}
 
-        }
 
+.search input {
 
-        .logout-button:hover {
+    width: 100%;
 
-            color: #ff7777;
+    border: none;
 
-        }
+    outline: none;
 
+    background: transparent;
 
-        /* =====================================================
-           MAIN
-        ===================================================== */
+    font-size: 12px;
+}
 
-        .main {
 
-            margin-left: 250px;
+.search input::placeholder {
 
-            min-height: 100vh;
+    color: var(--text-muted);
+}
 
-            transition: 0.3s ease;
 
-        }
+.avatar {
 
+    width: 32px;
 
-        /* TOPBAR */
+    height: 32px;
 
-        .topbar {
+    display: flex;
 
-            height: 70px;
+    align-items: center;
 
-            background: white;
+    justify-content: center;
 
-            border-bottom:
-                1px solid #e9ecf2;
+    border-radius: 50%;
 
-            display: flex;
+    background: var(--surface-soft);
 
-            align-items: center;
+    font-size: 11px;
 
-            justify-content: space-between;
+    font-weight: 700;
+}
 
-            padding: 0 30px;
 
-        }
+.user-name {
 
+    font-size: 11px;
 
-        .page-title {
+    font-weight: 600;
+}
 
-            font-size: 17px;
 
-            font-weight: 700;
+/* =========================================================
+   CONTENT
+   ========================================================= */
 
-            color: #202638;
+.content {
 
-        }
+    max-width: 1500px;
 
+    margin: auto;
 
-        .page-subtitle {
+    padding: 48px 42px 60px;
+}
 
-            font-size: 11px;
 
-            color: #9299a9;
+/* =========================================================
+   HERO
+   ========================================================= */
 
-            margin-top: 3px;
+.hero {
 
-        }
+    display: flex;
 
+    align-items: flex-end;
 
-        .topbar-right {
+    justify-content: space-between;
 
-            display: flex;
+    gap: 30px;
 
-            align-items: center;
+    margin-bottom: 38px;
+}
 
-            gap: 15px;
 
-        }
+.eyebrow {
 
+    font-size: 9px;
 
-        .status-indicator {
+    font-weight: 700;
 
-            display: flex;
+    letter-spacing: 1.4px;
 
-            align-items: center;
+    color: var(--text-muted);
+}
 
-            gap: 6px;
 
-            font-size: 11px;
+.hero h1 {
 
-            color: #7e8798;
+    margin-top: 8px;
 
-        }
+    font-size: clamp(34px,4vw,52px);
 
+    line-height: 1.02;
 
-        .status-dot {
+    letter-spacing: -2.2px;
 
-            width: 7px;
+    font-weight: 650;
+}
 
-            height: 7px;
 
-            border-radius: 50%;
+.hero p {
 
-            background: #35c77a;
+    max-width: 590px;
 
-        }
+    margin-top: 17px;
 
+    color: var(--text-secondary);
 
-        .menu-toggle {
+    font-size: 13px;
 
-            display: none;
+    line-height: 1.7;
+}
 
-            border: none;
 
-            background: transparent;
+.primary-button {
 
-            font-size: 22px;
+    display: inline-flex;
 
-            cursor: pointer;
+    align-items: center;
 
-        }
+    gap: 8px;
 
+    padding: 12px 17px;
 
-        /* =====================================================
-           CONTENT
-        ===================================================== */
+    border-radius: 8px;
 
-        .content {
+    background: var(--text);
 
-            padding: 30px;
+    color: white;
 
-        }
+    font-size: 12px;
 
+    white-space: nowrap;
 
-        .welcome {
+    transition: .15s ease;
+}
 
-            margin-bottom: 25px;
 
-        }
+.primary-button:hover {
 
+    transform: translateY(-1px);
+}
 
-        .welcome h1 {
 
-            font-size: 25px;
+/* =========================================================
+   STATISTICS
+   ========================================================= */
 
-            font-weight: 700;
+.stats {
 
-            color: #202638;
+    display: grid;
 
-        }
+    grid-template-columns:
+        repeat(4, 1fr);
 
+    gap: 12px;
 
-        .welcome p {
+    margin-bottom: 24px;
+}
 
-            margin-top: 7px;
 
-            color: #8991a3;
+.stat {
 
-            font-size: 13px;
+    padding: 19px;
 
-        }
+    background: var(--surface);
 
+    border: 1px solid var(--border);
 
-        /* =====================================================
-           STATISTICS
-        ===================================================== */
+    border-radius: var(--radius);
+}
 
-        .stats-grid {
 
-            display: grid;
+.stat-top {
 
-            grid-template-columns:
-                repeat(4, 1fr);
+    display: flex;
 
-            gap: 18px;
+    align-items: center;
 
-            margin-bottom: 30px;
+    justify-content: space-between;
+}
 
-        }
 
+.stat-label {
 
-        .stat-card {
+    font-size: 9px;
 
-            background: white;
+    letter-spacing: .8px;
 
-            border:
-                1px solid #e8ebf1;
+    font-weight: 700;
 
-            border-radius: 14px;
+    color: var(--text-muted);
+}
 
-            padding: 20px;
 
-            display: flex;
+.stat-icon {
 
-            align-items: center;
+    width: 27px;
 
-            transition: 0.2s ease;
+    height: 27px;
 
-        }
+    display: flex;
 
+    align-items: center;
 
-        .stat-card:hover {
+    justify-content: center;
 
-            transform:
-                translateY(-2px);
+    background: var(--surface-soft);
 
-            box-shadow:
-                0 8px 25px
-                rgba(32,38,56,0.06);
+    border-radius: 7px;
 
-        }
+    font-size: 12px;
+}
 
 
-        .stat-icon {
+.stat-value {
 
-            width: 46px;
+    margin-top: 17px;
 
-            height: 46px;
+    font-size: 30px;
 
-            border-radius: 11px;
+    line-height: 1;
 
-            background: #eef0ff;
+    font-weight: 600;
 
-            display: flex;
+    letter-spacing: -1px;
+}
 
-            align-items: center;
 
-            justify-content: center;
+.stat-description {
 
-            font-size: 20px;
+    margin-top: 9px;
 
-            margin-right: 13px;
+    font-size: 10px;
 
-        }
+    color: var(--text-muted);
+}
 
 
-        .stat-label {
+.green {
 
-            color: #9299a9;
+    color: var(--success);
+}
 
-            font-size: 11px;
 
-        }
+.orange {
 
+    color: var(--warning);
+}
 
-        .stat-value {
 
-            font-size: 23px;
+/* =========================================================
+   DASHBOARD GRID
+   ========================================================= */
 
-            font-weight: 700;
+.dashboard-grid {
 
-            color: #202638;
+    display: grid;
 
-            margin-top: 2px;
+    grid-template-columns:
+        minmax(0,1.55fr)
+        minmax(300px,.85fr);
 
-        }
+    gap: 18px;
 
+    margin-bottom: 24px;
+}
 
-        /* =====================================================
-           SECTION HEADER
-        ===================================================== */
 
-        .section-header {
+.panel {
 
-            display: flex;
+    background: var(--surface);
 
-            align-items: center;
+    border: 1px solid var(--border);
 
-            justify-content: space-between;
+    border-radius: var(--radius);
 
-            margin-bottom: 15px;
+    overflow: hidden;
+}
 
-        }
 
+.panel-header {
 
-        .section-title {
+    padding: 21px 22px 18px;
 
-            font-size: 16px;
+    display: flex;
 
-            font-weight: 700;
+    align-items: flex-start;
 
-        }
+    justify-content: space-between;
+}
 
 
-        .section-description {
+.panel-title {
 
-            font-size: 11px;
+    margin-top: 4px;
 
-            color: #9299a9;
+    font-size: 17px;
 
-            margin-top: 3px;
+    letter-spacing: -.4px;
+}
 
-        }
 
+.panel-link {
 
-        /* =====================================================
-           RESEARCH TOOLS
-        ===================================================== */
+    font-size: 10px;
 
-        .tools-grid {
+    color: var(--text-secondary);
+}
 
-            display: grid;
 
-            grid-template-columns:
-                repeat(3, 1fr);
+/* =========================================================
+   RECENT PAPERS
+   ========================================================= */
 
-            gap: 18px;
+.paper-list {
 
-            margin-bottom: 30px;
+    border-top: 1px solid var(--border);
+}
 
-        }
 
+.paper {
 
-        .tool-card {
+    display: flex;
 
-            background: white;
+    align-items: center;
 
-            border:
-                1px solid #e8ebf1;
+    gap: 15px;
 
-            border-radius: 14px;
+    padding: 17px 22px;
 
-            padding: 21px;
+    border-bottom: 1px solid var(--border);
+}
 
-            text-decoration: none;
 
-            color: inherit;
+.paper:last-child {
 
-            transition: 0.2s ease;
+    border-bottom: none;
+}
 
-        }
 
+.paper-number {
 
-        .tool-card:hover {
+    width: 24px;
 
-            transform:
-                translateY(-3px);
+    font-size: 10px;
 
-            box-shadow:
-                0 10px 30px
-                rgba(32,38,56,0.07);
+    color: var(--text-muted);
+}
 
-            border-color: #dce1ff;
 
-        }
+.paper-content {
 
+    flex: 1;
 
-        .tool-icon {
+    min-width: 0;
+}
 
-            width: 43px;
 
-            height: 43px;
+.paper-title {
 
-            border-radius: 11px;
+    font-size: 12px;
 
-            background: #eef0ff;
+    font-weight: 600;
 
-            display: flex;
+    line-height: 1.45;
 
-            align-items: center;
+    margin-bottom: 4px;
+}
 
-            justify-content: center;
 
-            font-size: 19px;
+.paper-journal {
 
-            margin-bottom: 14px;
+    font-size: 9px;
 
-        }
+    color: var(--text-muted);
+}
 
 
-        .tool-title {
+.tags {
 
-            font-size: 14px;
+    display: flex;
 
-            font-weight: 700;
+    flex-wrap: wrap;
 
-            color: #252b3b;
+    gap: 5px;
 
-            margin-bottom: 6px;
+    margin-top: 7px;
+}
 
-        }
 
+.tag {
 
-        .tool-description {
+    padding: 3px 6px;
 
-            font-size: 11px;
+    border-radius: 4px;
 
-            color: #8b93a4;
+    background: var(--surface-soft);
 
-            line-height: 1.55;
+    color: var(--text-secondary);
 
-        }
+    font-size: 8px;
+}
 
 
-        /* =====================================================
-           RECENT PAPERS
-        ===================================================== */
+.status {
 
-        .recent-card {
+    padding: 5px 8px;
 
-            background: white;
+    border-radius: 5px;
 
-            border:
-                1px solid #e8ebf1;
+    font-size: 8px;
 
-            border-radius: 14px;
+    white-space: nowrap;
+}
 
-            min-height: 190px;
 
-            display: flex;
+.status.reviewed {
 
-            align-items: center;
+    background: var(--success-bg);
 
-            justify-content: center;
+    color: var(--success);
+}
 
-        }
 
+.status.pending {
 
-        .empty-state {
+    background: var(--warning-bg);
 
-            text-align: center;
+    color: var(--warning);
+}
 
-            padding: 30px;
 
-        }
+/* =========================================================
+   OVERVIEW
+   ========================================================= */
 
+.overview {
 
-        .empty-icon {
+    padding-bottom: 22px;
+}
 
-            width: 50px;
 
-            height: 50px;
+.overview-body {
 
-            border-radius: 12px;
+    padding: 0 22px;
+}
 
-            background: #f0f2f7;
 
-            display: flex;
+.overview-heading {
 
-            align-items: center;
+    display: flex;
 
-            justify-content: center;
+    align-items: center;
 
-            margin: 0 auto 12px;
+    justify-content: space-between;
 
-            font-size: 22px;
+    margin-bottom: 15px;
 
-        }
+    font-size: 11px;
 
+    font-weight: 600;
+}
 
-        .empty-title {
 
-            font-size: 14px;
+.overview-heading small {
 
-            font-weight: 700;
+    color: var(--text-muted);
 
-            color: #454c5d;
+    font-size: 9px;
 
-        }
+    font-weight: 400;
+}
 
 
-        .empty-description {
+.topic {
 
-            font-size: 11px;
+    margin-bottom: 14px;
+}
 
-            color: #969dac;
 
-            margin-top: 5px;
+.topic-info {
 
-        }
+    display: flex;
 
+    align-items: center;
 
-        .upload-button {
+    justify-content: space-between;
 
-            display: inline-block;
+    margin-bottom: 6px;
 
-            margin-top: 14px;
+    font-size: 10px;
+}
 
-            padding: 9px 16px;
 
-            background: #5667f2;
+.progress {
 
-            color: white;
+    height: 5px;
 
-            border-radius: 8px;
+    background: var(--surface-soft);
 
-            text-decoration: none;
+    border-radius: 20px;
 
-            font-size: 11px;
+    overflow: hidden;
+}
 
-            font-weight: 600;
 
-        }
+.progress span {
 
+    display: block;
 
-        .upload-button:hover {
+    height: 100%;
 
-            background: #4556df;
+    background: var(--text);
 
-        }
+    border-radius: inherit;
+}
 
 
-        /* =====================================================
-           RESPONSIVE
-        ===================================================== */
+.divider {
 
-        @media (max-width: 1100px) {
+    height: 1px;
 
-            .stats-grid {
+    background: var(--border);
 
-                grid-template-columns:
-                    repeat(2, 1fr);
+    margin: 23px 0;
+}
 
-            }
 
+.big-progress {
 
-            .tools-grid {
+    height: 8px;
 
-                grid-template-columns:
-                    repeat(2, 1fr);
+    background: var(--surface-soft);
 
-            }
+    border-radius: 20px;
 
-        }
+    overflow: hidden;
+}
 
 
-        @media (max-width: 800px) {
+.big-progress span {
 
-            .sidebar {
+    display: block;
 
-                transform:
-                    translateX(-100%);
+    height: 100%;
 
-            }
+    background: var(--text);
 
+    border-radius: inherit;
+}
 
-            .sidebar.open {
 
-                transform:
-                    translateX(0);
+.progress-meta {
 
-            }
+    display: flex;
 
+    justify-content: space-between;
 
-            .main {
+    margin-top: 8px;
 
-                margin-left: 0;
+    color: var(--text-muted);
 
-            }
+    font-size: 9px;
+}
 
 
-            .menu-toggle {
+.secondary-button {
 
-                display: block;
+    display: flex;
 
-            }
+    justify-content: space-between;
 
+    align-items: center;
 
-            .content {
+    margin: 25px 22px 0;
 
-                padding: 22px;
+    padding: 11px 12px;
 
-            }
+    background: var(--surface-soft);
 
-        }
+    border-radius: 7px;
 
+    font-size: 10px;
 
-        @media (max-width: 550px) {
+    color: var(--text-secondary);
+}
 
-            .stats-grid {
 
-                grid-template-columns: 1fr;
+/* =========================================================
+   QUICK ACTIONS
+   ========================================================= */
 
-            }
+.quick {
 
+    padding: 21px 22px;
 
-            .tools-grid {
+    background: var(--surface);
 
-                grid-template-columns: 1fr;
+    border: 1px solid var(--border);
 
-            }
+    border-radius: var(--radius);
+}
 
 
-            .topbar {
+.quick-header {
 
-                padding: 0 18px;
+    margin-bottom: 17px;
+}
 
-            }
 
+.quick-title {
 
-            .status-indicator {
+    margin-top: 4px;
 
-                display: none;
+    font-size: 17px;
+}
 
-            }
 
+.quick-grid {
 
-            .welcome h1 {
+    display: grid;
 
-                font-size: 21px;
+    grid-template-columns:
+        repeat(3,1fr);
 
-            }
+    gap: 10px;
+}
 
-        }
 
-    </style>
+.action {
+
+    display: flex;
+
+    align-items: center;
+
+    gap: 11px;
+
+    padding: 14px;
+
+    border: 1px solid var(--border);
+
+    border-radius: 9px;
+
+    transition: .15s ease;
+}
+
+
+.action:hover {
+
+    transform: translateY(-1px);
+
+    border-color: #c8c8c1;
+}
+
+
+.action-icon {
+
+    width: 31px;
+
+    height: 31px;
+
+    flex-shrink: 0;
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: center;
+
+    background: var(--surface-soft);
+
+    border-radius: 7px;
+
+    font-size: 13px;
+}
+
+
+.action-content {
+
+    flex: 1;
+
+    min-width: 0;
+}
+
+
+.action-content strong {
+
+    display: block;
+
+    font-size: 10px;
+}
+
+
+.action-content span {
+
+    display: block;
+
+    margin-top: 2px;
+
+    font-size: 8px;
+
+    color: var(--text-muted);
+
+    white-space: nowrap;
+
+    overflow: hidden;
+
+    text-overflow: ellipsis;
+}
+
+
+.action-arrow {
+
+    color: var(--text-muted);
+
+    font-size: 12px;
+}
+
+
+/* =========================================================
+   RESPONSIVE
+   ========================================================= */
+
+@media (max-width: 1100px) {
+
+    .stats {
+
+        grid-template-columns:
+            repeat(2,1fr);
+    }
+
+    .dashboard-grid {
+
+        grid-template-columns: 1fr;
+    }
+
+    .quick-grid {
+
+        grid-template-columns: 1fr;
+    }
+}
+
+
+@media (max-width: 800px) {
+
+    :root {
+
+        --sidebar-width: 0px;
+    }
+
+    .sidebar {
+
+        display: none;
+    }
+
+    .main {
+
+        width: 100%;
+
+        margin-left: 0;
+    }
+
+    .content {
+
+        padding: 35px 18px 45px;
+    }
+
+    .topbar {
+
+        padding: 0 18px;
+    }
+
+    .location {
+
+        display: none;
+    }
+
+    .hero {
+
+        flex-direction: column;
+
+        align-items: flex-start;
+    }
+}
+
+
+@media (max-width: 550px) {
+
+    .stats {
+
+        grid-template-columns: 1fr;
+    }
+
+    .search {
+
+        display: none;
+    }
+
+    .hero h1 {
+
+        font-size: 35px;
+    }
+
+    .paper {
+
+        align-items: flex-start;
+
+        flex-wrap: wrap;
+    }
+
+    .status {
+
+        margin-left: 39px;
+    }
+}
+
+</style>
 
 </head>
 
@@ -936,59 +1184,53 @@
 <body>
 
 
-<!-- =====================================================
-     SIDEBAR
-===================================================== -->
-
-<aside
-    class="sidebar"
-    id="sidebar"
->
+<div class="app">
 
 
-    <!-- LOGO -->
+    <!-- =====================================================
+         SIDEBAR
+         ===================================================== -->
 
-    <div class="sidebar-header">
+    <aside class="sidebar">
 
-        <img
-            src="../static/logo.png"
-            alt="Paper Logo"
-            class="sidebar-logo"
-        >
 
-        <div class="brand-text">
+        <!-- BRAND -->
 
-            <div class="brand-name">
-                Paper
-            </div>
+        <div class="brand">
 
-            <div class="brand-version">
-                AI RESEARCH PLATFORM
+            <img
+                src="/static/logo.png"
+                alt="PaperLab"
+                class="brand-logo"
+            >
+
+            <div>
+
+                <div class="brand-name">
+                    PaperLab
+                </div>
+
+                <span class="brand-subtitle">
+                    Research Workspace
+                </span>
+
             </div>
 
         </div>
 
-    </div>
 
 
-    <!-- NAVIGATION -->
-
-    <div class="sidebar-content">
-
-
-        <!-- =================================================
-             MAIN
-        ================================================= -->
+        <!-- MAIN -->
 
         <div class="nav-section">
 
             <div class="nav-title">
-                Main
+                MAIN
             </div>
 
 
             <a
-                href="menu_utama.html"
+                href="/menu-utama"
                 class="nav-item active"
             >
 
@@ -1002,21 +1244,7 @@
 
 
             <a
-                href="input_paper.html"
-                class="nav-item"
-            >
-
-                <span class="nav-icon">
-                    ＋
-                </span>
-
-                Input Papers
-
-            </a>
-
-
-            <a
-                href="library.html"
+                href="/papers"
                 class="nav-item"
             >
 
@@ -1024,69 +1252,53 @@
                     ▤
                 </span>
 
-                Library
+                Papers
+
+            </a>
+
+
+            <a
+                href="/add-paper"
+                class="nav-item"
+            >
+
+                <span class="nav-icon">
+                    ＋
+                </span>
+
+                Add Paper
 
             </a>
 
         </div>
 
 
-        <!-- =================================================
-             RESEARCH
-        ================================================= -->
+
+        <!-- ANALYSIS -->
 
         <div class="nav-section">
 
             <div class="nav-title">
-                Research
+                ANALYSIS
             </div>
 
 
             <a
-                href="#"
+                href="/summary"
                 class="nav-item"
-                onclick="comingSoon(event, 'Projects')"
             >
 
                 <span class="nav-icon">
-                    ▦
+                    ◫
                 </span>
 
-                Projects
+                Summary
 
             </a>
 
 
             <a
-                href="research_gap.html"
-                class="nav-item"
-            >
-
-                <span class="nav-icon">
-                    ⌕
-                </span>
-
-                Research Gap
-
-            </a>
-
-
-            <a
-                href="novelty_find.html"
-                class="nav-item"
-            >
-
-                <span class="nav-icon">
-                    ✦
-                </span>
-
-                Novelty Find
-
-            </a>
-
-
-            <a
-                href="paper_summary.html"
+                href="/mini-review"
                 class="nav-item"
             >
 
@@ -1094,42 +1306,61 @@
                     ≡
                 </span>
 
-                Paper Summary
+                Mini Review
 
             </a>
 
 
             <a
-                href="mini_review.html"
+                href="/research-gap"
                 class="nav-item"
             >
 
                 <span class="nav-icon">
-                    ▥
+                    ⌁
                 </span>
 
-                Mini Review
+                Research Gap
 
             </a>
 
         </div>
 
 
-        <!-- =================================================
-             SYSTEM
-        ================================================= -->
+
+        <!-- TOOLS -->
 
         <div class="nav-section">
 
             <div class="nav-title">
-                System
+                TOOLS
             </div>
 
 
             <a
-                href="#"
+                href="/matrix"
                 class="nav-item"
-                onclick="comingSoon(event, 'Settings')"
+            >
+
+                <span class="nav-icon">
+                    ▦
+                </span>
+
+                Literature Matrix
+
+            </a>
+
+        </div>
+
+
+
+        <!-- BOTTOM -->
+
+        <div class="sidebar-bottom">
+
+            <a
+                href="/settings"
+                class="nav-item"
             >
 
                 <span class="nav-icon">
@@ -1143,1176 +1374,785 @@
         </div>
 
 
-    </div>
+    </aside>
+
 
 
     <!-- =====================================================
-         USER
-    ===================================================== -->
+         MAIN
+         ===================================================== -->
 
-    <div class="sidebar-user">
-
-        <div class="user-card">
+    <main class="main">
 
 
-            <div class="user-avatar">
-                A
+        <!-- TOPBAR -->
+
+        <header class="topbar">
+
+
+            <div class="location">
+
+                Research Workspace
+
             </div>
 
 
-            <div class="user-info">
+            <div class="topbar-right">
 
-                <div class="user-name">
-                    Administrator
+
+                <div class="search">
+
+                    <span>
+                        ⌕
+                    </span>
+
+                    <input
+                        type="text"
+                        placeholder="Search papers..."
+                    >
+
                 </div>
 
-                <div class="user-role">
+
+                <div class="avatar">
+                    U
+                </div>
+
+
+                <span class="user-name">
                     Researcher
-                </div>
+                </span>
+
 
             </div>
 
-
-            <a
-                href="../index.html"
-                class="logout-button"
-                title="Logout"
-            >
-                ⇥
-            </a>
-
-
-        </div>
-
-    </div>
-
-
-</aside>
+        </header>
 
 
 
-<!-- =====================================================
-     MAIN
-===================================================== -->
+        <!-- CONTENT -->
 
-<main class="main">
+        <section class="content">
 
 
-    <!-- TOPBAR -->
+            <!-- HERO -->
 
-    <header class="topbar">
+            <div class="hero">
 
-
-        <div>
-
-            <div class="page-title">
-                Literature Research Dashboard
-            </div>
-
-            <div class="page-subtitle">
-                AI-powered research analysis workspace
-            </div>
-
-        </div>
-
-
-        <div class="topbar-right">
-
-
-            <div class="status-indicator">
-
-                <span class="status-dot"></span>
-
-                System Ready
-
-            </div>
-
-
-            <button
-                class="menu-toggle"
-                onclick="toggleSidebar()"
-            >
-                ☰
-            </button>
-
-
-        </div>
-
-
-    </header>
-
-
-
-    <!-- =====================================================
-         CONTENT
-    ===================================================== -->
-
-    <div class="content">
-
-
-        <!-- WELCOME -->
-
-        <div class="welcome">
-
-            <h1>
-                Research Overview
-            </h1>
-
-            <p>
-                Analyze your literature, identify research gaps,
-                and discover potential novelty with AI assistance.
-            </p>
-
-        </div>
-
-
-
-        <!-- =================================================
-             STATISTICS
-        ================================================= -->
-
-        <div class="stats-grid">
-
-
-            <div class="stat-card">
-
-                <div class="stat-icon">
-                    📄
-                </div>
 
                 <div>
 
-                    <div class="stat-label">
-                        Total Papers
-                    </div>
-
-                    <div
-                        class="stat-value"
-                        id="totalPapers"
-                    >
-                        0
-                    </div>
-
-                </div>
-
-            </div>
+                    <span class="eyebrow">
+                        LITERATURE WORKSPACE
+                    </span>
 
 
-            <div class="stat-card">
+                    <h1>
+                        Your research,<br>
+                        organized intelligently.
+                    </h1>
 
-                <div class="stat-icon">
-                    📁
-                </div>
 
-                <div>
-
-                    <div class="stat-label">
-                        Research Projects
-                    </div>
-
-                    <div
-                        class="stat-value"
-                        id="projectCount"
-                    >
-                        0
-                    </div>
+                    <p>
+                        Manage papers, extract information,
+                        generate reviews, and identify research
+                        gaps from one workspace.
+                    </p>
 
                 </div>
 
-            </div>
 
+                <a
+                    href="/add-paper"
+                    class="primary-button"
+                >
 
-            <div class="stat-card">
-
-                <div class="stat-icon">
-                    🔎
-                </div>
-
-                <div>
-
-                    <div class="stat-label">
-                        Research Gaps
-                    </div>
-
-                    <div
-                        class="stat-value"
-                        id="gapCount"
-                    >
-                        0
-                    </div>
-
-                </div>
-
-            </div>
-
-
-            <div class="stat-card">
-
-                <div class="stat-icon">
-                    ✦
-                </div>
-
-                <div>
-
-                    <div class="stat-label">
-                        Potential Novelties
-                    </div>
-
-                    <div
-                        class="stat-value"
-                        id="noveltyCount"
-                    >
-                        0
-                    </div>
-
-                </div>
-
-            </div>
-
-
-        </div>
-
-
-
-        <!-- =================================================
-             RESEARCH TOOLS
-        ================================================= -->
-
-        <div class="section-header">
-
-            <div>
-
-                <div class="section-title">
-                    Research Tools
-                </div>
-
-                <div class="section-description">
-                    Tools for analyzing and developing your research
-                </div>
-
-            </div>
-
-        </div>
-
-
-
-        <div class="tools-grid">
-
-
-            <!-- INPUT PAPERS -->
-
-            <a
-                href="input_paper.html"
-                class="tool-card"
-            >
-
-                <div class="tool-icon">
                     ＋
-                </div>
 
-                <div class="tool-title">
-                    Input Papers
-                </div>
+                    Add New Paper
 
-                <div class="tool-description">
-                    Upload research papers in PDF format
-                    for AI-powered analysis.
-                </div>
+                </a>
 
-            </a>
-
-
-
-            <!-- LIBRARY -->
-
-            <a
-                href="library.html"
-                class="tool-card"
-            >
-
-                <div class="tool-icon">
-                    ▤
-                </div>
-
-                <div class="tool-title">
-                    Library
-                </div>
-
-                <div class="tool-description">
-                    Manage and explore all uploaded
-                    research papers.
-                </div>
-
-            </a>
-
-
-
-            <!-- RESEARCH GAP -->
-
-            <a
-                href="research_gap.html"
-                class="tool-card"
-            >
-
-                <div class="tool-icon">
-                    🔎
-                </div>
-
-                <div class="tool-title">
-                    Research Gap
-                </div>
-
-                <div class="tool-description">
-                    Identify unresolved problems,
-                    limitations, and research gaps.
-                </div>
-
-            </a>
-
-
-
-            <!-- NOVELTY FIND -->
-
-            <a
-                href="novelty_find.html"
-                class="tool-card"
-            >
-
-                <div class="tool-icon">
-                    ✦
-                </div>
-
-                <div class="tool-title">
-                    Novelty Find
-                </div>
-
-                <div class="tool-description">
-                    Discover potential novelty,
-                    compare existing studies,
-                    and identify promising research directions.
-                </div>
-
-            </a>
-
-
-
-            <!-- PAPER SUMMARY -->
-
-            <a
-                href="paper_summary.html"
-                class="tool-card"
-            >
-
-                <div class="tool-icon">
-                    ≡
-                </div>
-
-                <div class="tool-title">
-                    Paper Summary
-                </div>
-
-                <div class="tool-description">
-                    Generate structured summaries
-                    from research papers.
-                </div>
-
-            </a>
-
-
-
-            <!-- MINI REVIEW -->
-
-            <a
-                href="mini_review.html"
-                class="tool-card"
-            >
-
-                <div class="tool-icon">
-                    ▥
-                </div>
-
-                <div class="tool-title">
-                    Mini Review
-                </div>
-
-                <div class="tool-description">
-                    Build a literature map and generate
-                    structured mini reviews.
-                </div>
-
-            </a>
-
-
-        </div>
-
-
-
-        <!-- =================================================
-             RECENT PAPERS
-        ================================================= -->
-
-        <div class="section-header">
-
-            <div>
-
-                <div class="section-title">
-                    Recent Papers
-                </div>
-
-                <div class="section-description">
-                    Your recently uploaded research papers
-                </div>
 
             </div>
 
-        </div>
 
 
-        <div
-            class="recent-card"
-            id="recentPapers"
-        >
+            <!-- STATISTICS -->
 
-            <div class="empty-state">
+            <div class="stats">
 
-                <div class="empty-icon">
-                    📄
+
+                <div class="stat">
+
+                    <div class="stat-top">
+
+                        <span class="stat-label">
+                            TOTAL PAPERS
+                        </span>
+
+                        <span class="stat-icon">
+                            ▤
+                        </span>
+
+                    </div>
+
+
+                    <div class="stat-value">
+                        127
+                    </div>
+
+
+                    <div class="stat-description green">
+                        ↑ 12 this month
+                    </div>
+
                 </div>
 
-                <div class="empty-title">
-                    Loading papers...
+
+
+                <div class="stat">
+
+                    <div class="stat-top">
+
+                        <span class="stat-label">
+                            REVIEWED
+                        </span>
+
+                        <span class="stat-icon">
+                            ✓
+                        </span>
+
+                    </div>
+
+
+                    <div class="stat-value">
+                        84
+                    </div>
+
+
+                    <div class="stat-description">
+                        66% of collection
+                    </div>
+
                 </div>
 
-                <div class="empty-description">
-                    Reading your paper database.
+
+
+                <div class="stat">
+
+                    <div class="stat-top">
+
+                        <span class="stat-label">
+                            NEEDS REVIEW
+                        </span>
+
+                        <span class="stat-icon">
+                            !
+                        </span>
+
+                    </div>
+
+
+                    <div class="stat-value">
+                        43
+                    </div>
+
+
+                    <div class="stat-description orange">
+                        Requires attention
+                    </div>
+
                 </div>
+
+
+
+                <div class="stat">
+
+                    <div class="stat-top">
+
+                        <span class="stat-label">
+                            RESEARCH TOPICS
+                        </span>
+
+                        <span class="stat-icon">
+                            #
+                        </span>
+
+                    </div>
+
+
+                    <div class="stat-value">
+                        8
+                    </div>
+
+
+                    <div class="stat-description">
+                        Active research areas
+                    </div>
+
+                </div>
+
 
             </div>
 
-        </div>
 
 
-    </div>
+            <!-- MAIN DASHBOARD -->
 
-</main>
+            <div class="dashboard-grid">
 
 
+                <!-- RECENT PAPERS -->
 
-<script>
+                <section class="panel">
 
 
-/* =====================================================
-   SIDEBAR
-===================================================== */
+                    <div class="panel-header">
 
-function toggleSidebar(){
+                        <div>
 
-    const sidebar =
-        document.getElementById(
-            "sidebar"
-        );
+                            <span class="eyebrow">
+                                LIBRARY
+                            </span>
 
-    sidebar.classList.toggle(
-        "open"
-    );
+                            <h2 class="panel-title">
+                                Recent Papers
+                            </h2>
 
-}
+                        </div>
 
 
+                        <a
+                            href="/papers"
+                            class="panel-link"
+                        >
+                            View all →
+                        </a>
 
-/* =====================================================
-   COMING SOON
-===================================================== */
-
-function comingSoon(
-    event,
-    feature
-){
-
-    event.preventDefault();
-
-    alert(
-        feature +
-        " module is currently under development."
-    );
-
-}
-
-
-
-/* =====================================================
-   CSV PARSER
-===================================================== */
-
-function parseCSV(text){
-
-    const rows = [];
-
-    let row = [];
-
-    let cell = "";
-
-    let insideQuotes = false;
-
-
-    for(
-        let i = 0;
-        i < text.length;
-        i++
-    ){
-
-        const char =
-            text[i];
-
-        const next =
-            text[i + 1];
-
-
-        if(
-            char === '"' &&
-            insideQuotes &&
-            next === '"'
-        ){
-
-            cell += '"';
-
-            i++;
-
-            continue;
-
-        }
-
-
-        if(char === '"'){
-
-            insideQuotes =
-                !insideQuotes;
-
-            continue;
-
-        }
-
-
-        if(
-            char === "," &&
-            !insideQuotes
-        ){
-
-            row.push(cell);
-
-            cell = "";
-
-            continue;
-
-        }
-
-
-        if(
-            (
-                char === "\n" ||
-                char === "\r"
-            ) &&
-            !insideQuotes
-        ){
-
-            if(
-                char === "\r" &&
-                next === "\n"
-            ){
-
-                i++;
-
-            }
-
-
-            row.push(cell);
-
-
-            if(
-                row.some(
-                    value =>
-                        String(value)
-                        .trim() !== ""
-                )
-            ){
-
-                rows.push(row);
-
-            }
-
-
-            row = [];
-
-            cell = "";
-
-            continue;
-
-        }
-
-
-        cell += char;
-
-    }
-
-
-    if(
-        cell !== "" ||
-        row.length > 0
-    ){
-
-        row.push(cell);
-
-
-        if(
-            row.some(
-                value =>
-                    String(value)
-                    .trim() !== ""
-            )
-        ){
-
-            rows.push(row);
-
-        }
-
-    }
-
-
-    if(!rows.length){
-
-        return [];
-
-    }
-
-
-    const headers =
-        rows[0].map(
-            header =>
-                normalizeHeader(header)
-        );
-
-
-    return rows
-        .slice(1)
-        .map(values => {
-
-            const object = {};
-
-
-            headers.forEach(
-                (header,index) => {
-
-                    object[header] =
-                        values[index] || "";
-
-                }
-            );
-
-
-            return object;
-
-        });
-
-}
-
-
-
-/* =====================================================
-   NORMALIZE HEADER
-===================================================== */
-
-function normalizeHeader(
-    value
-){
-
-    return String(
-        value || ""
-    )
-    .trim()
-    .toLowerCase()
-    .replace(
-        /^\uFEFF/,
-        ""
-    )
-    .replace(
-        /\s+/g,
-        " "
-    )
-    .replace(
-        /[_-]+/g,
-        " "
-    );
-
-}
-
-
-
-/* =====================================================
-   GET CSV VALUE
-===================================================== */
-
-function getValue(
-    row,
-    aliases
-){
-
-    for(
-        const alias of aliases
-    ){
-
-        const key =
-            normalizeHeader(
-                alias
-            );
-
-
-        if(
-            Object.prototype
-                .hasOwnProperty
-                .call(
-                    row,
-                    key
-                )
-            &&
-            String(
-                row[key]
-            ).trim() !== ""
-        ){
-
-            return String(
-                row[key]
-            ).trim();
-
-        }
-
-    }
-
-
-    return "";
-
-}
-
-
-
-/* =====================================================
-   LOAD DASHBOARD
-===================================================== */
-
-async function loadDashboard(){
-
-    try{
-
-        const response =
-            await fetch(
-                "/data.csv?t=" +
-                Date.now(),
-                {
-                    cache:
-                        "no-store"
-                }
-            );
-
-
-        if(
-            !response.ok
-        ){
-
-            throw new Error(
-                "HTTP " +
-                response.status
-            );
-
-        }
-
-
-        const text =
-            await response.text();
-
-
-        const papers =
-            parseCSV(text);
-
-
-        updateStatistics(
-            papers
-        );
-
-
-        renderRecentPapers(
-            papers
-        );
-
-
-    }catch(error){
-
-        console.error(
-            "Database error:",
-            error
-        );
-
-
-        document
-            .getElementById(
-                "recentPapers"
-            )
-            .innerHTML = `
-
-                <div class="empty-state">
-
-                    <div class="empty-icon">
-                        ⚠️
                     </div>
 
-                    <div class="empty-title">
-                        Database unavailable
+
+
+                    <div class="paper-list">
+
+
+                        <!-- PAPER 1 -->
+
+                        <article class="paper">
+
+                            <div class="paper-number">
+                                01
+                            </div>
+
+
+                            <div class="paper-content">
+
+                                <h3 class="paper-title">
+                                    NiFe-based electrocatalysts
+                                    for efficient oxygen evolution
+                                </h3>
+
+
+                                <p class="paper-journal">
+                                    Journal of Materials Chemistry A
+                                    · 2025
+                                </p>
+
+
+                                <div class="tags">
+
+                                    <span class="tag">
+                                        OER
+                                    </span>
+
+                                    <span class="tag">
+                                        NiFe
+                                    </span>
+
+                                    <span class="tag">
+                                        Electrocatalyst
+                                    </span>
+
+                                </div>
+
+                            </div>
+
+
+                            <span class="status reviewed">
+                                Reviewed
+                            </span>
+
+                        </article>
+
+
+
+                        <!-- PAPER 2 -->
+
+                        <article class="paper">
+
+                            <div class="paper-number">
+                                02
+                            </div>
+
+
+                            <div class="paper-content">
+
+                                <h3 class="paper-title">
+                                    Surface engineering of transition
+                                    metal catalysts
+                                </h3>
+
+
+                                <p class="paper-journal">
+                                    ACS Catalysis · 2024
+                                </p>
+
+
+                                <div class="tags">
+
+                                    <span class="tag">
+                                        HER
+                                    </span>
+
+                                    <span class="tag">
+                                        Surface
+                                    </span>
+
+                                </div>
+
+                            </div>
+
+
+                            <span class="status pending">
+                                Pending
+                            </span>
+
+                        </article>
+
+
+
+                        <!-- PAPER 3 -->
+
+                        <article class="paper">
+
+                            <div class="paper-number">
+                                03
+                            </div>
+
+
+                            <div class="paper-content">
+
+                                <h3 class="paper-title">
+                                    Electrochemical characterization
+                                    of porous catalysts
+                                </h3>
+
+
+                                <p class="paper-journal">
+                                    Advanced Energy Materials · 2024
+                                </p>
+
+
+                                <div class="tags">
+
+                                    <span class="tag">
+                                        ECSA
+                                    </span>
+
+                                    <span class="tag">
+                                        Characterization
+                                    </span>
+
+                                </div>
+
+                            </div>
+
+
+                            <span class="status reviewed">
+                                Reviewed
+                            </span>
+
+                        </article>
+
+
+
+                        <!-- PAPER 4 -->
+
+                        <article class="paper">
+
+                            <div class="paper-number">
+                                04
+                            </div>
+
+
+                            <div class="paper-content">
+
+                                <h3 class="paper-title">
+                                    Rational design of bifunctional
+                                    water splitting catalysts
+                                </h3>
+
+
+                                <p class="paper-journal">
+                                    Energy & Environmental Science
+                                    · 2023
+                                </p>
+
+
+                                <div class="tags">
+
+                                    <span class="tag">
+                                        Water Splitting
+                                    </span>
+
+                                </div>
+
+                            </div>
+
+
+                            <span class="status pending">
+                                Pending
+                            </span>
+
+                        </article>
+
+
                     </div>
 
-                    <div class="empty-description">
-                        Tidak dapat membaca data.csv.
-                        Pastikan server Python sedang berjalan.
+                </section>
+
+
+
+                <!-- RESEARCH OVERVIEW -->
+
+                <section class="panel overview">
+
+
+                    <div class="panel-header">
+
+                        <div>
+
+                            <span class="eyebrow">
+                                ANALYTICS
+                            </span>
+
+                            <h2 class="panel-title">
+                                Research Overview
+                            </h2>
+
+                        </div>
+
                     </div>
+
+
+
+                    <div class="overview-body">
+
+
+                        <div class="overview-heading">
+
+                            <span>
+                                Research Topics
+                            </span>
+
+                            <small>
+                                8 areas
+                            </small>
+
+                        </div>
+
+
+
+                        <div class="topic">
+
+                            <div class="topic-info">
+
+                                <span>
+                                    OER
+                                </span>
+
+                                <strong>
+                                    32
+                                </strong>
+
+                            </div>
+
+
+                            <div class="progress">
+
+                                <span style="width:75%"></span>
+
+                            </div>
+
+                        </div>
+
+
+
+                        <div class="topic">
+
+                            <div class="topic-info">
+
+                                <span>
+                                    HER
+                                </span>
+
+                                <strong>
+                                    28
+                                </strong>
+
+                            </div>
+
+
+                            <div class="progress">
+
+                                <span style="width:65%"></span>
+
+                            </div>
+
+                        </div>
+
+
+
+                        <div class="topic">
+
+                            <div class="topic-info">
+
+                                <span>
+                                    ECSA
+                                </span>
+
+                                <strong>
+                                    21
+                                </strong>
+
+                            </div>
+
+
+                            <div class="progress">
+
+                                <span style="width:50%"></span>
+
+                            </div>
+
+                        </div>
+
+
+
+                        <div class="topic">
+
+                            <div class="topic-info">
+
+                                <span>
+                                    Water Splitting
+                                </span>
+
+                                <strong>
+                                    18
+                                </strong>
+
+                            </div>
+
+
+                            <div class="progress">
+
+                                <span style="width:42%"></span>
+
+                            </div>
+
+                        </div>
+
+
+
+                        <div class="divider"></div>
+
+
+
+                        <div class="overview-heading">
+
+                            <span>
+                                Review Progress
+                            </span>
+
+                            <strong>
+                                66%
+                            </strong>
+
+                        </div>
+
+
+                        <div class="big-progress">
+
+                            <span style="width:66%"></span>
+
+                        </div>
+
+
+                        <div class="progress-meta">
+
+                            <span>
+                                84 reviewed
+                            </span>
+
+                            <span>
+                                43 remaining
+                            </span>
+
+                        </div>
+
+
+                    </div>
+
+
 
                     <a
-                        href="input_paper.html"
-                        class="upload-button"
+                        href="/matrix"
+                        class="secondary-button"
                     >
-                        Open Input Papers
+
+                        Open Literature Matrix
+
+                        <span>
+                            →
+                        </span>
+
                     </a>
 
-                </div>
 
-            `;
+                </section>
 
-    }
-
-}
-
-
-
-/* =====================================================
-   STATISTICS
-===================================================== */
-
-function updateStatistics(
-    papers
-){
-
-    document
-        .getElementById(
-            "totalPapers"
-        )
-        .textContent =
-        papers.length;
-
-
-    /*
-       Research Projects,
-       Research Gaps dan
-       Potential Novelties
-       belum mempunyai database
-       tersendiri.
-
-       Jadi jangan mengarang angka.
-    */
-
-    document
-        .getElementById(
-            "projectCount"
-        )
-        .textContent = "0";
-
-
-    document
-        .getElementById(
-            "gapCount"
-        )
-        .textContent = "0";
-
-
-    document
-        .getElementById(
-            "noveltyCount"
-        )
-        .textContent = "0";
-
-}
-
-
-
-/* =====================================================
-   RECENT PAPERS
-===================================================== */
-
-function renderRecentPapers(
-    papers
-){
-
-    const container =
-        document.getElementById(
-            "recentPapers"
-        );
-
-
-    if(!papers.length){
-
-        container.innerHTML = `
-
-            <div class="empty-state">
-
-                <div class="empty-icon">
-                    📄
-                </div>
-
-                <div class="empty-title">
-                    No papers uploaded yet
-                </div>
-
-                <div class="empty-description">
-                    Start by uploading your first
-                    research paper.
-                </div>
-
-                <a
-                    href="input_paper.html"
-                    class="upload-button"
-                >
-                    Upload First Paper
-                </a>
 
             </div>
 
-        `;
-
-        return;
-
-    }
 
 
-    /*
-       Tampilkan maksimal
-       5 paper terakhir dari CSV.
-    */
+            <!-- QUICK ACTIONS -->
 
-    const recent =
-        papers
-        .slice(-5)
-        .reverse();
+            <section class="quick">
 
 
-    let html = `
+                <div class="quick-header">
 
-        <div
-            style="
-                width:100%;
-                padding:18px;
-            "
-        >
+                    <span class="eyebrow">
+                        WORKFLOW
+                    </span>
 
-            <div
-                style="
-                    display:grid;
-                    gap:10px;
-                "
-            >
-    `;
+                    <h2 class="quick-title">
+                        Quick Actions
+                    </h2>
+
+                </div>
 
 
-    recent.forEach(
-        paper => {
 
-            const title =
-                getValue(
-                    paper,
-                    [
-                        "title",
-                        "article title",
-                        "paper title",
-                        "ti"
-                    ]
-                ) ||
-                "Untitled Paper";
+                <div class="quick-grid">
 
 
-            const author =
-                getValue(
-                    paper,
-                    [
-                        "authors",
-                        "author",
-                        "au"
-                    ]
-                );
-
-
-            const year =
-                getValue(
-                    paper,
-                    [
-                        "year",
-                        "publication year",
-                        "py"
-                    ]
-                );
-
-
-            const journal =
-                getValue(
-                    paper,
-                    [
-                        "journal",
-                        "journal name",
-                        "source",
-                        "jo",
-                        "jf"
-                    ]
-                );
-
-
-            html += `
-
-                <div
-                    style="
-                        padding:13px;
-                        border:1px solid #edf0f5;
-                        border-radius:9px;
-                        background:#fafbfe;
-                    "
-                >
-
-                    <div
-                        style="
-                            font-size:12px;
-                            font-weight:600;
-                            color:#30374a;
-                            line-height:1.5;
-                        "
-                    >
-                        ${escapeHTML(title)}
-                    </div>
-
-
-                    <div
-                        style="
-                            margin-top:5px;
-                            font-size:10px;
-                            color:#9299a9;
-                        "
+                    <a
+                        href="/add-paper"
+                        class="action"
                     >
 
-                        ${
-                            author
-                            ?
-                            escapeHTML(author)
-                            : "Author tidak tersedia"
-                        }
+                        <div class="action-icon">
+                            ＋
+                        </div>
 
-                        ${
-                            year
-                            ?
-                            " · " +
-                            escapeHTML(year)
-                            : ""
-                        }
 
-                        ${
-                            journal
-                            ?
-                            " · " +
-                            escapeHTML(journal)
-                            : ""
-                        }
+                        <div class="action-content">
 
-                    </div>
+                            <strong>
+                                Add Paper
+                            </strong>
+
+                            <span>
+                                Upload a new research paper
+                            </span>
+
+                        </div>
+
+
+                        <span class="action-arrow">
+                            →
+                        </span>
+
+                    </a>
+
+
+
+                    <a
+                        href="/summary"
+                        class="action"
+                    >
+
+                        <div class="action-icon">
+                            ◫
+                        </div>
+
+
+                        <div class="action-content">
+
+                            <strong>
+                                Generate Summary
+                            </strong>
+
+                            <span>
+                                Create structured paper summaries
+                            </span>
+
+                        </div>
+
+
+                        <span class="action-arrow">
+                            →
+                        </span>
+
+                    </a>
+
+
+
+                    <a
+                        href="/research-gap"
+                        class="action"
+                    >
+
+                        <div class="action-icon">
+                            ⌁
+                        </div>
+
+
+                        <div class="action-content">
+
+                            <strong>
+                                Find Research Gap
+                            </strong>
+
+                            <span>
+                                Explore unresolved research problems
+                            </span>
+
+                        </div>
+
+
+                        <span class="action-arrow">
+                            →
+                        </span>
+
+                    </a>
+
 
                 </div>
 
-            `;
 
-        }
-    );
+            </section>
 
 
-    html += `
-
-            </div>
-
-            <div
-                style="
-                    text-align:right;
-                    margin-top:12px;
-                "
-            >
-
-                <a
-                    href="library.html"
-                    style="
-                        font-size:11px;
-                        color:#5667f2;
-                        text-decoration:none;
-                        font-weight:600;
-                    "
-                >
-                    View Full Library →
-                </a>
-
-            </div>
-
-        </div>
-
-    `;
+        </section>
 
 
-    container.innerHTML =
-        html;
-
-}
+    </main>
 
 
-
-/* =====================================================
-   ESCAPE HTML
-===================================================== */
-
-function escapeHTML(
-    value
-){
-
-    return String(
-        value || ""
-    )
-    .replace(
-        /&/g,
-        "&amp;"
-    )
-    .replace(
-        /</g,
-        "&lt;"
-    )
-    .replace(
-        />/g,
-        "&gt;"
-    )
-    .replace(
-        /"/g,
-        "&quot;"
-    )
-    .replace(
-        /'/g,
-        "&#039;"
-    );
-
-}
-
-
-
-/* =====================================================
-   START
-===================================================== */
-
-loadDashboard();
-
-
-</script>
+</div>
 
 
 </body>
