@@ -4,13 +4,16 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Input Papers - Paper</title>
+
   <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
+
   <style>
     * {
       box-sizing: border-box;
       margin: 0;
       padding: 0;
     }
+
     :root {
       --primary: #2563eb;
       --primary-dark: #1d4ed8;
@@ -23,6 +26,7 @@
       --danger: #dc2626;
       --warning: #d97706;
     }
+
     body {
       font-family: Arial, Helvetica, sans-serif;
       background: var(--bg);
@@ -43,6 +47,7 @@
       flex-direction: column;
       z-index: 1000;
     }
+
     .sidebar-header {
       height: 80px;
       display: flex;
@@ -50,17 +55,21 @@
       padding: 0 22px;
       border-bottom: 1px solid rgba(255,255,255,.08);
     }
+
     .sidebar-title {
       font-size: 20px;
       font-weight: 700;
     }
+
     .sidebar-title span {
       color: #60a5fa;
     }
+
     .nav {
       padding: 20px 12px;
       flex: 1;
     }
+
     .nav-title {
       font-size: 11px;
       font-weight: 700;
@@ -69,6 +78,7 @@
       letter-spacing: 1px;
       padding: 0 12px 10px;
     }
+
     .nav a {
       display: flex;
       align-items: center;
@@ -81,22 +91,27 @@
       font-size: 14px;
       transition: .2s;
     }
+
     .nav a:hover {
       background: #1f2937;
       color: white;
     }
+
     .nav a.active {
       background: var(--primary);
       color: white;
     }
+
     .nav-icon {
       width: 20px;
       text-align: center;
     }
+
     .sidebar-bottom {
       padding: 15px;
       border-top: 1px solid rgba(255,255,255,.08);
     }
+
     .version {
       font-size: 11px;
       color: #9ca3af;
@@ -107,6 +122,7 @@
       margin-left: 250px;
       min-height: 100vh;
     }
+
     .topbar {
       height: 80px;
       background: white;
@@ -116,14 +132,17 @@
       justify-content: space-between;
       padding: 0 35px;
     }
+
     .topbar-left {
       display: flex;
       align-items: center;
       gap: 15px;
     }
+
     .topbar h1 {
       font-size: 22px;
     }
+
     .topbar-right {
       display: flex;
       align-items: center;
@@ -146,6 +165,7 @@
       cursor: pointer;
       transition: all .2s ease;
     }
+
     .back-menu-button:hover {
       background: #f3f6fb;
       border-color: #2563eb;
@@ -160,6 +180,7 @@
       font-size: 12px;
       color: var(--muted);
     }
+
     .status-dot {
       width: 9px;
       height: 9px;
@@ -172,13 +193,16 @@
       padding: 30px 35px 50px;
       max-width: 1250px;
     }
+
     .page-header {
       margin-bottom: 25px;
     }
+
     .page-header h2 {
       font-size: 26px;
       margin-bottom: 7px;
     }
+
     .page-header p {
       font-size: 14px;
       color: var(--muted);
@@ -192,11 +216,13 @@
       margin-bottom: 25px;
       box-shadow: 0 3px 12px rgba(0,0,0,.03);
     }
+
     .card-title {
       font-size: 17px;
       font-weight: 700;
       margin-bottom: 6px;
     }
+
     .card-description {
       font-size: 13px;
       color: var(--muted);
@@ -213,11 +239,13 @@
       cursor: pointer;
       transition: .2s;
     }
+
     .dropzone:hover,
     .dropzone.dragover {
       border-color: var(--primary);
       background: #eff6ff;
     }
+
     .upload-icon {
       width: 65px;
       height: 65px;
@@ -230,15 +258,18 @@
       margin: 0 auto 16px;
       font-size: 27px;
     }
+
     .dropzone h3 {
       font-size: 18px;
       margin-bottom: 7px;
     }
+
     .dropzone p {
       color: var(--muted);
       font-size: 13px;
       margin-bottom: 18px;
     }
+
     .browse-btn {
       display: inline-block;
       background: var(--primary);
@@ -249,9 +280,11 @@
       font-weight: 600;
       cursor: pointer;
     }
+
     .browse-btn:hover {
       background: var(--primary-dark);
     }
+
     #fileInput {
       display: none;
     }
@@ -265,21 +298,25 @@
       border-radius: 10px;
       padding: 16px;
     }
+
     .file-info.show {
       display: block;
     }
+
     .file-row {
       display: flex;
       align-items: center;
       justify-content: space-between;
       gap: 15px;
     }
+
     .file-left {
       display: flex;
       align-items: center;
       gap: 12px;
       min-width: 0;
     }
+
     .pdf-icon {
       width: 44px;
       height: 44px;
@@ -293,6 +330,7 @@
       font-weight: bold;
       flex-shrink: 0;
     }
+
     .file-name {
       font-size: 14px;
       font-weight: 600;
@@ -300,11 +338,13 @@
       text-overflow: ellipsis;
       white-space: nowrap;
     }
+
     .file-size {
       font-size: 12px;
       color: var(--muted);
       margin-top: 3px;
     }
+
     .remove-btn {
       border: none;
       background: transparent;
@@ -318,12 +358,14 @@
     .title-field {
       margin-top: 20px;
     }
+
     .title-field label {
       display: block;
       font-size: 13px;
       font-weight: 600;
       margin-bottom: 7px;
     }
+
     .title-input {
       width: 100%;
       border: 1px solid #d1d5db;
@@ -332,6 +374,7 @@
       font-size: 14px;
       outline: none;
     }
+
     .title-input:focus {
       border-color: var(--primary);
     }
@@ -341,14 +384,17 @@
       display: none;
       margin-top: 25px;
     }
+
     .preview-section.show {
       display: block;
     }
+
     .section-title {
       font-size: 15px;
       font-weight: 700;
       margin-bottom: 12px;
     }
+
     .pdf-preview {
       width: 100%;
       height: 500px;
@@ -364,9 +410,11 @@
       border-radius: 10px;
       overflow: hidden;
     }
+
     .extraction-box.show {
       display: block;
     }
+
     .extraction-header {
       background: #f8fafc;
       padding: 13px 15px;
@@ -375,13 +423,16 @@
       align-items: center;
       border-bottom: 1px solid var(--border);
     }
+
     .extraction-header strong {
       font-size: 13px;
     }
+
     .extraction-stat {
       font-size: 12px;
       color: var(--muted);
     }
+
     .full-text-preview {
       height: 250px;
       overflow: auto;
@@ -393,14 +444,49 @@
       background: #fff;
     }
 
+    /* FILE OUTPUT INFO */
+    .output-info {
+      display: none;
+      margin-top: 20px;
+      border: 1px solid #dbeafe;
+      border-radius: 10px;
+      background: #f8fbff;
+      padding: 15px;
+    }
+
+    .output-info.show {
+      display: block;
+    }
+
+    .output-title {
+      font-size: 13px;
+      font-weight: 700;
+      margin-bottom: 10px;
+    }
+
+    .output-item {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 7px 0;
+      font-size: 13px;
+      color: #374151;
+    }
+
+    .output-item span:first-child {
+      width: 28px;
+    }
+
     /* PROGRESS */
     .progress-wrapper {
       display: none;
       margin-top: 22px;
     }
+
     .progress-wrapper.show {
       display: block;
     }
+
     .progress-info {
       display: flex;
       justify-content: space-between;
@@ -408,12 +494,14 @@
       color: var(--muted);
       margin-bottom: 7px;
     }
+
     .progress-bar {
       height: 8px;
       background: #e5e7eb;
       border-radius: 999px;
       overflow: hidden;
     }
+
     .progress-fill {
       width: 0%;
       height: 100%;
@@ -428,6 +516,7 @@
       gap: 10px;
       margin-top: 22px;
     }
+
     .btn {
       border: none;
       border-radius: 8px;
@@ -437,20 +526,25 @@
       cursor: pointer;
       transition: .2s;
     }
+
     .btn-secondary {
       background: #e5e7eb;
       color: #374151;
     }
+
     .btn-secondary:hover {
       background: #d1d5db;
     }
+
     .btn-primary {
       background: var(--primary);
       color: white;
     }
+
     .btn-primary:hover {
       background: var(--primary-dark);
     }
+
     .btn:disabled {
       opacity: 0.6;
       cursor: not-allowed;
@@ -460,25 +554,29 @@
     .message {
       display: none;
       margin-top: 18px;
-      padding: 13px 15px;
+      padding: 15px;
       border-radius: 9px;
       font-size: 13px;
       line-height: 1.6;
       white-space: pre-wrap;
     }
+
     .message a {
-      color: inherit;
+      color: #1d4ed8;
       font-weight: bold;
       text-decoration: underline;
     }
+
     .message.show {
       display: block;
     }
+
     .message.success {
       background: #dcfce7;
       color: #166534;
       border: 1px solid #bbf7d0;
     }
+
     .message.error {
       background: #fee2e2;
       color: #991b1b;
@@ -487,44 +585,107 @@
 
     /* RESPONSIVE */
     @media (max-width: 850px) {
-      .sidebar { width: 210px; }
-      .main { margin-left: 210px; }
-      .content { padding: 22px; }
+      .sidebar {
+        width: 210px;
+      }
+
+      .main {
+        margin-left: 210px;
+      }
+
+      .content {
+        padding: 22px;
+      }
     }
+
     @media (max-width: 650px) {
-      .sidebar { position: static; width: 100%; height: auto; }
-      .sidebar-header { height: 65px; }
-      .nav { display: flex; padding: 10px 12px; }
-      .nav-title, .sidebar-bottom { display: none; }
-      .nav a { flex: 1; justify-content: center; margin: 0 3px; }
-      .main { margin-left: 0; }
-      .topbar { padding: 0 20px; height: 65px; }
-      .topbar h1 { font-size: 18px; }
-      .server-status { display: none; }
-      .content { padding: 18px; }
-      .card { padding: 20px; }
-      .actions { flex-direction: column; }
-      .btn { width: 100%; }
+      .sidebar {
+        position: static;
+        width: 100%;
+        height: auto;
+      }
+
+      .sidebar-header {
+        height: 65px;
+      }
+
+      .nav {
+        display: flex;
+        padding: 10px 12px;
+      }
+
+      .nav-title,
+      .sidebar-bottom {
+        display: none;
+      }
+
+      .nav a {
+        flex: 1;
+        justify-content: center;
+        margin: 0 3px;
+      }
+
+      .main {
+        margin-left: 0;
+      }
+
+      .topbar {
+        padding: 0 20px;
+        height: 65px;
+      }
+
+      .topbar h1 {
+        font-size: 18px;
+      }
+
+      .server-status {
+        display: none;
+      }
+
+      .content {
+        padding: 18px;
+      }
+
+      .card {
+        padding: 20px;
+      }
+
+      .actions {
+        flex-direction: column;
+      }
+
+      .btn {
+        width: 100%;
+      }
     }
   </style>
 </head>
+
 <body>
 
 <aside class="sidebar">
   <div class="sidebar-header">
-    <div class="sidebar-title">Paper <span>ML</span></div>
+    <div class="sidebar-title">
+      Paper <span>ML</span>
+    </div>
   </div>
+
   <nav class="nav">
     <div class="nav-title">Library</div>
     <a href="input_paper.html" class="active">
-      <span class="nav-icon">📄</span> Input Paper
+      <span class="nav-icon">📄</span>
+      Input Paper
     </a>
     <a href="library.html">
-      <span class="nav-icon">📚</span> Paper Library
+      <span class="nav-icon">📚</span>
+      Paper Library
     </a>
   </nav>
+
   <div class="sidebar-bottom">
-    <div class="version">Paper Client · V.1.0.0</div>
+    <div class="version">
+      Paper Client · V.1.0.0
+    </div>
   </div>
 </aside>
 
@@ -533,14 +694,16 @@
     <div class="topbar-left">
       <h1>Input Papers</h1>
     </div>
+
     <div class="topbar-right">
       <a href="menu.html" class="back-menu-button" title="Kembali ke Menu Utama">
         <span class="back-menu-icon">←</span>
         <span>Kembali ke Menu Utama</span>
       </a>
+
       <div class="server-status">
         <span class="status-dot"></span>
-        <span>Auto-Convert Engine Online</span>
+        <span>Auto-Sync Online</span>
       </div>
     </div>
   </header>
@@ -548,13 +711,15 @@
   <div class="content">
     <div class="page-header" id="upload">
       <h2>Upload Research Paper</h2>
-      <p>Upload 1 PDF, sistem otomatis menyimpannya dan men-generate versi CSV & RIS ke Google Drive.</p>
+      <p>
+        Upload PDF, ekstrak teks di browser, lalu simpan 3 file otomatis ke Google Drive (PDF Asli, CSV, dan RIS).
+      </p>
     </div>
 
     <section class="card">
       <div class="card-title">Add New Paper</div>
       <div class="card-description">
-        File PDF yang diunggah akan otomatis diproses menjadi 3 file di Google Drive: File PDF asli, Metadata CSV, dan Sitasi RIS.
+        Satu file PDF akan dikonversi menjadi tiga file: PDF asli, file dataset CSV, dan file rujukan RIS.
       </div>
 
       <!-- DROPZONE -->
@@ -564,6 +729,7 @@
         <p>atau klik tombol di bawah untuk memilih file</p>
         <label for="fileInput" class="browse-btn">Browse PDF</label>
       </div>
+
       <input type="file" id="fileInput" accept="application/pdf,.pdf">
 
       <!-- FILE INFO -->
@@ -576,6 +742,7 @@
               <div id="fileSize" class="file-size">-</div>
             </div>
           </div>
+
           <button type="button" id="removeBtn" class="remove-btn">Remove</button>
         </div>
       </div>
@@ -586,19 +753,36 @@
         <input id="paperTitle" class="title-input" type="text" placeholder="Judul paper">
       </div>
 
-      <!-- PREVIEW SECTION -->
+      <!-- PREVIEW -->
       <div id="previewSection" class="preview-section">
         <div class="section-title">PDF Preview</div>
         <iframe id="pdfPreview" class="pdf-preview"></iframe>
       </div>
 
-      <!-- EXTRACTION RESULT -->
+      <!-- EXTRACTION -->
       <div id="extractionBox" class="extraction-box">
         <div class="extraction-header">
-          <strong>Extracted Text Preview (Client Side)</strong>
+          <strong>Extracted Full Text</strong>
           <span id="extractionStat" class="extraction-stat">-</span>
         </div>
         <div id="fullTextPreview" class="full-text-preview"></div>
+      </div>
+
+      <!-- OUTPUT FILE INFO -->
+      <div id="outputInfo" class="output-info">
+        <div class="output-title">File yang akan dibuat di Google Drive</div>
+        <div class="output-item">
+          <span>📄</span>
+          <span id="outputPdfName">-</span>
+        </div>
+        <div class="output-item">
+          <span>📊</span>
+          <span id="outputCsvName">-</span>
+        </div>
+        <div class="output-item">
+          <span>📚</span>
+          <span id="outputRisName">-</span>
+        </div>
       </div>
 
       <!-- PROGRESS -->
@@ -612,12 +796,14 @@
         </div>
       </div>
 
-      <!-- NOTIFICATION -->
+      <!-- MESSAGE -->
       <div id="message" class="message"></div>
 
       <!-- ACTIONS -->
       <div class="actions">
         <button type="button" id="resetBtn" class="btn btn-secondary">Reset</button>
+        <button type="button" id="downloadCsvBtn" class="btn btn-secondary" disabled>Download CSV</button>
+        <button type="button" id="downloadRisBtn" class="btn btn-secondary" disabled>Download RIS</button>
         <button type="button" id="uploadBtn" class="btn btn-primary" disabled>Proses & Upload</button>
       </div>
     </section>
@@ -627,6 +813,9 @@
 <script>
 "use strict";
 
+/* =========================================================
+   CONFIG
+========================================================= */
 const CONFIG = {
   GOOGLE_SCRIPT_URL: "https://script.google.com/macros/s/AKfycbxeatGVs5HUcaY8FTxAfTsqQ8KqoiF1nQDmDs3Lc_BBEedlYdXxZ2wg5VpSiOiONPem/exec",
   PDF_WORKER_URL: "https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js"
@@ -636,12 +825,19 @@ if (window.pdfjsLib) {
   pdfjsLib.GlobalWorkerOptions.workerSrc = CONFIG.PDF_WORKER_URL;
 }
 
-// State
+/* =========================================================
+   STATE
+========================================================= */
 let selectedFile = null;
 let previewUrl = null;
 let extractedText = "";
+let extractedPages = [];
+let generatedCsvBlob = null;
+let generatedRisBlob = null;
 
-// DOM Elements
+/* =========================================================
+   DOM ELEMENTS
+========================================================= */
 const fileInput = document.getElementById("fileInput");
 const dropzone = document.getElementById("dropzone");
 const fileInfo = document.getElementById("fileInfo");
@@ -656,13 +852,22 @@ const extractionBox = document.getElementById("extractionBox");
 const extractionStat = document.getElementById("extractionStat");
 const fullTextPreview = document.getElementById("fullTextPreview");
 const uploadBtn = document.getElementById("uploadBtn");
+const downloadCsvBtn = document.getElementById("downloadCsvBtn");
+const downloadRisBtn = document.getElementById("downloadRisBtn");
 const resetBtn = document.getElementById("resetBtn");
 const progressWrapper = document.getElementById("progressWrapper");
 const progressFill = document.getElementById("progressFill");
 const progressText = document.getElementById("progressText");
 const progressPercent = document.getElementById("progressPercent");
 const message = document.getElementById("message");
+const outputInfo = document.getElementById("outputInfo");
+const outputPdfName = document.getElementById("outputPdfName");
+const outputCsvName = document.getElementById("outputCsvName");
+const outputRisName = document.getElementById("outputRisName");
 
+/* =========================================================
+   EVENT LISTENERS
+========================================================= */
 fileInput.addEventListener("change", (e) => {
   if (e.target.files[0]) handleSelectedFile(e.target.files[0]);
 });
@@ -672,7 +877,9 @@ dropzone.addEventListener("dragover", (e) => {
   dropzone.classList.add("dragover");
 });
 
-dropzone.addEventListener("dragleave", () => dropzone.classList.remove("dragover"));
+dropzone.addEventListener("dragleave", () => {
+  dropzone.classList.remove("dragover");
+});
 
 dropzone.addEventListener("drop", (e) => {
   e.preventDefault();
@@ -687,8 +894,13 @@ dropzone.addEventListener("click", (e) => {
 
 removeBtn.addEventListener("click", resetAll);
 resetBtn.addEventListener("click", resetAll);
+downloadCsvBtn.addEventListener("click", triggerCsvDownload);
+downloadRisBtn.addEventListener("click", triggerRisDownload);
 uploadBtn.addEventListener("click", runPipeline);
 
+/* =========================================================
+   HANDLE FILE
+========================================================= */
 async function handleSelectedFile(file) {
   clearMessage();
 
@@ -703,9 +915,18 @@ async function handleSelectedFile(file) {
   fileInfo.classList.add("show");
   titleField.style.display = "block";
   paperTitle.value = file.name.replace(/\.pdf$/i, "");
+
   uploadBtn.disabled = true;
+  downloadCsvBtn.disabled = true;
+  downloadRisBtn.disabled = true;
+
   extractedText = "";
+  extractedPages = [];
+  generatedCsvBlob = null;
+  generatedRisBlob = null;
+
   extractionBox.classList.remove("show");
+  outputInfo.classList.remove("show");
 
   if (previewUrl) URL.revokeObjectURL(previewUrl);
   previewUrl = URL.createObjectURL(file);
@@ -716,41 +937,52 @@ async function handleSelectedFile(file) {
     await extractPdfText(file);
     uploadBtn.disabled = false;
   } catch (error) {
-    console.warn("Extraction warning:", error);
-    // Tetap izinkan upload meski ekstraksi teks client-side gagal
-    uploadBtn.disabled = false;
+    console.error("Extraction error:", error);
+    showMessage("error", "Gagal mengekstrak teks PDF: " + error.message);
+    uploadBtn.disabled = true;
   }
 }
 
+/* =========================================================
+   EXTRACT PDF TEXT
+========================================================= */
 async function extractPdfText(file) {
-  setProgress(10, "Membaca struktur PDF...");
+  setProgress(10, "Membaca file PDF...");
   const arrayBuffer = await file.arrayBuffer();
   const pdf = await pdfjsLib.getDocument({ data: arrayBuffer }).promise;
-  
   const totalPages = pdf.numPages;
   const pageTexts = [];
 
-  for (let i = 1; i <= Math.min(totalPages, 5); i++) {
+  for (let i = 1; i <= totalPages; i++) {
     const page = await pdf.getPage(i);
     const content = await page.getTextContent();
     const cleanText = content.items.map(item => item.str || "").join(" ").replace(/\s+/g, " ").trim();
+
+    extractedPages.push({ page: i, text: cleanText });
     pageTexts.push(`[PAGE ${i}]\n` + cleanText);
 
-    const percent = 10 + Math.round((i / Math.min(totalPages, 5)) * 40);
-    setProgress(percent, `Membaca halaman ${i}...`);
+    const percent = 10 + Math.round((i / totalPages) * 40);
+    setProgress(percent, `Mengekstrak teks halaman ${i} / ${totalPages}...`);
   }
 
   extractedText = pageTexts.join("\n\n").trim();
-  if (extractedText) {
-    extractionStat.textContent = `${totalPages} halaman terdeteksi`;
-    fullTextPreview.textContent = extractedText;
-    extractionBox.classList.add("show");
+  if (!extractedText) {
+    throw new Error("PDF kosong atau berupa hasil scan gambar.");
   }
-  setProgress(50, "File siap diproses & diunggah.");
+
+  extractionStat.textContent = `${totalPages} halaman · ${extractedText.length} karakter`;
+  fullTextPreview.textContent = extractedText;
+  extractionBox.classList.add("show");
+
+  updateOutputNames();
+  setProgress(50, "Teks siap diproses.");
 }
 
+/* =========================================================
+   MAIN PIPELINE
+========================================================= */
 async function runPipeline() {
-  if (!selectedFile) return;
+  if (!selectedFile || !extractedText) return;
 
   uploadBtn.disabled = true;
   resetBtn.disabled = true;
@@ -758,36 +990,69 @@ async function runPipeline() {
 
   try {
     const title = paperTitle.value.trim() || selectedFile.name.replace(/\.pdf$/i, "");
+    const paperId = "PAPER-" + Date.now();
 
-    setProgress(65, "Mengonversi file ke base64...");
-    const base64Data = await fileToBase64(selectedFile);
+    // 1. Generate Blobs
+    setProgress(58, "Membuat dataset CSV...");
+    generateCsvBlob(paperId, title, selectedFile.name, extractedText);
+    downloadCsvBtn.disabled = false;
 
-    setProgress(80, "Mengirim ke Google Apps Script...");
+    setProgress(64, "Membuat referensi RIS...");
+    generateRisBlob(paperId, title, selectedFile.name, extractedText);
+    downloadRisBtn.disabled = false;
+
+    // 2. Base64 Conversions
+    setProgress(70, "Menyiapkan file PDF...");
+    const pdfBase64 = await fileToBase64(selectedFile);
+
+    setProgress(74, "Menyiapkan file CSV...");
+    const csvBase64 = await blobToBase64(generatedCsvBlob);
+
+    setProgress(78, "Menyiapkan file RIS...");
+    const risBase64 = await blobToBase64(generatedRisBlob);
+
+    // 3. Payload
+    const baseName = selectedFile.name.replace(/\.pdf$/i, "");
     const payload = {
-      fileName: selectedFile.name,
-      base64: base64Data,
-      title: title
+      action: "uploadPaper",
+      paperId: paperId,
+      title: title,
+      pageCount: extractedPages.length,
+      pdf: {
+        fileName: selectedFile.name,
+        mimeType: "application/pdf",
+        base64: pdfBase64
+      },
+      csv: {
+        fileName: baseName + "_extracted.csv",
+        mimeType: "text/csv",
+        base64: csvBase64
+      },
+      ris: {
+        fileName: baseName + ".ris",
+        mimeType: "application/x-research-info-systems",
+        base64: risBase64
+      }
     };
 
+    // 4. Send to Google Apps Script
+    setProgress(85, "Mengunggah 3 file ke Google Drive...");
     const googleResult = await postGoogleScript(payload);
 
     if (!googleResult || googleResult.success !== true) {
-      throw new Error(googleResult?.message || "Gagal mengunggah file ke Google Drive.");
+      throw new Error(googleResult?.message || "Gagal menyimpan file ke Google Drive.");
     }
 
     setProgress(100, "Selesai!");
-    
-    // Tampilkan pesan sukses dan tautan ketiga file yang dibuat
-    let successMsg = `Berhasil! 1 PDF telah diubah menjadi 3 file di Google Drive:\n\n`;
-    if (googleResult.files) {
-      if (googleResult.files.pdfUrl) successMsg += `• PDF: ${googleResult.files.pdfUrl}\n`;
-      if (googleResult.files.csvUrl) successMsg += `• CSV: ${googleResult.files.csvUrl}\n`;
-      if (googleResult.files.risUrl) successMsg += `• RIS: ${googleResult.files.risUrl}\n`;
-    } else {
-      successMsg += googleResult.message;
-    }
 
-    showMessage("success", successMsg);
+    // Menampilkan pesan sukses dengan link aktif
+    showMessage(
+      "success",
+      `Berhasil diproses dan disimpan ke Google Drive!\n\n` +
+      `✓ PDF: <a href="${googleResult.pdfUrl}" target="_blank">Buka PDF di Drive</a>\n` +
+      `✓ CSV: <a href="${googleResult.csvUrl}" target="_blank">Buka CSV di Drive</a>\n` +
+      `✓ RIS: <a href="${googleResult.risUrl}" target="_blank">Buka RIS di Drive</a>`
+    );
 
   } catch (error) {
     console.error("Pipeline error:", error);
@@ -799,6 +1064,116 @@ async function runPipeline() {
   }
 }
 
+/* =========================================================
+   GENERATE CSV
+========================================================= */
+function generateCsvBlob(id, title, filename, text) {
+  const escapeCsv = (str) => `"${String(str || "").replace(/"/g, '""')}"`;
+  const headers = ["id", "title", "filename", "full_text", "created_at"];
+  const row = [
+    escapeCsv(id),
+    escapeCsv(title),
+    escapeCsv(filename),
+    escapeCsv(text),
+    escapeCsv(new Date().toISOString())
+  ];
+
+  const csvContent = "\uFEFF" + headers.join(",") + "\n" + row.join(",");
+  generatedCsvBlob = new Blob([csvContent], { type: "text/csv;charset=utf-8;" });
+}
+
+/* =========================================================
+   GENERATE RIS
+========================================================= */
+function generateRisBlob(id, title, filename, text) {
+  const cleanTitle = String(title || "").replace(/\r?\n/g, " ").trim();
+  const cleanFilename = String(filename || "").replace(/\r?\n/g, " ").trim();
+  const abstractText = extractAbstract(text);
+
+  const risLines = [
+    "TY  - JOUR",
+    "ID  - " + id,
+    "TI  - " + cleanTitle
+  ];
+
+  if (abstractText) risLines.push("AB  - " + abstractText);
+  risLines.push("N1  - Original file: " + cleanFilename);
+  risLines.push("N1  - Imported from Paper ML");
+  risLines.push("ER  - ");
+
+  const risContent = risLines.join("\r\n") + "\r\n";
+  generatedRisBlob = new Blob([risContent], { type: "application/x-research-info-systems;charset=utf-8" });
+}
+
+/* =========================================================
+   EXTRACT ABSTRACT
+========================================================= */
+function extractAbstract(text) {
+  if (!text) return "";
+  const normalized = String(text).replace(/\r/g, " ").replace(/\n/g, " ").replace(/\s+/g, " ").trim();
+  const match = normalized.match(/(?:abstract)\s*[:.]?\s*(.*?)(?=\s+(?:keywords?|introduction|1\.?\s+introduction)\b)/i);
+  if (match && match[1]) {
+    return match[1].trim().substring(0, 5000);
+  }
+  return "";
+}
+
+/* =========================================================
+   DOWNLOAD LOCAL HELPERS
+========================================================= */
+function triggerCsvDownload() {
+  if (!generatedCsvBlob) return;
+  downloadBlob(generatedCsvBlob, (selectedFile ? selectedFile.name.replace(/\.pdf$/i, "") : "paper") + "_extracted.csv");
+}
+
+function triggerRisDownload() {
+  if (!generatedRisBlob) return;
+  downloadBlob(generatedRisBlob, (selectedFile ? selectedFile.name.replace(/\.pdf$/i, "") : "paper") + ".ris");
+}
+
+function downloadBlob(blob, filename) {
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement("a");
+  a.href = url;
+  a.download = filename;
+  document.body.appendChild(a);
+  a.click();
+  a.remove();
+  setTimeout(() => URL.revokeObjectURL(url), 1000);
+}
+
+/* =========================================================
+   BASE64 HELPERS
+========================================================= */
+function fileToBase64(file) {
+  return new Promise((resolve, reject) => {
+    const reader = new FileReader();
+    reader.onload = () => {
+      const res = reader.result;
+      const comma = res.indexOf(",");
+      resolve(comma === -1 ? res : res.substring(comma + 1));
+    };
+    reader.onerror = () => reject(new Error("Gagal membaca file fisik."));
+    reader.readAsDataURL(file);
+  });
+}
+
+function blobToBase64(blob) {
+  return new Promise((resolve, reject) => {
+    const reader = new FileReader();
+    reader.onload = () => {
+      const result = reader.result;
+      const comma = result.indexOf(",");
+      resolve(comma === -1 ? result : result.substring(comma + 1));
+    };
+    reader.onerror = () => reject(new Error("Gagal membaca blob."));
+    reader.readAsDataURL(blob);
+  });
+}
+
+/* =========================================================
+   POST GOOGLE APPS SCRIPT
+========================================================= */
 async function postGoogleScript(payload) {
   const response = await fetch(CONFIG.GOOGLE_SCRIPT_URL, {
     method: "POST",
@@ -810,26 +1185,29 @@ async function postGoogleScript(payload) {
   try {
     return JSON.parse(responseText);
   } catch (e) {
-    throw new Error("Respon server bukan JSON: " + responseText);
+    console.error("Raw response:", responseText);
+    throw new Error("Respon server bukan JSON:\n" + responseText);
   }
 }
 
-function fileToBase64(file) {
-  return new Promise((resolve, reject) => {
-    const reader = new FileReader();
-    reader.onload = () => {
-      const res = reader.result;
-      const comma = res.indexOf(",");
-      resolve(comma === -1 ? res : res.substring(comma + 1));
-    };
-    reader.onerror = () => reject(new Error("Gagal membaca file lokal."));
-    reader.readAsDataURL(file);
-  });
+/* =========================================================
+   UI HELPERS
+========================================================= */
+function updateOutputNames() {
+  if (!selectedFile) return;
+  const baseName = selectedFile.name.replace(/\.pdf$/i, "");
+  outputPdfName.textContent = baseName + ".pdf";
+  outputCsvName.textContent = baseName + "_extracted.csv";
+  outputRisName.textContent = baseName + ".ris";
+  outputInfo.classList.add("show");
 }
 
 function resetAll() {
   selectedFile = null;
   extractedText = "";
+  extractedPages = [];
+  generatedCsvBlob = null;
+  generatedRisBlob = null;
 
   if (previewUrl) {
     URL.revokeObjectURL(previewUrl);
@@ -844,10 +1222,16 @@ function resetAll() {
   titleField.style.display = "none";
   previewSection.classList.remove("show");
   extractionBox.classList.remove("show");
+  outputInfo.classList.remove("show");
   pdfPreview.removeAttribute("src");
   fullTextPreview.textContent = "";
   extractionStat.textContent = "-";
+  outputPdfName.textContent = "-";
+  outputCsvName.textContent = "-";
+  outputRisName.textContent = "-";
   uploadBtn.disabled = true;
+  downloadCsvBtn.disabled = true;
+  downloadRisBtn.disabled = true;
 
   clearMessage();
   progressWrapper.classList.remove("show");
@@ -862,14 +1246,14 @@ function setProgress(percent, text) {
   progressText.textContent = text || "";
 }
 
-function showMessage(type, text) {
+function showMessage(type, htmlContent) {
   message.className = "message show " + type;
-  message.textContent = text;
+  message.innerHTML = htmlContent;
 }
 
 function clearMessage() {
   message.className = "message";
-  message.textContent = "";
+  message.innerHTML = "";
 }
 
 function formatFileSize(bytes) {
@@ -879,5 +1263,6 @@ function formatFileSize(bytes) {
   return (bytes / Math.pow(1024, i)).toFixed(2) + " " + units[i];
 }
 </script>
+
 </body>
 </html>
