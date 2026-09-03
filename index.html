@@ -1,217 +1,307 @@
 <!DOCTYPE html>
-<html lang="id">
-
+<html lang="en">
 <head>
-
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-    <meta
-        name="viewport"
-        content="width=device-width, initial-scale=1.0"
-    >
+    <title>Research Paper Manager</title>
 
-    <title>PaperLab</title>
-
-    <meta
-        name="description"
-        content="PaperLab — Research and Literature Workspace"
-    >
-
-    <style>
-
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-
-        html,
-        body {
-            width: 100%;
-            min-height: 100%;
-        }
-
-        body {
-
-            font-family:
-                Inter,
-                system-ui,
-                -apple-system,
-                BlinkMacSystemFont,
-                "Segoe UI",
-                sans-serif;
-
-            background: #f7f7f5;
-
-            color: #171717;
-
-        }
-
-        .loading-screen {
-
-            min-height: 100vh;
-
-            display: flex;
-
-            align-items: center;
-            justify-content: center;
-
-            flex-direction: column;
-
-            gap: 18px;
-
-        }
-
-        .logo {
-
-            width: 58px;
-            height: 58px;
-
-            object-fit: contain;
-
-            border-radius: 12px;
-
-        }
-
-        .brand {
-
-            font-size: 17px;
-
-            font-weight: 700;
-
-            letter-spacing: -0.4px;
-
-        }
-
-        .loading {
-
-            display: flex;
-
-            align-items: center;
-
-            gap: 6px;
-
-        }
-
-        .loading span {
-
-            width: 5px;
-            height: 5px;
-
-            border-radius: 50%;
-
-            background: #777;
-
-            animation:
-                loading
-                1.2s
-                infinite
-                ease-in-out;
-
-        }
-
-        .loading span:nth-child(2) {
-
-            animation-delay: 0.15s;
-
-        }
-
-        .loading span:nth-child(3) {
-
-            animation-delay: 0.30s;
-
-        }
-
-        @keyframes loading {
-
-            0%,
-            60%,
-            100% {
-
-                opacity: 0.25;
-
-                transform:
-                    translateY(0);
-
-            }
-
-            30% {
-
-                opacity: 1;
-
-                transform:
-                    translateY(-3px);
-
-            }
-
-        }
-
-    </style>
-
+    <!-- =========================
+         CSS
+    ========================== -->
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/components.css">
 </head>
-
 
 <body>
 
+    <!-- =========================
+         APP CONTAINER
+    ========================== -->
+    <div id="app">
 
-    <div class="loading-screen">
+        <!-- =========================
+             SIDEBAR
+        ========================== -->
+        <aside id="sidebar">
 
-        <img
-            src="static/logo.png"
-            alt="PaperLab"
-            class="logo"
-        >
+            <div class="sidebar-header">
+                <div class="logo">
+                    <img src="assets/logo.png" alt="Logo">
+                </div>
 
-        <div class="brand">
-            PaperLab
-        </div>
+                <div class="app-title">
+                    <h1>Research Manager</h1>
+                    <span>Literature Review</span>
+                </div>
+            </div>
 
-        <div class="loading">
 
-            <span></span>
-            <span></span>
-            <span></span>
+            <!-- Navigation -->
+            <nav id="main-navigation">
 
-        </div>
+                <button
+                    class="nav-item active"
+                    data-page="dashboard"
+                    type="button">
+                    Dashboard
+                </button>
+
+                <button
+                    class="nav-item"
+                    data-page="papers"
+                    type="button">
+                    Papers
+                </button>
+
+                <button
+                    class="nav-item"
+                    data-page="input-paper"
+                    type="button">
+                    Input Paper
+                </button>
+
+                <button
+                    class="nav-item"
+                    data-page="summary"
+                    type="button">
+                    Summary
+                </button>
+
+                <button
+                    class="nav-item"
+                    data-page="mini-review"
+                    type="button">
+                    Mini Review
+                </button>
+
+                <button
+                    class="nav-item"
+                    data-page="research-gap"
+                    type="button">
+                    Research Gap
+                </button>
+
+            </nav>
+
+
+            <!-- Sidebar Footer -->
+            <div class="sidebar-footer">
+                <span>Research Paper Manager</span>
+            </div>
+
+        </aside>
+
+
+        <!-- =========================
+             MAIN AREA
+        ========================== -->
+        <main id="main-content">
+
+            <!-- =========================
+                 TOPBAR
+            ========================== -->
+            <header id="topbar">
+
+                <div class="topbar-left">
+                    <button
+                        id="sidebar-toggle"
+                        type="button"
+                        aria-label="Toggle sidebar">
+                        ☰
+                    </button>
+
+                    <div id="page-title">
+                        Dashboard
+                    </div>
+                </div>
+
+
+                <div class="topbar-right">
+
+                    <div id="system-status">
+                        <span class="status-indicator"></span>
+                        <span>Ready</span>
+                    </div>
+
+                </div>
+
+            </header>
+
+
+            <!-- =========================
+                 PAGE CONTAINER
+            ========================== -->
+            <section id="page-container">
+
+                <!--
+                    Konten halaman akan dimuat
+                    melalui JavaScript.
+                -->
+
+                <div id="dashboard-page" class="page active">
+
+                    <div class="page-header">
+                        <div>
+                            <h2>Dashboard</h2>
+                            <p>
+                                Research paper management and
+                                literature review workspace.
+                            </p>
+                        </div>
+                    </div>
+
+
+                    <!-- Dashboard Cards -->
+                    <div class="dashboard-grid">
+
+                        <div class="dashboard-card">
+                            <span class="card-label">
+                                Total Papers
+                            </span>
+
+                            <strong
+                                id="total-papers">
+                                0
+                            </strong>
+                        </div>
+
+
+                        <div class="dashboard-card">
+                            <span class="card-label">
+                                Summaries
+                            </span>
+
+                            <strong
+                                id="total-summaries">
+                                0
+                            </strong>
+                        </div>
+
+
+                        <div class="dashboard-card">
+                            <span class="card-label">
+                                Mini Reviews
+                            </span>
+
+                            <strong
+                                id="total-mini-reviews">
+                                0
+                            </strong>
+                        </div>
+
+
+                        <div class="dashboard-card">
+                            <span class="card-label">
+                                Research Gaps
+                            </span>
+
+                            <strong
+                                id="total-research-gaps">
+                                0
+                            </strong>
+                        </div>
+
+                    </div>
+
+
+                    <!-- Welcome Section -->
+                    <div class="welcome-card">
+
+                        <h3>
+                            Welcome to Research Paper Manager
+                        </h3>
+
+                        <p>
+                            Use the navigation menu to manage papers,
+                            create summaries, develop mini reviews,
+                            and identify research gaps.
+                        </p>
+
+                    </div>
+
+                </div>
+
+
+                <!--
+                    Halaman lain akan dikembangkan
+                    pada tahap berikutnya.
+                -->
+
+                <div
+                    id="papers-page"
+                    class="page"
+                    hidden>
+                </div>
+
+                <div
+                    id="input-paper-page"
+                    class="page"
+                    hidden>
+                </div>
+
+                <div
+                    id="summary-page"
+                    class="page"
+                    hidden>
+                </div>
+
+                <div
+                    id="mini-review-page"
+                    class="page"
+                    hidden>
+                </div>
+
+                <div
+                    id="research-gap-page"
+                    class="page"
+                    hidden>
+                </div>
+
+            </section>
+
+
+            <!-- =========================
+                 FOOTER
+            ========================== -->
+            <footer id="main-footer">
+                <span>
+                    Research Paper Manager
+                </span>
+            </footer>
+
+        </main>
 
     </div>
 
 
-    <script>
+    <!-- =========================
+         JAVASCRIPT
+    ========================== -->
 
-        /*
-         * INDEX.HTML
-         * --------------------------------
-         * Fungsi:
-         * 1. Menjadi halaman awal aplikasi
-         * 2. Menampilkan loading screen
-         * 3. Mengarahkan user ke login.html
-         *
-         * Tidak menggunakan Flask.
-         * Tidak menggunakan url_for().
-         */
+    <!-- Main Application -->
+    <script src="js/app.js"></script>
 
+    <!-- Dashboard -->
+    <script src="js/dashboard.js"></script>
 
-        window.addEventListener(
-            "load",
-            function () {
+    <!-- Papers -->
+    <script src="js/papers.js"></script>
 
-                setTimeout(
-                    function () {
+    <!-- Input Paper -->
+    <script src="js/input-paper.js"></script>
 
-                        window.location.href =
-                            "templates/login.html";
+    <!-- Summary -->
+    <script src="js/summary.js"></script>
 
-                    },
-                    500
-                );
+    <!-- Mini Review -->
+    <script src="js/mini-review.js"></script>
 
-            }
-        );
+    <!-- Research Gap -->
+    <script src="js/research-gap.js"></script>
 
-    </script>
-
+    <!-- Storage -->
+    <script src="js/storage.js"></script>
 
 </body>
-
 </html>
