@@ -463,7 +463,13 @@
       padding: 13px 15px;
       border-radius: 9px;
       font-size: 13px;
+      line-height: 1.6;
       white-space: pre-wrap;
+    }
+    .message a {
+      color: inherit;
+      font-weight: bold;
+      text-decoration: underline;
     }
     .message.show {
       display: block;
@@ -518,7 +524,7 @@
     </a>
   </nav>
   <div class="sidebar-bottom">
-    <div class="version">Paper Client · V.1.0.0 (No Backend)</div>
+    <div class="version">Paper Client · V.1.0.0</div>
   </div>
 </aside>
 
@@ -534,7 +540,7 @@
       </a>
       <div class="server-status">
         <span class="status-dot"></span>
-        <span>Client-Side Mode (Online)</span>
+        <span>Auto-Convert Engine Online</span>
       </div>
     </div>
   </header>
@@ -542,13 +548,13 @@
   <div class="content">
     <div class="page-header" id="upload">
       <h2>Upload Research Paper</h2>
-      <p>Upload PDF, ekstrak seluruh teks langsung di browser, ekspor CSV, dan backup file PDF asli ke Google Drive.</p>
+      <p>Upload 1 PDF, sistem otomatis menyimpannya dan men-generate versi CSV & RIS ke Google Drive.</p>
     </div>
 
     <section class="card">
       <div class="card-title">Add New Paper</div>
       <div class="card-description">
-        Satu file PDF akan di-split: PDF dikirim ke Google Drive dan teks lengkap otomatis di-generate menjadi file CSV.
+        File PDF yang diunggah akan otomatis diproses menjadi 3 file di Google Drive: File PDF asli, Metadata CSV, dan Sitasi RIS.
       </div>
 
       <!-- DROPZONE -->
@@ -589,7 +595,7 @@
       <!-- EXTRACTION RESULT -->
       <div id="extractionBox" class="extraction-box">
         <div class="extraction-header">
-          <strong>Extracted Full Text</strong>
+          <strong>Extracted Text Preview (Client Side)</strong>
           <span id="extractionStat" class="extraction-stat">-</span>
         </div>
         <div id="fullTextPreview" class="full-text-preview"></div>
@@ -612,7 +618,6 @@
       <!-- ACTIONS -->
       <div class="actions">
         <button type="button" id="resetBtn" class="btn btn-secondary">Reset</button>
-        <button type="button" id="downloadCsvBtn" class="btn btn-secondary" disabled>Download CSV</button>
         <button type="button" id="uploadBtn" class="btn btn-primary" disabled>Proses & Upload</button>
       </div>
     </section>
@@ -623,7 +628,6 @@
 "use strict";
 
 const CONFIG = {
-  // Google Apps Script Web App URL
   GOOGLE_SCRIPT_URL: "https://script.google.com/macros/s/AKfycbxeatGVs5HUcaY8FTxAfTsqQ8KqoiF1nQDmDs3Lc_BBEedlYdXxZ2wg5VpSiOiONPem/exec",
   PDF_WORKER_URL: "https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js"
 };
@@ -636,8 +640,6 @@ if (window.pdfjsLib) {
 let selectedFile = null;
 let previewUrl = null;
 let extractedText = "";
-let extractedPages = [];
-let generatedCsvBlob = null;
 
 // DOM Elements
 const fileInput = document.getElementById("fileInput");
@@ -654,7 +656,6 @@ const extractionBox = document.getElementById("extractionBox");
 const extractionStat = document.getElementById("extractionStat");
 const fullTextPreview = document.getElementById("fullTextPreview");
 const uploadBtn = document.getElementById("uploadBtn");
-const downloadCsvBtn = document.getElementById("downloadCsvBtn");
 const resetBtn = document.getElementById("resetBtn");
 const progressWrapper = document.getElementById("progressWrapper");
 const progressFill = document.getElementById("progressFill");
@@ -662,7 +663,6 @@ const progressText = document.getElementById("progressText");
 const progressPercent = document.getElementById("progressPercent");
 const message = document.getElementById("message");
 
-// Event Listeners
 fileInput.addEventListener("change", (e) => {
   if (e.target.files[0]) handleSelectedFile(e.target.files[0]);
 });
@@ -687,7 +687,6 @@ dropzone.addEventListener("click", (e) => {
 
 removeBtn.addEventListener("click", resetAll);
 resetBtn.addEventListener("click", resetAll);
-downloadCsvBtn.addEventListener("click", triggerCsvDownload);
 uploadBtn.addEventListener("click", runPipeline);
 
 async function handleSelectedFile(file) {
@@ -705,9 +704,7 @@ async function handleSelectedFile(file) {
   titleField.style.display = "block";
   paperTitle.value = file.name.replace(/\.pdf$/i, "");
   uploadBtn.disabled = true;
-  downloadCsvBtn.disabled = true;
   extractedText = "";
-  extractedPages = [];
   extractionBox.classList.remove("show");
 
   if (previewUrl) URL.revokeObjectURL(previewUrl);
@@ -719,45 +716,41 @@ async function handleSelectedFile(file) {
     await extractPdfText(file);
     uploadBtn.disabled = false;
   } catch (error) {
-    console.error("Extraction error:", error);
-    showMessage("error", "Gagal mengekstrak teks PDF: " + error.message);
-    uploadBtn.disabled = true;
+    console.warn("Extraction warning:", error);
+    // Tetap izinkan upload meski ekstraksi teks client-side gagal
+    uploadBtn.disabled = false;
   }
 }
 
 async function extractPdfText(file) {
-  setProgress(10, "Membaca file PDF...");
+  setProgress(10, "Membaca struktur PDF...");
   const arrayBuffer = await file.arrayBuffer();
   const pdf = await pdfjsLib.getDocument({ data: arrayBuffer }).promise;
   
   const totalPages = pdf.numPages;
   const pageTexts = [];
 
-  for (let i = 1; i <= totalPages; i++) {
+  for (let i = 1; i <= Math.min(totalPages, 5); i++) {
     const page = await pdf.getPage(i);
     const content = await page.getTextContent();
     const cleanText = content.items.map(item => item.str || "").join(" ").replace(/\s+/g, " ").trim();
-    
-    extractedPages.push({ page: i, text: cleanText });
     pageTexts.push(`[PAGE ${i}]\n` + cleanText);
 
-    const percent = 10 + Math.round((i / totalPages) * 40);
-    setProgress(percent, `Mengekstrak teks halaman ${i} / ${totalPages}...`);
+    const percent = 10 + Math.round((i / Math.min(totalPages, 5)) * 40);
+    setProgress(percent, `Membaca halaman ${i}...`);
   }
 
   extractedText = pageTexts.join("\n\n").trim();
-  if (!extractedText) {
-    throw new Error("PDF kosong atau berupa hasil scan/gambar.");
+  if (extractedText) {
+    extractionStat.textContent = `${totalPages} halaman terdeteksi`;
+    fullTextPreview.textContent = extractedText;
+    extractionBox.classList.add("show");
   }
-
-  extractionStat.textContent = `${totalPages} halaman · ${extractedText.length} karakter`;
-  fullTextPreview.textContent = extractedText;
-  extractionBox.classList.add("show");
-  setProgress(50, "Teks siap diproses.");
+  setProgress(50, "File siap diproses & diunggah.");
 }
 
 async function runPipeline() {
-  if (!selectedFile || !extractedText) return;
+  if (!selectedFile) return;
 
   uploadBtn.disabled = true;
   resetBtn.disabled = true;
@@ -765,39 +758,36 @@ async function runPipeline() {
 
   try {
     const title = paperTitle.value.trim() || selectedFile.name.replace(/\.pdf$/i, "");
-    const paperId = "PAPER-" + Date.now();
 
-    // 1. Ekspor & Simpan ke CSV di sisi client
-    setProgress(60, "Membuat file CSV dataset...");
-    generateCsvBlob(paperId, title, selectedFile.name, extractedText);
-    downloadCsvBtn.disabled = false;
-    triggerCsvDownload(); // Otomatis mengunduh CSV ke komputer
-
-    // 2. Kirim PDF Asli ke Google Drive via Apps Script
-    setProgress(75, "Mengunggah PDF ke Google Drive...");
+    setProgress(65, "Mengonversi file ke base64...");
     const base64Data = await fileToBase64(selectedFile);
 
+    setProgress(80, "Mengirim ke Google Apps Script...");
     const payload = {
-      action: "uploadPaper",
       fileName: selectedFile.name,
-      mimeType: "application/pdf",
       base64: base64Data,
-      title: title,
-      pageCount: extractedPages.length
+      title: title
     };
 
     const googleResult = await postGoogleScript(payload);
+
     if (!googleResult || googleResult.success !== true) {
       throw new Error(googleResult?.message || "Gagal mengunggah file ke Google Drive.");
     }
 
     setProgress(100, "Selesai!");
-    showMessage(
-      "success",
-      `Berhasil diproses!\n\n` +
-      `✓ 1. PDF disimpan di Google Drive: ${googleResult.fileUrl || "Tersimpan"}\n` +
-      `✓ 2. Full text diekspor dan diunduh otomatis sebagai CSV.`
-    );
+    
+    // Tampilkan pesan sukses dan tautan ketiga file yang dibuat
+    let successMsg = `Berhasil! 1 PDF telah diubah menjadi 3 file di Google Drive:\n\n`;
+    if (googleResult.files) {
+      if (googleResult.files.pdfUrl) successMsg += `• PDF: ${googleResult.files.pdfUrl}\n`;
+      if (googleResult.files.csvUrl) successMsg += `• CSV: ${googleResult.files.csvUrl}\n`;
+      if (googleResult.files.risUrl) successMsg += `• RIS: ${googleResult.files.risUrl}\n`;
+    } else {
+      successMsg += googleResult.message;
+    }
+
+    showMessage("success", successMsg);
 
   } catch (error) {
     console.error("Pipeline error:", error);
@@ -809,40 +799,9 @@ async function runPipeline() {
   }
 }
 
-function generateCsvBlob(id, title, filename, text) {
-  // Format field CSV agar karakter tanda kutip/newline aman
-  const escapeCsv = (str) => `"${String(str || "").replace(/"/g, '""')}"`;
-  
-  const headers = ["id", "title", "filename", "full_text", "created_at"];
-  const row = [
-    escapeCsv(id),
-    escapeCsv(title),
-    escapeCsv(filename),
-    escapeCsv(text),
-    escapeCsv(new Date().toISOString())
-  ];
-
-  const csvContent = "\uFEFF" + headers.join(",") + "\n" + row.join(",");
-  generatedCsvBlob = new Blob([csvContent], { type: "text/csv;charset=utf-8;" });
-}
-
-function triggerCsvDownload() {
-  if (!generatedCsvBlob) return;
-  const url = URL.createObjectURL(generatedCsvBlob);
-  const a = document.createElement("a");
-  a.href = url;
-  a.download = (selectedFile ? selectedFile.name.replace(/\.pdf$/i, "") : "paper") + "_extracted.csv";
-  document.body.appendChild(a);
-  a.click();
-  a.remove();
-  setTimeout(() => URL.revokeObjectURL(url), 1000);
-}
-
 async function postGoogleScript(payload) {
   const response = await fetch(CONFIG.GOOGLE_SCRIPT_URL, {
     method: "POST",
-    mode: "cors",
-    redirect: "follow",
     headers: { "Content-Type": "text/plain;charset=utf-8" },
     body: JSON.stringify(payload)
   });
@@ -851,7 +810,7 @@ async function postGoogleScript(payload) {
   try {
     return JSON.parse(responseText);
   } catch (e) {
-    throw new Error("Respon Google Script bukan format JSON yang valid.");
+    throw new Error("Respon server bukan JSON: " + responseText);
   }
 }
 
@@ -863,7 +822,7 @@ function fileToBase64(file) {
       const comma = res.indexOf(",");
       resolve(comma === -1 ? res : res.substring(comma + 1));
     };
-    reader.onerror = () => reject(new Error("Gagal membaca file fisik."));
+    reader.onerror = () => reject(new Error("Gagal membaca file lokal."));
     reader.readAsDataURL(file);
   });
 }
@@ -871,8 +830,6 @@ function fileToBase64(file) {
 function resetAll() {
   selectedFile = null;
   extractedText = "";
-  extractedPages = [];
-  generatedCsvBlob = null;
 
   if (previewUrl) {
     URL.revokeObjectURL(previewUrl);
@@ -891,7 +848,6 @@ function resetAll() {
   fullTextPreview.textContent = "";
   extractionStat.textContent = "-";
   uploadBtn.disabled = true;
-  downloadCsvBtn.disabled = true;
 
   clearMessage();
   progressWrapper.classList.remove("show");
