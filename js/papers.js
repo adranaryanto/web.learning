@@ -1,1660 +1,1134 @@
 /* ============================================================
    RESEARCH PAPER MANAGER
-   PAPERS.JS
-   FINAL VERSION 1
+   PAPER.JS
+   FINAL VERSION
    ============================================================ */
 
-(function () {
+"use strict";
 
-    "use strict";
+/* ============================================================
+   CONFIG
+   ============================================================ */
 
+const PAPER_STORAGE_KEY = "research_papers";
+const PAPER_JSON_PATH = "data/papers.json";
 
-    /* ========================================================
-       CONFIGURATION
-    ======================================================== */
+/* ============================================================
+   STATE
+   ============================================================ */
 
-    const STORAGE_KEYS = [
-        "papers",
-        "research_papers",
-        "rpm_papers"
-    ];
+let papers = [];
+let filteredPapers = [];
+let selectedPaperId = null;
 
+/* ============================================================
+   DOM
+   ============================================================ */
 
-    const state = {
+const paperList = document.getElementById("paperList");
+const paperCount = document.getElementById("paperCount");
+const searchInput = document.getElementById("searchInput");
 
-        papers: [],
+const detailEmpty = document.getElementById("detailEmpty");
+const detailContent = document.getElementById("detailContent");
 
-        search: "",
+/* ============================================================
+   INITIALIZATION
+   ============================================================ */
 
-        filter: "all",
+document.addEventListener("DOMContentLoaded", initPaperPage);
 
-        sort: "newest"
+async function initPaperPage() {
+    setupNavigation();
+    setupSearch();
 
-    };
+    await loadPapers();
 
+    filteredPapers = [...papers];
 
-    /* ========================================================
-       STORAGE
-    ======================================================== */
+    renderPaperCount();
+    renderPaperList();
 
-    function loadPapers() {
+    if (filteredPapers.length > 0) {
+        selectPaper(filteredPapers[0]);
+    } else {
+        showEmptyDetail();
+    }
+}
 
-        for (const key of STORAGE_KEYS) {
+/* ============================================================
+   NAVIGATION
+   ============================================================ */
 
-            try {
+function setupNavigation() {
+    const currentPage = getCurrentPage();
 
-                const raw =
-                    localStorage.getItem(key);
+    document.querySelectorAll(".app-nav-link").forEach(link => {
+        const target = link.getAttribute("data-page");
 
-
-                if (!raw) {
-                    continue;
-                }
-
-
-                const parsed =
-                    JSON.parse(raw);
-
-
-                if (Array.isArray(parsed)) {
-
-                    state.papers = parsed;
-
-                    return state.papers;
-
-                }
-
-
-                if (
-                    parsed &&
-                    Array.isArray(parsed.items)
-                ) {
-
-                    state.papers = parsed.items;
-
-                    return state.papers;
-
-                }
-
-            } catch (error) {
-
-                console.warn(
-                    "Cannot read paper storage:",
-                    key,
-                    error
-                );
-
-            }
-
+        if (target === currentPage) {
+            link.classList.add("active");
         }
 
+        link.addEventListener("click", function () {
+            document
+                .querySelectorAll(".app-nav-link")
+                .forEach(item => item.classList.remove("active"));
 
-        state.papers = [];
+            this.classList.add("active");
+        });
+    });
 
-        return state.papers;
+    const menuButton = document.getElementById("menuButton");
 
+    if (menuButton) {
+        menuButton.addEventListener("click", function () {
+            document.body.classList.toggle("sidebar-open");
+        });
+    }
+}
+
+function getCurrentPage() {
+    const path = window.location.pathname.toLowerCase();
+
+    if (path.includes("paper")) {
+        return "papers";
     }
 
+    if (path.includes("input")) {
+        return "input";
+    }
 
-    function savePapers() {
+    if (path.includes("summary")) {
+        return "summary";
+    }
 
-        /*
-         * Gunakan storage utama "papers".
-         * Key ini menjadi standar untuk modul berikutnya.
-         */
+    if (path.includes("mini")) {
+        return "mini-review";
+    }
 
-        localStorage.setItem(
-            "papers",
-            JSON.stringify(state.papers)
+    if (path.includes("research")) {
+        return "research-gap";
+    }
+
+    return "dashboard";
+}
+
+/* ============================================================
+   SEARCH
+   ============================================================ */
+
+function setupSearch() {
+    if (!searchInput) {
+        return;
+    }
+
+    searchInput.addEventListener("input", function () {
+        filterPapers(this.value);
+    });
+}
+
+function filterPapers(query) {
+    const text = String(query || "")
+        .trim()
+        .toLowerCase();
+
+    if (!text) {
+        filteredPapers = [...papers];
+    } else {
+        filteredPapers = papers.filter(paper => {
+            return Object.values(paper)
+                .join(" ")
+                .toLowerCase()
+                .includes(text);
+        });
+    }
+
+    renderPaperCount();
+    renderPaperList();
+
+    if (filteredPapers.length > 0) {
+        const stillExists = filteredPapers.some(
+            paper => getPaperId(paper) === selectedPaperId
         );
 
+        if (!stillExists) {
+            selectPaper(filteredPapers[0]);
+        }
+    } else {
+        showEmptyDetail();
+    }
+}
+
+/* ============================================================
+   LOAD PAPERS
+   ============================================================ */
+
+async function loadPapers() {
+    let localData = [];
+
+    try {
+        const stored = localStorage.getItem(PAPER_STORAGE_KEY);
+
+        if (stored) {
+            const parsed = JSON.parse(stored);
+
+            if (Array.isArray(parsed)) {
+                localData = parsed;
+            }
+        }
+    } catch (error) {
+        console.warn(
+            "LocalStorage papers tidak dapat dibaca:",
+            error
+        );
     }
 
+    if (localData.length > 0) {
+        papers = normalizePapers(localData);
+        return;
+    }
 
-    /* ========================================================
-       NORMALIZATION
-    ======================================================== */
+    try {
+        const response = await fetch(PAPER_JSON_PATH, {
+            cache: "no-store"
+        });
 
-    function normalizePaper(paper, index) {
-
-        if (!paper || typeof paper !== "object") {
-
-            return {
-
-                id:
-                    String(index),
-
-                title:
-                    "Untitled Paper",
-
-                authors:
-                    "Unknown author",
-
-                year:
-                    "",
-
-                journal:
-                    "",
-
-                doi:
-                    "",
-
-                volume:
-                    "",
-
-                issue:
-                    "",
-
-                pages:
-                    "",
-
-                keywords:
-                    "",
-
-                researchArea:
-                    "",
-
-                material:
-                    "",
-
-                methodology:
-                    "",
-
-                experimentalConditions:
-                    "",
-
-                createdAt:
-                    null
-
-            };
-
+        if (!response.ok) {
+            throw new Error(
+                `HTTP ${response.status}`
+            );
         }
 
+        const json = await response.json();
 
-        return {
+        if (Array.isArray(json)) {
+            papers = normalizePapers(json);
+        } else if (
+            json &&
+            Array.isArray(json.papers)
+        ) {
+            papers = normalizePapers(json.papers);
+        } else {
+            papers = [];
+        }
 
-            ...paper,
+    } catch (error) {
+        console.warn(
+            "papers.json tidak tersedia:",
+            error
+        );
 
-            id:
-                paper.id ||
-                paper.ID ||
-                String(index),
+        papers = [];
+    }
+}
 
-            title:
-                paper.title ||
-                paper.Title ||
-                paper.paperTitle ||
-                paper.name ||
-                "Untitled Paper",
+/* ============================================================
+   NORMALIZE
+   ============================================================ */
 
-            authors:
-                paper.authors ||
-                paper.Authors ||
-                paper.author ||
-                "Unknown author",
-
-            year:
-                paper.year ||
-                paper.Year ||
-                "",
-
-            journal:
-                paper.journal ||
-                paper.Journal ||
-                "",
-
-            doi:
-                paper.doi ||
-                paper.DOI ||
-                "",
-
-            volume:
-                paper.volume ||
-                paper.Volume ||
-                "",
-
-            issue:
-                paper.issue ||
-                paper.Issue ||
-                "",
-
-            pages:
-                paper.pages ||
-                paper.Pages ||
-                "",
-
-            keywords:
-                paper.keywords ||
-                paper.Keywords ||
-                "",
-
-            researchArea:
-                paper.researchArea ||
-                paper["Research Area"] ||
-                "",
-
-            material:
-                paper.material ||
-                paper.Material ||
-                "",
-
-            methodology:
-                paper.methodology ||
-                paper.Methodology ||
-                "",
-
-            experimentalConditions:
-                paper.experimentalConditions ||
-                paper["Experimental Conditions"] ||
-                "",
-
-            createdAt:
-                paper.createdAt ||
-                paper.created_at ||
-                null
-
+function normalizePapers(data) {
+    return data.map((paper, index) => {
+        const normalized = {
+            ...paper
         };
 
-    }
-
-
-    function normalizeAllPapers() {
-
-        state.papers =
-            state.papers.map(
-                normalizePaper
-            );
-
-    }
-
-
-    /* ========================================================
-       HELPERS
-    ======================================================== */
-
-    function escapeHTML(value) {
-
-        return String(value ?? "")
-
-            .replace(
-                /&/g,
-                "&amp;"
-            )
-
-            .replace(
-                /</g,
-                "&lt;"
-            )
-
-            .replace(
-                />/g,
-                "&gt;"
-            )
-
-            .replace(
-                /"/g,
-                "&quot;"
-            )
-
-            .replace(
-                /'/g,
-                "&#039;"
-            );
-
-    }
-
-
-    function getAuthors(paper) {
-
-        if (Array.isArray(paper.authors)) {
-
-            return paper.authors.join(", ");
-
+        if (!getPaperId(normalized)) {
+            normalized.id =
+                "PAPER-" +
+                String(index + 1).padStart(4, "0");
         }
 
-        return String(
-            paper.authors || "Unknown author"
-        );
+        return normalized;
+    });
+}
 
+/* ============================================================
+   PAPER ID
+   ============================================================ */
+
+function getPaperId(paper) {
+    if (!paper) {
+        return "";
     }
 
+    return String(
+        paper.id ||
+        paper.paper_id ||
+        paper.Paper_ID ||
+        paper.ID ||
+        ""
+    );
+}
 
-    function getKeywords(paper) {
+/* ============================================================
+   VALUE HELPERS
+   ============================================================ */
 
-        if (Array.isArray(paper.keywords)) {
+function getField(paper, aliases) {
+    if (!paper) {
+        return "";
+    }
 
-            return paper.keywords;
-
-        }
-
-
+    for (const alias of aliases) {
         if (
-            typeof paper.keywords === "string"
-        ) {
-
-            return paper.keywords
-
-                .split(/[,;|]/)
-
-                .map(function (item) {
-
-                    return item.trim();
-
-                })
-
-                .filter(Boolean);
-
-        }
-
-
-        return [];
-
-    }
-
-
-    function getYear(paper) {
-
-        return String(
-            paper.year || ""
-        );
-
-    }
-
-
-    function getDateValue(paper) {
-
-        if (!paper.createdAt) {
-
-            return 0;
-
-        }
-
-
-        const time =
-            new Date(
-                paper.createdAt
-            ).getTime();
-
-
-        return Number.isNaN(time)
-            ? 0
-            : time;
-
-    }
-
-
-    /* ========================================================
-       FILTERING
-    ======================================================== */
-
-    function getFilteredPapers() {
-
-        let papers =
-            state.papers.slice();
-
-
-        /*
-         * SEARCH
-         */
-
-        if (state.search) {
-
-            const query =
-                state.search.toLowerCase();
-
-
-            papers =
-                papers.filter(
-                    function (paper) {
-
-                        const searchable = [
-
-                            paper.title,
-
-                            getAuthors(paper),
-
-                            paper.journal,
-
-                            paper.doi,
-
-                            paper.researchArea,
-
-                            paper.material,
-
-                            paper.methodology,
-
-                            getKeywords(paper).join(" ")
-
-                        ]
-                            .join(" ")
-                            .toLowerCase();
-
-
-                        return searchable.includes(
-                            query
-                        );
-
-                    }
-                );
-
-        }
-
-
-        /*
-         * YEAR FILTER
-         */
-
-        if (state.filter !== "all") {
-
-            papers =
-                papers.filter(
-                    function (paper) {
-
-                        return (
-                            getYear(paper) ===
-                            String(state.filter)
-                        );
-
-                    }
-                );
-
-        }
-
-
-        /*
-         * SORT
-         */
-
-        papers.sort(
-            function (a, b) {
-
-                if (
-                    state.sort === "oldest"
-                ) {
-
-                    return (
-                        getDateValue(a) -
-                        getDateValue(b)
-                    );
-
-                }
-
-
-                if (
-                    state.sort === "title"
-                ) {
-
-                    return String(
-                        a.title
-                    ).localeCompare(
-                        String(b.title)
-                    );
-
-                }
-
-
-                if (
-                    state.sort === "year"
-                ) {
-
-                    return (
-                        Number(b.year || 0) -
-                        Number(a.year || 0)
-                    );
-
-                }
-
-
-                return (
-                    getDateValue(b) -
-                    getDateValue(a)
-                );
-
-            }
-        );
-
-
-        return papers;
-
-    }
-
-
-    /* ========================================================
-       STATISTICS
-    ======================================================== */
-
-    function updateStatistics() {
-
-        const papers =
-            state.papers;
-
-
-        setText(
-            "papers-total-count",
-            papers.length
-        );
-
-
-        const years =
-            papers
-
-                .map(function (paper) {
-
-                    return Number(
-                        paper.year
-                    );
-
-                })
-
-                .filter(function (year) {
-
-                    return year > 0;
-
-                });
-
-
-        const latestYear =
-            years.length
-                ? Math.max(...years)
-                : "—";
-
-
-        setText(
-            "papers-latest-year",
-            latestYear
-        );
-
-
-        const journals =
-            new Set(
-
-                papers
-
-                    .map(function (paper) {
-
-                        return String(
-                            paper.journal || ""
-                        ).trim();
-
-                    })
-
-                    .filter(Boolean)
-
-            );
-
-
-        setText(
-            "papers-journal-count",
-            journals.size
-        );
-
-
-        const areas =
-            new Set(
-
-                papers
-
-                    .map(function (paper) {
-
-                        return String(
-                            paper.researchArea || ""
-                        ).trim();
-
-                    })
-
-                    .filter(Boolean)
-
-            );
-
-
-        setText(
-            "papers-area-count",
-            areas.size
-        );
-
-    }
-
-
-    function setText(id, value) {
-
-        const element =
-            document.getElementById(id);
-
-
-        if (element) {
-
-            element.textContent =
-                String(value);
-
-        }
-
-    }
-
-
-    /* ========================================================
-       YEAR OPTIONS
-    ======================================================== */
-
-    function buildYearFilter() {
-
-        const select =
-            document.getElementById(
-                "paper-year-filter"
-            );
-
-
-        if (!select) {
-            return;
-        }
-
-
-        const currentValue =
-            state.filter;
-
-
-        const years = [
-
-            ...new Set(
-
-                state.papers
-
-                    .map(function (paper) {
-
-                        return String(
-                            paper.year || ""
-                        );
-
-                    })
-
-                    .filter(Boolean)
-
+            Object.prototype.hasOwnProperty.call(
+                paper,
+                alias
             )
+        ) {
+            const value = paper[alias];
 
-        ];
-
-
-        years.sort(
-            function (a, b) {
-
-                return (
-                    Number(b) -
-                    Number(a)
-                );
-
+            if (
+                value !== null &&
+                value !== undefined &&
+                String(value).trim() !== ""
+            ) {
+                return String(value).trim();
             }
-        );
-
-
-        select.innerHTML = `
-
-            <option value="all">
-                All Years
-            </option>
-
-        `;
-
-
-        years.forEach(
-            function (year) {
-
-                const option =
-                    document.createElement(
-                        "option"
-                    );
-
-
-                option.value = year;
-
-                option.textContent =
-                    year;
-
-
-                select.appendChild(
-                    option
-                );
-
-            }
-        );
-
-
-        select.value =
-            currentValue === "all"
-                ? "all"
-                : String(currentValue);
-
+        }
     }
 
+    const normalizedKeys = Object.keys(paper);
 
-    /* ========================================================
-       PAPER CARD
-    ======================================================== */
+    for (const alias of aliases) {
+        const normalizedAlias =
+            normalizeKey(alias);
 
-    function createPaperCard(paper) {
-
-        const keywords =
-            getKeywords(paper);
-
-
-        const keywordHTML =
-            keywords
-                .slice(0, 4)
-                .map(function (keyword) {
-
-                    return `
-
-                        <span class="paper-tag">
-                            ${escapeHTML(keyword)}
-                        </span>
-
-                    `;
-
-                })
-                .join("");
-
-
-        const journal =
-            paper.journal
-                ? escapeHTML(
-                    paper.journal
-                )
-                : "Journal not specified";
-
-
-        const authors =
-            escapeHTML(
-                getAuthors(paper)
+        const foundKey =
+            normalizedKeys.find(
+                key =>
+                    normalizeKey(key) ===
+                    normalizedAlias
             );
 
+        if (foundKey) {
+            const value = paper[foundKey];
 
-        const year =
-            escapeHTML(
-                paper.year || "—"
-            );
+            if (
+                value !== null &&
+                value !== undefined &&
+                String(value).trim() !== ""
+            ) {
+                return String(value).trim();
+            }
+        }
+    }
 
+    return "";
+}
 
-        return `
+function normalizeKey(value) {
+    return String(value || "")
+        .toLowerCase()
+        .replace(/[^a-z0-9]/g, "");
+}
 
-            <article
-                class="paper-card"
-                data-paper-id="${escapeHTML(paper.id)}"
-            >
+/* ============================================================
+   COMMON PAPER FIELDS
+   ============================================================ */
 
-                <div class="paper-card-top">
+function getTitle(paper) {
+    return (
+        getField(paper, [
+            "Title",
+            "title",
+            "Paper Title",
+            "paper_title"
+        ]) ||
+        getField(paper, [
+            "File Name",
+            "Filename",
+            "file_name"
+        ]) ||
+        "Untitled Paper"
+    );
+}
 
-                    <div class="paper-document-icon">
-                        ▤
-                    </div>
+function getAuthors(paper) {
+    return getField(paper, [
+        "Authors",
+        "Author",
+        "authors",
+        "author"
+    ]);
+}
 
+function getYear(paper) {
+    return getField(paper, [
+        "Year",
+        "year",
+        "Publication Year",
+        "publication_year"
+    ]);
+}
 
-                    <div class="paper-card-actions">
+function getJournal(paper) {
+    return getField(paper, [
+        "Journal",
+        "journal",
+        "Journal Name"
+    ]);
+}
 
-                        <button
-                            type="button"
-                            class="paper-action-btn"
-                            data-action="view"
-                            data-id="${escapeHTML(paper.id)}"
-                            title="View paper"
-                        >
-                            ↗
-                        </button>
+function getDOI(paper) {
+    return getField(paper, [
+        "DOI",
+        "doi"
+    ]);
+}
 
+function getVolume(paper) {
+    return getField(paper, [
+        "Volume",
+        "volume"
+    ]);
+}
 
-                        <button
-                            type="button"
-                            class="paper-action-btn danger"
-                            data-action="delete"
-                            data-id="${escapeHTML(paper.id)}"
-                            title="Delete paper"
-                        >
-                            ×
-                        </button>
+function getIssue(paper) {
+    return getField(paper, [
+        "Issue",
+        "issue"
+    ]);
+}
 
-                    </div>
+function getPages(paper) {
+    return getField(paper, [
+        "Pages",
+        "Page",
+        "pages"
+    ]);
+}
 
-                </div>
+function getKeywords(paper) {
+    return getField(paper, [
+        "Keywords",
+        "Keyword",
+        "keywords"
+    ]);
+}
 
+function getResearchArea(paper) {
+    return getField(paper, [
+        "Research Area",
+        "Research_Area",
+        "research_area"
+    ]);
+}
 
-                <div class="paper-card-body">
+function getMaterial(paper) {
+    return getField(paper, [
+        "Material",
+        "material"
+    ]);
+}
 
-                    <div class="paper-year">
-                        ${year}
-                    </div>
+function getMethodology(paper) {
+    return getField(paper, [
+        "Methodology",
+        "methodology",
+        "Methods",
+        "methods"
+    ]);
+}
 
+function getExperimentalConditions(paper) {
+    return getField(paper, [
+        "Experimental Conditions",
+        "Experimental_Conditions",
+        "experimental_conditions"
+    ]);
+}
 
-                    <h3 class="paper-title">
-                        ${escapeHTML(paper.title)}
-                    </h3>
+function getAbstract(paper) {
+    return getField(paper, [
+        "Abstract",
+        "abstract",
+        "Abstract Text",
+        "Summary"
+    ]);
+}
 
+function getFullText(paper) {
+    return getField(paper, [
+        "Full Text",
+        "Full_Text",
+        "full_text",
+        "Text",
+        "Extracted Text",
+        "Extracted_Text",
+        "Content",
+        "text"
+    ]);
+}
 
-                    <p class="paper-authors">
-                        ${authors}
-                    </p>
+/* ============================================================
+   RENDER COUNT
+   ============================================================ */
 
+function renderPaperCount() {
+    if (!paperCount) {
+        return;
+    }
 
-                    <p class="paper-journal">
-                        ${journal}
-                    </p>
+    const total = filteredPapers.length;
 
+    paperCount.textContent =
+        total === 1
+            ? "1 paper"
+            : `${total} papers`;
+}
 
+/* ============================================================
+   RENDER PAPER LIST
+   ============================================================ */
+
+function renderPaperList() {
+    if (!paperList) {
+        return;
+    }
+
+    if (filteredPapers.length === 0) {
+        paperList.innerHTML = `
+            <div class="paper-empty-state">
+                <div class="paper-empty-icon">📚</div>
+
+                <h3>
                     ${
-                        keywordHTML
-                            ? `
-                                <div class="paper-tags">
-                                    ${keywordHTML}
-                                </div>
-                            `
-                            : ""
+                        papers.length === 0
+                            ? "No papers yet"
+                            : "No papers found"
                     }
+                </h3>
 
-                </div>
-
-
-                <div class="paper-card-footer">
-
-                    <span>
-                        ${
-                            paper.doi
-                                ? "DOI available"
-                                : "No DOI"
-                        }
-                    </span>
-
-
-                    <button
-                        type="button"
-                        class="paper-open-btn"
-                        data-action="view"
-                        data-id="${escapeHTML(paper.id)}"
-                    >
-                        View Details →
-                    </button>
-
-                </div>
-
-            </article>
-
+                <p>
+                    ${
+                        papers.length === 0
+                            ? "Add your first research paper to start building your library."
+                            : "Try another search keyword."
+                    }
+                </p>
+            </div>
         `;
 
+        return;
     }
 
+    paperList.innerHTML = "";
 
-    /* ========================================================
-       RENDER PAPERS
-    ======================================================== */
+    filteredPapers.forEach((paper, index) => {
+        const item =
+            document.createElement("button");
 
-    function renderPapers() {
+        item.type = "button";
+        item.className = "paper-list-item";
 
-        const container =
-            document.getElementById(
-                "papers-list"
-            );
+        const id = getPaperId(paper);
 
-
-        if (!container) {
-            return;
+        if (id === selectedPaperId) {
+            item.classList.add("active");
         }
 
+        item.innerHTML = `
+            <span class="paper-list-number">
+                ${String(index + 1).padStart(2, "0")}
+            </span>
 
-        const papers =
-            getFilteredPapers();
+            <span class="paper-list-body">
+                <strong>
+                    ${escapeHtml(getTitle(paper))}
+                </strong>
 
+                <small>
+                    ${
+                        escapeHtml(
+                            getAuthors(paper) ||
+                            "Author not available"
+                        )
+                    }
+                </small>
 
-        const resultCount =
-            document.getElementById(
-                "papers-result-count"
-            );
+                <small class="paper-list-meta">
+                    ${
+                        escapeHtml(
+                            [
+                                getYear(paper),
+                                getJournal(paper)
+                            ]
+                                .filter(Boolean)
+                                .join(" · ")
+                        ) ||
+                        "Bibliographic information unavailable"
+                    }
+                </small>
+            </span>
+        `;
 
+        item.addEventListener(
+            "click",
+            function () {
+                selectPaper(paper);
+            }
+        );
 
-        if (resultCount) {
+        paperList.appendChild(item);
+    });
+}
 
-            resultCount.textContent =
-                `${papers.length} ${
-                    papers.length === 1
-                        ? "paper"
-                        : "papers"
-                }`;
+/* ============================================================
+   SELECT PAPER
+   ============================================================ */
 
-        }
+function selectPaper(paper) {
+    if (!paper) {
+        showEmptyDetail();
+        return;
+    }
 
+    selectedPaperId =
+        getPaperId(paper);
 
-        if (!papers.length) {
+    renderPaperList();
+    renderPaperDetail(paper);
+}
 
-            container.innerHTML = `
+/* ============================================================
+   RENDER DETAIL
+   ============================================================ */
 
-                <div class="papers-empty">
+function renderPaperDetail(paper) {
+    if (!detailEmpty || !detailContent) {
+        return;
+    }
 
-                    <div class="papers-empty-icon">
-                        ▤
-                    </div>
+    detailEmpty.hidden = true;
+    detailContent.hidden = false;
 
+    const doi = getDOI(paper);
 
-                    <h3>
-                        ${
-                            state.search ||
-                            state.filter !== "all"
-                                ? "No papers found"
-                                : "Your library is empty"
-                        }
-                    </h3>
+    detailContent.innerHTML = `
+        <div class="paper-detail-header">
 
+            <div class="paper-detail-id">
+                ${escapeHtml(
+                    getPaperId(paper)
+                )}
+            </div>
 
-                    <p>
-                        ${
-                            state.search ||
-                            state.filter !== "all"
-                                ? "Try changing your search or filter."
-                                : "Add your first research paper to start building your literature library."
-                        }
-                    </p>
+            <h2>
+                ${escapeHtml(
+                    getTitle(paper)
+                )}
+            </h2>
 
+            <p class="paper-detail-authors">
+                ${
+                    escapeHtml(
+                        getAuthors(paper) ||
+                        "Authors not available"
+                    )
+                }
+            </p>
 
-                    <button
-                        type="button"
-                        class="primary-btn"
-                        id="empty-add-paper"
-                    >
-                        ＋ Add New Paper
-                    </button>
+            <div class="paper-detail-actions">
+
+                ${
+                    doi
+                        ? `
+                            <a
+                                class="ui-button ui-button-primary"
+                                href="${escapeAttribute(
+                                    normalizeDoi(doi)
+                                )}"
+                                target="_blank"
+                                rel="noopener noreferrer"
+                            >
+                                View DOI
+                            </a>
+                          `
+                        : ""
+                }
+
+                <button
+                    type="button"
+                    class="ui-button ui-button-danger"
+                    id="deletePaperButton"
+                >
+                    Delete
+                </button>
+
+            </div>
+
+        </div>
+
+        <div class="paper-detail-body">
+
+            <section class="paper-section">
+
+                <div class="paper-section-title">
+                    Bibliographic Information
+                </div>
+
+                <div class="paper-field-grid">
+
+                    ${renderField(
+                        "Year",
+                        getYear(paper)
+                    )}
+
+                    ${renderField(
+                        "Journal",
+                        getJournal(paper)
+                    )}
+
+                    ${renderField(
+                        "DOI",
+                        doi
+                    )}
+
+                    ${renderField(
+                        "Volume",
+                        getVolume(paper)
+                    )}
+
+                    ${renderField(
+                        "Issue",
+                        getIssue(paper)
+                    )}
+
+                    ${renderField(
+                        "Pages",
+                        getPages(paper)
+                    )}
+
+                    ${renderField(
+                        "Keywords",
+                        getKeywords(paper)
+                    )}
+
+                    ${renderField(
+                        "Research Area",
+                        getResearchArea(paper)
+                    )}
+
+                    ${renderField(
+                        "Material",
+                        getMaterial(paper)
+                    )}
+
+                    ${renderField(
+                        "Methodology",
+                        getMethodology(paper)
+                    )}
+
+                    ${renderField(
+                        "Experimental Conditions",
+                        getExperimentalConditions(paper)
+                    )}
 
                 </div>
 
-            `;
+            </section>
 
+            ${
+                getAbstract(paper)
+                    ? `
+                        <section class="paper-section">
 
-            const emptyButton =
-                document.getElementById(
-                    "empty-add-paper"
-                );
+                            <div class="paper-section-title">
+                                Abstract
+                            </div>
 
+                            <div class="paper-text">
+                                ${escapeHtml(
+                                    getAbstract(paper)
+                                )}
+                            </div>
 
-            if (emptyButton) {
-
-                emptyButton.addEventListener(
-                    "click",
-                    function () {
-
-                        navigate(
-                            "input-paper"
-                        );
-
-                    }
-                );
-
+                        </section>
+                      `
+                    : ""
             }
 
+            ${
+                getFullText(paper)
+                    ? `
+                        <section class="paper-section">
 
-            return;
+                            <div class="paper-section-title">
+                                Full Text
+                            </div>
 
-        }
+                            <details class="paper-fulltext">
 
+                                <summary>
+                                    Show extracted full text
+                                </summary>
 
-        container.innerHTML =
-            papers
-                .map(createPaperCard)
-                .join("");
+                                <div class="paper-fulltext-content">
+                                    ${escapeHtml(
+                                        getFullText(paper)
+                                    )}
+                                </div>
 
+                            </details>
 
-        attachPaperActions();
-
-    }
-
-
-    /* ========================================================
-       PAPER ACTIONS
-    ======================================================== */
-
-    function attachPaperActions() {
-
-        const buttons =
-            document.querySelectorAll(
-                "[data-action]"
-            );
-
-
-        buttons.forEach(
-            function (button) {
-
-                button.addEventListener(
-                    "click",
-                    function (event) {
-
-                        event.stopPropagation();
-
-
-                        const action =
-                            button.dataset.action;
-
-
-                        const id =
-                            button.dataset.id;
-
-
-                        if (
-                            action === "view"
-                        ) {
-
-                            openPaperDetails(id);
-
-                        }
-
-
-                        if (
-                            action === "delete"
-                        ) {
-
-                            deletePaper(id);
-
-                        }
-
-                    }
-                );
-
+                        </section>
+                      `
+                    : ""
             }
+
+            ${renderAdditionalFields(paper)}
+
+        </div>
+    `;
+
+    const deleteButton =
+        document.getElementById(
+            "deletePaperButton"
         );
 
-    }
-
-
-    /* ========================================================
-       PAPER DETAILS
-    ======================================================== */
-
-    function openPaperDetails(id) {
-
-        const paper =
-            state.papers.find(
-                function (item) {
-
-                    return String(item.id) ===
-                        String(id);
-
-                }
-            );
-
-
-        if (!paper) {
-            return;
-        }
-
-
-        const modal =
-            document.getElementById(
-                "paper-detail-modal"
-            );
-
-
-        if (!modal) {
-            return;
-        }
-
-
-        setText(
-            "detail-title",
-            paper.title || "Untitled Paper"
-        );
-
-
-        setText(
-            "detail-authors",
-            getAuthors(paper)
-        );
-
-
-        setText(
-            "detail-year",
-            paper.year || "—"
-        );
-
-
-        setText(
-            "detail-journal",
-            paper.journal || "—"
-        );
-
-
-        setText(
-            "detail-doi",
-            paper.doi || "—"
-        );
-
-
-        setText(
-            "detail-volume",
-            paper.volume || "—"
-        );
-
-
-        setText(
-            "detail-issue",
-            paper.issue || "—"
-        );
-
-
-        setText(
-            "detail-pages",
-            paper.pages || "—"
-        );
-
-
-        setText(
-            "detail-area",
-            paper.researchArea || "—"
-        );
-
-
-        setText(
-            "detail-material",
-            paper.material || "—"
-        );
-
-
-        setText(
-            "detail-methodology",
-            paper.methodology || "—"
-        );
-
-
-        setText(
-            "detail-conditions",
-            paper.experimentalConditions || "—"
-        );
-
-
-        setText(
-            "detail-keywords",
-            getKeywords(paper).join(", ") || "—"
-        );
-
-
-        modal.classList.add(
-            "open"
-        );
-
-
-        document.body.classList.add(
-            "modal-open"
-        );
-
-    }
-
-
-    function closePaperDetails() {
-
-        const modal =
-            document.getElementById(
-                "paper-detail-modal"
-            );
-
-
-        if (!modal) {
-            return;
-        }
-
-
-        modal.classList.remove(
-            "open"
-        );
-
-
-        document.body.classList.remove(
-            "modal-open"
-        );
-
-    }
-
-
-    /* ========================================================
-       DELETE PAPER
-    ======================================================== */
-
-    function deletePaper(id) {
-
-        const paper =
-            state.papers.find(
-                function (item) {
-
-                    return String(item.id) ===
-                        String(id);
-
-                }
-            );
-
-
-        if (!paper) {
-            return;
-        }
-
-
-        const confirmed =
-            window.confirm(
-                `Delete "${paper.title}" from your library?`
-            );
-
-
-        if (!confirmed) {
-            return;
-        }
-
-
-        state.papers =
-            state.papers.filter(
-                function (item) {
-
-                    return String(item.id) !==
-                        String(id);
-
-                }
-            );
-
-
-        savePapers();
-
-        refresh();
-
-    }
-
-
-    /* ========================================================
-       NAVIGATION
-    ======================================================== */
-
-    function navigate(page) {
-
-        /*
-         * dashboard.js menjadi navigator utama.
-         * Jika tersedia, gunakan API tersebut.
-         */
-
-        if (
-            window.ResearchDashboard &&
-            typeof window.ResearchDashboard.navigate ===
-                "function"
-        ) {
-
-            window.ResearchDashboard.navigate(
-                page
-            );
-
-            return;
-
-        }
-
-
-        /*
-         * Fallback jika dashboard.js
-         * belum tersedia.
-         */
-
-        const pages =
-            document.querySelectorAll(
-                ".page"
-            );
-
-
-        pages.forEach(
-            function (item) {
-
-                item.style.display =
-                    "none";
-
-            }
-        );
-
-
-        const target =
-            document.getElementById(
-                page + "-page"
-            );
-
-
-        if (target) {
-
-            target.style.display =
-                "block";
-
-        }
-
-    }
-
-
-    /* ========================================================
-       SEARCH
-    ======================================================== */
-
-    function initializeSearch() {
-
-        const input =
-            document.getElementById(
-                "paper-search"
-            );
-
-
-        if (!input) {
-            return;
-        }
-
-
-        input.addEventListener(
-            "input",
+    if (deleteButton) {
+        deleteButton.addEventListener(
+            "click",
             function () {
-
-                state.search =
-                    input.value.trim();
-
-
-                renderPapers();
-
+                deletePaper(
+                    getPaperId(paper)
+                );
             }
         );
+    }
+}
 
+/* ============================================================
+   FIELD
+   ============================================================ */
+
+function renderField(label, value) {
+    const safeValue =
+        String(value || "").trim();
+
+    return `
+        <div class="paper-field">
+
+            <div class="paper-field-label">
+                ${escapeHtml(label)}
+            </div>
+
+            <div class="paper-field-value ${
+                safeValue
+                    ? ""
+                    : "is-empty"
+            }">
+                ${
+                    safeValue
+                        ? escapeHtml(safeValue)
+                        : "Not available"
+                }
+            </div>
+
+        </div>
+    `;
+}
+
+/* ============================================================
+   ADDITIONAL FIELDS
+   ============================================================ */
+
+function renderAdditionalFields(paper) {
+    const known = new Set();
+
+    const knownFields = [
+        "id",
+        "paper_id",
+        "Paper_ID",
+        "ID",
+
+        "Title",
+        "title",
+        "Paper Title",
+
+        "Authors",
+        "Author",
+        "authors",
+        "author",
+
+        "Year",
+        "year",
+
+        "Journal",
+        "journal",
+
+        "DOI",
+        "doi",
+
+        "Volume",
+        "volume",
+
+        "Issue",
+        "issue",
+
+        "Pages",
+        "Page",
+        "pages",
+
+        "Keywords",
+        "Keyword",
+        "keywords",
+
+        "Research Area",
+        "Research_Area",
+        "research_area",
+
+        "Material",
+        "material",
+
+        "Methodology",
+        "methodology",
+        "Methods",
+        "methods",
+
+        "Experimental Conditions",
+        "Experimental_Conditions",
+        "experimental_conditions",
+
+        "Abstract",
+        "abstract",
+        "Abstract Text",
+        "Summary",
+
+        "Full Text",
+        "Full_Text",
+        "full_text",
+        "Text",
+        "Extracted Text",
+        "Extracted_Text",
+        "Content",
+        "text"
+    ];
+
+    knownFields.forEach(field => {
+        known.add(normalizeKey(field));
+    });
+
+    const extraKeys =
+        Object.keys(paper).filter(key => {
+            return !known.has(
+                normalizeKey(key)
+            );
+        });
+
+    if (extraKeys.length === 0) {
+        return "";
     }
 
-
-    /* ========================================================
-       FILTER
-    ======================================================== */
-
-    function initializeFilter() {
-
-        const yearFilter =
-            document.getElementById(
-                "paper-year-filter"
-            );
-
-
-        const sort =
-            document.getElementById(
-                "paper-sort"
-            );
-
-
-        if (yearFilter) {
-
-            yearFilter.addEventListener(
-                "change",
-                function () {
-
-                    state.filter =
-                        yearFilter.value;
-
-
-                    renderPapers();
-
-                }
-            );
-
-        }
-
-
-        if (sort) {
-
-            sort.addEventListener(
-                "change",
-                function () {
-
-                    state.sort =
-                        sort.value;
-
-
-                    renderPapers();
-
-                }
-            );
-
-        }
-
-    }
-
-
-    /* ========================================================
-       BUTTONS
-    ======================================================== */
-
-    function initializeButtons() {
-
-        const add =
-            document.getElementById(
-                "papers-add-button"
-            );
-
-
-        const close =
-            document.getElementById(
-                "close-paper-modal"
-            );
-
-
-        const modal =
-            document.getElementById(
-                "paper-detail-modal"
-            );
-
-
-        if (add) {
-
-            add.addEventListener(
-                "click",
-                function () {
-
-                    navigate(
-                        "input-paper"
-                    );
-
-                }
-            );
-
-        }
-
-
-        if (close) {
-
-            close.addEventListener(
-                "click",
-                closePaperDetails
-            );
-
-        }
-
-
-        if (modal) {
-
-            modal.addEventListener(
-                "click",
-                function (event) {
-
-                    if (
-                        event.target === modal
-                    ) {
-
-                        closePaperDetails();
-
-                    }
-
-                }
-            );
-
-        }
-
-
-        document.addEventListener(
-            "keydown",
-            function (event) {
-
-                if (
-                    event.key === "Escape"
-                ) {
-
-                    closePaperDetails();
-
-                }
-
-            }
-        );
-
-    }
-
-
-    /* ========================================================
-       REFRESH
-    ======================================================== */
-
-    function refresh() {
-
-        loadPapers();
-
-        normalizeAllPapers();
-
-        updateStatistics();
-
-        buildYearFilter();
-
-        renderPapers();
-
-    }
-
-
-    /* ========================================================
-       STORAGE EVENT
-    ======================================================== */
-
-    window.addEventListener(
-        "storage",
-        function (event) {
+    const fields = extraKeys
+        .map(key => {
+            const value =
+                paper[key];
 
             if (
-                STORAGE_KEYS.includes(
-                    event.key
-                )
+                value === null ||
+                value === undefined ||
+                String(value).trim() === ""
             ) {
-
-                refresh();
-
+                return "";
             }
 
-        }
-    );
+            return renderField(
+                prettifyLabel(key),
+                String(value)
+            );
+        })
+        .filter(Boolean)
+        .join("");
 
-
-    /* ========================================================
-       PAGE CHANGE
-    ======================================================== */
-
-    document.addEventListener(
-        "rpm:pagechange",
-        function (event) {
-
-            if (
-                event.detail &&
-                event.detail.page === "papers"
-            ) {
-
-                refresh();
-
-            }
-
-        }
-    );
-
-
-    /* ========================================================
-       PUBLIC API
-    ======================================================== */
-
-    window.ResearchPapers = {
-
-        refresh:
-
-            refresh,
-
-        getPapers:
-
-            function () {
-
-                return state.papers.slice();
-
-            },
-
-        addPaper:
-
-            function (paper) {
-
-                const newPaper =
-                    normalizePaper(
-                        {
-                            ...paper,
-
-                            id:
-                                paper.id ||
-                                Date.now().toString(),
-
-                            createdAt:
-                                paper.createdAt ||
-                                new Date().toISOString()
-
-                        },
-
-                        state.papers.length
-                    );
-
-
-                state.papers.push(
-                    newPaper
-                );
-
-
-                savePapers();
-
-                refresh();
-
-            },
-
-        deletePaper:
-
-            deletePaper,
-
-        openDetails:
-
-            openPaperDetails
-
-    };
-
-
-    /* ========================================================
-       INIT
-    ======================================================== */
-
-    function init() {
-
-        initializeSearch();
-
-        initializeFilter();
-
-        initializeButtons();
-
-        refresh();
-
-
-        console.log(
-            "Research Paper Manager Papers initialized."
-        );
-
+    if (!fields) {
+        return "";
     }
 
+    return `
+        <section class="paper-section">
+
+            <div class="paper-section-title">
+                Additional Information
+            </div>
+
+            <div class="paper-field-grid">
+                ${fields}
+            </div>
+
+        </section>
+    `;
+}
+
+/* ============================================================
+   EMPTY DETAIL
+   ============================================================ */
+
+function showEmptyDetail() {
+    if (!detailEmpty || !detailContent) {
+        return;
+    }
+
+    detailEmpty.hidden = false;
+    detailContent.hidden = true;
+
+    selectedPaperId = null;
+}
+
+/* ============================================================
+   DELETE
+   ============================================================ */
+
+function deletePaper(paperId) {
+    if (!paperId) {
+        return;
+    }
+
+    const paper =
+        papers.find(
+            item =>
+                getPaperId(item) ===
+                paperId
+        );
+
+    if (!paper) {
+        return;
+    }
+
+    const title =
+        getTitle(paper);
+
+    const confirmed =
+        window.confirm(
+            `Delete "${title}" from your local library?`
+        );
+
+    if (!confirmed) {
+        return;
+    }
+
+    papers =
+        papers.filter(
+            item =>
+                getPaperId(item) !==
+                paperId
+        );
+
+    try {
+        localStorage.setItem(
+            PAPER_STORAGE_KEY,
+            JSON.stringify(papers)
+        );
+    } catch (error) {
+        console.warn(
+            "Gagal menyimpan perubahan ke LocalStorage:",
+            error
+        );
+    }
+
+    filteredPapers =
+        filteredPapers.filter(
+            item =>
+                getPaperId(item) !==
+                paperId
+        );
+
+    selectedPaperId = null;
+
+    renderPaperCount();
+    renderPaperList();
+
+    if (filteredPapers.length > 0) {
+        selectPaper(
+            filteredPapers[0]
+        );
+    } else {
+        showEmptyDetail();
+    }
+}
+
+/* ============================================================
+   DOI
+   ============================================================ */
+
+function normalizeDoi(value) {
+    const text =
+        String(value || "").trim();
+
+    if (!text) {
+        return "";
+    }
 
     if (
-        document.readyState === "loading"
+        text.startsWith("http://") ||
+        text.startsWith("https://")
     ) {
-
-        document.addEventListener(
-            "DOMContentLoaded",
-            init
-        );
-
-    } else {
-
-        init();
-
+        return text;
     }
 
+    return `https://doi.org/${text.replace(
+        /^doi:\s*/i,
+        ""
+    )}`;
+}
 
-})();
+/* ============================================================
+   LABEL
+   ============================================================ */
+
+function prettifyLabel(value) {
+    return String(value || "")
+        .replace(/_/g, " ")
+        .replace(/([a-z])([A-Z])/g, "$1 $2")
+        .replace(/\s+/g, " ")
+        .trim()
+        .replace(/\b\w/g, char =>
+            char.toUpperCase()
+        );
+}
+
+/* ============================================================
+   ESCAPE
+   ============================================================ */
+
+function escapeHtml(value) {
+    return String(value ?? "")
+        .replace(/&/g, "&amp;")
+        .replace(/</g, "&lt;")
+        .replace(/>/g, "&gt;")
+        .replace(/"/g, "&quot;")
+        .replace(/'/g, "&#039;");
+}
+
+function escapeAttribute(value) {
+    return escapeHtml(value);
+}
+
+/* ============================================================
+   PUBLIC API
+   ============================================================ */
+
+window.ResearchPaperManager = {
+    reload: async function () {
+        await loadPapers();
+
+        filteredPapers = [...papers];
+
+        renderPaperCount();
+        renderPaperList();
+
+        if (filteredPapers.length > 0) {
+            selectPaper(
+                filteredPapers[0]
+            );
+        } else {
+            showEmptyDetail();
+        }
+    },
+
+    getPapers: function () {
+        return [...papers];
+    }
+};
