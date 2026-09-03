@@ -1,6 +1,8 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
+
     <meta charset="UTF-8">
 
     <meta
@@ -10,19 +12,18 @@
 
     <title>Research Paper Manager</title>
 
-    <!--
-        CSS PATH
-        Jangan diubah.
-    -->
     <link
         rel="stylesheet"
-        href="./css/components.css?v=20260903"
+        href="./css/components.css?v=3"
     >
+
 </head>
+
 
 <body>
 
 <div id="app">
+
 
     <!-- =====================================================
          SIDEBAR
@@ -30,17 +31,20 @@
 
     <aside id="sidebar">
 
-        <div class="sidebar-brand">
+        <div class="brand">
 
-            <div class="sidebar-logo">
+            <div class="brand-logo">
+
                 <img
                     src="./static/logo.png"
                     alt="Research Manager"
-                    onerror="this.style.display='none'; this.parentElement.classList.add('logo-error');"
+                    onerror="this.style.display='none'"
                 >
+
             </div>
 
-            <div class="sidebar-brand-text">
+
+            <div class="brand-info">
 
                 <strong>
                     Research Manager
@@ -55,15 +59,17 @@
         </div>
 
 
-        <nav class="sidebar-nav">
+        <nav class="navigation">
 
             <button
+                type="button"
                 class="nav-item active"
                 data-page="dashboard"
-                type="button"
             >
 
-                <span class="nav-icon">⌂</span>
+                <span class="nav-icon">
+                    ⌂
+                </span>
 
                 <span>
                     Dashboard
@@ -73,12 +79,14 @@
 
 
             <button
+                type="button"
                 class="nav-item"
                 data-page="papers"
-                type="button"
             >
 
-                <span class="nav-icon">▤</span>
+                <span class="nav-icon">
+                    ▤
+                </span>
 
                 <span>
                     Papers
@@ -88,12 +96,14 @@
 
 
             <button
+                type="button"
                 class="nav-item"
                 data-page="input-paper"
-                type="button"
             >
 
-                <span class="nav-icon">＋</span>
+                <span class="nav-icon">
+                    ＋
+                </span>
 
                 <span>
                     Input Paper
@@ -103,12 +113,14 @@
 
 
             <button
+                type="button"
                 class="nav-item"
                 data-page="summary"
-                type="button"
             >
 
-                <span class="nav-icon">≡</span>
+                <span class="nav-icon">
+                    ≡
+                </span>
 
                 <span>
                     Summary
@@ -118,12 +130,14 @@
 
 
             <button
+                type="button"
                 class="nav-item"
                 data-page="mini-review"
-                type="button"
             >
 
-                <span class="nav-icon">◫</span>
+                <span class="nav-icon">
+                    ◫
+                </span>
 
                 <span>
                     Mini Review
@@ -133,12 +147,14 @@
 
 
             <button
+                type="button"
                 class="nav-item"
                 data-page="research-gap"
-                type="button"
             >
 
-                <span class="nav-icon">⌕</span>
+                <span class="nav-icon">
+                    ⌕
+                </span>
 
                 <span>
                     Research Gap
@@ -151,15 +167,20 @@
 
         <div class="sidebar-bottom">
 
-            <div class="sidebar-divider"></div>
+            <div class="sidebar-line"></div>
 
             <span>
                 RESEARCH WORKSPACE
             </span>
 
+            <small>
+                Literature Review System
+            </small>
+
         </div>
 
     </aside>
+
 
 
     <!-- =====================================================
@@ -167,6 +188,7 @@
     ====================================================== -->
 
     <main id="main">
+
 
         <!-- TOPBAR -->
 
@@ -177,23 +199,21 @@
                 <button
                     id="sidebar-toggle"
                     type="button"
-                    aria-label="Toggle sidebar"
+                    aria-label="Toggle navigation"
                 >
                     ☰
                 </button>
 
-                <div>
 
-                    <div
-                        id="page-title"
-                        class="topbar-title"
-                    >
+                <div class="topbar-page">
+
+                    <strong id="page-title">
                         Dashboard
-                    </div>
+                    </strong>
 
-                    <div class="topbar-subtitle">
+                    <span>
                         Research Paper Manager
-                    </div>
+                    </span>
 
                 </div>
 
@@ -202,7 +222,7 @@
 
             <div class="topbar-right">
 
-                <span class="status-dot"></span>
+                <span class="online-dot"></span>
 
                 <span>
                     Ready
@@ -213,8 +233,9 @@
         </header>
 
 
+
         <!-- =================================================
-             PAGE AREA
+             CONTENT
         ================================================== -->
 
         <div id="page-area">
@@ -229,37 +250,42 @@
                 class="page dashboard-page"
             >
 
+
                 <!-- BACKGROUND -->
 
                 <div
-                    class="dashboard-bg"
+                    class="dashboard-background"
                     aria-hidden="true"
                 ></div>
 
 
                 <div
-                    class="dashboard-bg-overlay"
+                    class="background-overlay"
                     aria-hidden="true"
                 ></div>
 
 
-                <!-- CONTENT -->
 
-                <div class="dashboard-container">
+                <!-- DASHBOARD CONTENT -->
+
+                <div class="dashboard-content">
 
 
-                    <!-- HERO -->
+                    <!-- =================================================
+                         HERO
+                    ================================================== -->
 
-                    <section class="hero-card">
+                    <section class="hero">
 
-                        <div class="hero-left">
+                        <div class="hero-content">
+
 
                             <div class="hero-logo">
 
                                 <img
                                     src="./static/logo.png"
                                     alt="Research Manager"
-                                    onerror="this.style.display='none';"
+                                    onerror="this.style.display='none'"
                                 >
 
                             </div>
@@ -267,13 +293,15 @@
 
                             <div class="hero-text">
 
-                                <span class="eyebrow">
+                                <span class="hero-eyebrow">
                                     RESEARCH WORKSPACE
                                 </span>
 
+
                                 <h1>
-                                    Research Paper Manager
+                                    Welcome back.
                                 </h1>
+
 
                                 <p>
                                     Organize your literature,
@@ -287,13 +315,14 @@
                         </div>
 
 
+
                         <button
-                            id="add-paper-button"
-                            class="primary-button"
                             type="button"
+                            id="hero-add-paper"
+                            class="hero-button"
                         >
 
-                            <span class="button-icon">
+                            <span class="hero-button-icon">
                                 ＋
                             </span>
 
@@ -306,173 +335,189 @@
                     </section>
 
 
+
                     <!-- =================================================
                          STATISTICS
                     ================================================== -->
 
-                    <section class="stats-grid">
+                    <section class="stats">
 
+
+                        <!-- PAPERS -->
 
                         <article class="stat-card">
 
-                            <div class="stat-top">
+                            <div class="stat-header">
 
                                 <div class="stat-icon">
                                     ▤
                                 </div>
 
-                                <span class="stat-label">
+                                <span>
                                     LIBRARY
                                 </span>
 
                             </div>
 
 
-                            <div class="stat-number">
-                                <span id="total-papers">
-                                    0
-                                </span>
+                            <div
+                                class="stat-number"
+                                id="total-papers"
+                            >
+                                0
                             </div>
 
 
-                            <div class="stat-name">
+                            <strong>
                                 Total Papers
-                            </div>
+                            </strong>
 
 
-                            <div class="stat-description">
-                                Research papers
-                            </div>
+                            <p>
+                                Research papers in your library
+                            </p>
 
                         </article>
 
 
+
+                        <!-- SUMMARIES -->
+
                         <article class="stat-card">
 
-                            <div class="stat-top">
+                            <div class="stat-header">
 
                                 <div class="stat-icon">
                                     ≡
                                 </div>
 
-                                <span class="stat-label">
+                                <span>
                                     ANALYSIS
                                 </span>
 
                             </div>
 
 
-                            <div class="stat-number">
-                                <span id="total-summaries">
-                                    0
-                                </span>
+                            <div
+                                class="stat-number"
+                                id="total-summaries"
+                            >
+                                0
                             </div>
 
 
-                            <div class="stat-name">
+                            <strong>
                                 Summaries
-                            </div>
+                            </strong>
 
 
-                            <div class="stat-description">
-                                Paper summaries
-                            </div>
+                            <p>
+                                Structured paper summaries
+                            </p>
 
                         </article>
 
 
+
+                        <!-- MINI REVIEWS -->
+
                         <article class="stat-card">
 
-                            <div class="stat-top">
+                            <div class="stat-header">
 
                                 <div class="stat-icon">
                                     ◫
                                 </div>
 
-                                <span class="stat-label">
+                                <span>
                                     REVIEW
                                 </span>
 
                             </div>
 
 
-                            <div class="stat-number">
-                                <span id="total-mini-reviews">
-                                    0
-                                </span>
+                            <div
+                                class="stat-number"
+                                id="total-mini-reviews"
+                            >
+                                0
                             </div>
 
 
-                            <div class="stat-name">
+                            <strong>
                                 Mini Reviews
-                            </div>
+                            </strong>
 
 
-                            <div class="stat-description">
+                            <p>
                                 Literature reviews
-                            </div>
+                            </p>
 
                         </article>
 
 
+
+                        <!-- RESEARCH GAP -->
+
                         <article class="stat-card">
 
-                            <div class="stat-top">
+                            <div class="stat-header">
 
                                 <div class="stat-icon">
                                     ⌕
                                 </div>
 
-                                <span class="stat-label">
+                                <span>
                                     INSIGHT
                                 </span>
 
                             </div>
 
 
-                            <div class="stat-number">
-                                <span id="total-research-gaps">
-                                    0
-                                </span>
+                            <div
+                                class="stat-number"
+                                id="total-research-gaps"
+                            >
+                                0
                             </div>
 
 
-                            <div class="stat-name">
+                            <strong>
                                 Research Gaps
-                            </div>
+                            </strong>
 
 
-                            <div class="stat-description">
-                                Identified gaps
-                            </div>
+                            <p>
+                                Identified research opportunities
+                            </p>
 
                         </article>
-
 
                     </section>
 
 
+
                     <!-- =================================================
-                         LOWER CONTENT
+                         LOWER GRID
                     ================================================== -->
 
-                    <section class="dashboard-columns">
+                    <section class="dashboard-grid">
 
 
-                        <!-- QUICK ACTION -->
+                        <!-- QUICK ACTIONS -->
 
-                        <div class="dashboard-card">
+                        <div class="panel">
 
-                            <div class="card-header">
+                            <div class="panel-header">
 
                                 <div>
 
-                                    <span class="card-eyebrow">
+                                    <span>
                                         WORKSPACE
                                     </span>
 
                                     <h2>
-                                        Continue Your Research
+                                        Quick Actions
                                     </h2>
 
                                 </div>
@@ -480,84 +525,122 @@
                             </div>
 
 
-                            <div class="quick-actions">
+                            <div class="actions">
 
 
                                 <button
-                                    id="quick-add-paper"
-                                    class="quick-action"
                                     type="button"
+                                    class="action-item"
+                                    id="browse-papers"
                                 >
 
-                                    <div class="quick-icon">
-                                        ＋
-                                    </div>
-
-                                    <div class="quick-text">
-
-                                        <strong>
-                                            Add New Paper
-                                        </strong>
-
-                                        <span>
-                                            Import a research paper
-                                            into your workspace.
-                                        </span>
-
-                                    </div>
-
-                                    <span class="quick-arrow">
-                                        →
-                                    </span>
-
-                                </button>
-
-
-                                <button
-                                    id="quick-browse-papers"
-                                    class="quick-action"
-                                    type="button"
-                                >
-
-                                    <div class="quick-icon">
+                                    <div class="action-icon">
                                         ▤
                                     </div>
 
-                                    <div class="quick-text">
+
+                                    <div class="action-text">
 
                                         <strong>
                                             Browse Papers
                                         </strong>
 
-                                        <span>
-                                            Explore and manage
-                                            your research collection.
-                                        </span>
+                                        <small>
+                                            View and manage your
+                                            paper collection
+                                        </small>
 
                                     </div>
 
-                                    <span class="quick-arrow">
+
+                                    <span class="action-arrow">
                                         →
                                     </span>
 
                                 </button>
 
+
+
+                                <button
+                                    type="button"
+                                    class="action-item"
+                                    id="create-summary"
+                                >
+
+                                    <div class="action-icon">
+                                        ≡
+                                    </div>
+
+
+                                    <div class="action-text">
+
+                                        <strong>
+                                            Create Summary
+                                        </strong>
+
+                                        <small>
+                                            Analyze and structure
+                                            a research paper
+                                        </small>
+
+                                    </div>
+
+
+                                    <span class="action-arrow">
+                                        →
+                                    </span>
+
+                                </button>
+
+
+
+                                <button
+                                    type="button"
+                                    class="action-item"
+                                    id="create-gap"
+                                >
+
+                                    <div class="action-icon">
+                                        ⌕
+                                    </div>
+
+
+                                    <div class="action-text">
+
+                                        <strong>
+                                            Research Gap
+                                        </strong>
+
+                                        <small>
+                                            Explore potential
+                                            research opportunities
+                                        </small>
+
+                                    </div>
+
+
+                                    <span class="action-arrow">
+                                        →
+                                    </span>
+
+                                </button>
 
                             </div>
 
                         </div>
 
 
-                        <!-- RECENT ACTIVITY -->
 
-                        <div class="dashboard-card">
+                        <!-- RECENT PAPERS -->
 
-                            <div class="card-header">
+                        <div class="panel">
+
+                            <div class="panel-header">
 
                                 <div>
 
-                                    <span class="card-eyebrow">
-                                        ACTIVITY
+                                    <span>
+                                        LIBRARY
                                     </span>
 
                                     <h2>
@@ -568,9 +651,9 @@
 
 
                                 <button
-                                    id="view-all-papers"
-                                    class="text-button"
                                     type="button"
+                                    class="view-all"
+                                    id="view-all-papers"
                                 >
                                     View All →
                                 </button>
@@ -589,6 +672,7 @@
                                         ＋
                                     </div>
 
+
                                     <div>
 
                                         <strong>
@@ -596,8 +680,9 @@
                                         </strong>
 
                                         <span>
-                                            Add your first research
-                                            paper to begin.
+                                            Add your first paper
+                                            to start building
+                                            your library.
                                         </span>
 
                                     </div>
@@ -608,39 +693,37 @@
 
                         </div>
 
-
                     </section>
 
 
-                    <!-- WORKFLOW -->
 
-                    <section class="workflow-card">
+                    <!-- =================================================
+                         WORKFLOW
+                    ================================================== -->
 
-                        <div class="workflow-heading">
+                    <section class="workflow">
 
-                            <div>
+                        <div class="workflow-title">
 
-                                <span class="card-eyebrow">
-                                    WORKFLOW
-                                </span>
+                            <span>
+                                WORKFLOW
+                            </span>
 
-                                <h2>
-                                    Literature Review Workflow
-                                </h2>
-
-                            </div>
+                            <h2>
+                                Literature Review Workflow
+                            </h2>
 
                         </div>
 
 
-                        <div class="workflow-steps">
+                        <div class="workflow-track">
 
 
                             <div class="workflow-step active">
 
-                                <span class="step-number">
+                                <div class="workflow-number">
                                     01
-                                </span>
+                                </div>
 
                                 <strong>
                                     Papers
@@ -653,14 +736,14 @@
                             </div>
 
 
-                            <div class="workflow-line"></div>
+                            <div class="workflow-connector"></div>
 
 
                             <div class="workflow-step">
 
-                                <span class="step-number">
+                                <div class="workflow-number">
                                     02
-                                </span>
+                                </div>
 
                                 <strong>
                                     Summary
@@ -673,14 +756,14 @@
                             </div>
 
 
-                            <div class="workflow-line"></div>
+                            <div class="workflow-connector"></div>
 
 
                             <div class="workflow-step">
 
-                                <span class="step-number">
+                                <div class="workflow-number">
                                     03
-                                </span>
+                                </div>
 
                                 <strong>
                                     Mini Review
@@ -693,14 +776,14 @@
                             </div>
 
 
-                            <div class="workflow-line"></div>
+                            <div class="workflow-connector"></div>
 
 
                             <div class="workflow-step">
 
-                                <span class="step-number">
+                                <div class="workflow-number">
                                     04
-                                </span>
+                                </div>
 
                                 <strong>
                                     Research Gap
@@ -711,7 +794,6 @@
                                 </small>
 
                             </div>
-
 
                         </div>
 
@@ -731,41 +813,43 @@
             </section>
 
 
+
             <!-- =================================================
                  OTHER PAGES
             ================================================== -->
 
             <section
                 id="papers-page"
-                class="page hidden-page"
+                class="page empty-page"
             ></section>
 
 
             <section
                 id="input-paper-page"
-                class="page hidden-page"
+                class="page empty-page"
             ></section>
 
 
             <section
                 id="summary-page"
-                class="page hidden-page"
+                class="page empty-page"
             ></section>
 
 
             <section
                 id="mini-review-page"
-                class="page hidden-page"
+                class="page empty-page"
             ></section>
 
 
             <section
                 id="research-gap-page"
-                class="page hidden-page"
+                class="page empty-page"
             ></section>
 
 
         </div>
+
 
 
         <!-- FOOTER -->
@@ -782,16 +866,17 @@
 
         </footer>
 
+
     </main>
 
 </div>
 
 
-<!-- =========================================================
-     JAVASCRIPT
-========================================================== -->
 
-<script src="./js/dashboard.js?v=20260903"></script>
+<script
+    src="./js/dashboard.js?v=3"
+></script>
 
 </body>
+
 </html>
