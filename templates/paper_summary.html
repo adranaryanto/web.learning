@@ -1,0 +1,363 @@
+from flask import Flask, request, jsonify
+from flask_cors import CORS
+from pathlib import Path
+import csv
+import os
+import tempfile
+from datetime import datetime
+
+app = Flask(__name__)
+CORS(app)
+
+CSV_PATH = Path(r"D:\data\web_machine learning\data.csv")
+CSV_PATH.parent.mkdir(parents=True, exist_ok=True)
+
+
+def clean_value(value):
+    if value is None:
+        return ""
+    return str(value)
+
+
+def read_csv():
+    if not CSV_PATH.exists():
+        return [], []
+
+    with CSV_PATH.open("r", encoding="utf-8-sig", newline="") as f:
+        reader = csv.DictReader(f)
+        fieldnames = reader.fieldnames or []
+        rows = []
+        for row in reader:
+            rows.append({
+                str(k): clean_value(v)
+                for k, v in row.items()
+                if k is not None
+            })
+        return fieldnames, rows
+
+
+def write_csv(fieldnames, rows):
+    if not fieldnames:
+        fieldnames = [
+            "id", "type", "title", "authors", "year", "journal", "volume", "issue",
+            "pages", "publisher", "doi", "abstract", "url", "ris",
+            "ris_type", "ris_title", "ris_author", "ris_year", "ris_journal",
+            "ris_doi", "ris_abstract", "ris_url", "ris_text",
+            "file_name", "page_count", "text", "drive_file_id", "drive_url",
+            "uploaded_at", "status"
+        ]
+
+    fd, temp_name = tempfile.mkstemp(
+        prefix="data_",
+        suffix=".csv",
+        dir=str(CSV_PATH.parent)
+    )
+    os.close(fd)
+
+    try:
+        with open(temp_name, "w", encoding="utf-8-sig", newline="") as f:
+            writer = csv.DictWriter(
+                f,
+                fieldnames=fieldnames,
+                extrasaction="ignore",
+                quoting=csv.QUOTE_MINIMAL
+            )
+            writer.writeheader()
+            for row in rows:
+                writer.writerow({
+                    field: clean_value(row.get(field, ""))
+                    for field in fieldnames
+                })
+
+        os.replace(temp_name, CSV_PATH)
+
+    finally:
+        if os.path.exists(temp_name):
+            os.remove(temp_name)
+
+
+def find_key(row, aliases):
+    normalized = {
+        str(k).strip().lower().replace(" ", "").replace("_", "").replace("-", ""): k
+        for k in row.keys()
+    }
+
+    for alias in aliases:
+        key = normalized.get(
+            str(alias).strip().lower().replace(" ", "").replace("_", "").replace("-", "")
+        )
+        if key is not None and clean_value(row.get(key, "")).strip():
+            return clean_value(row.get(key, "")).strip()
+
+    return ""
+
+
+def paper_id(row):
+    return find_key(row, [
+        "ID", "id", "Paper ID", "Paper_ID"
+    ]) or find_key(row, [
+        "File Name", "file_name", "Filename"
+    ]) or find_key(row, [
+        "Title", "title", "Paper Title"
+    ])
+
+
+def title_of(row):
+    return find_key(row, [
+        "Title", "title", "Paper Title"
+    ]) or find_key(row, [
+        "File Name", "file_name", "Filename"
+    ]) or "Untitled Paper"
+
+
+@app.get("/api/status")
+def status():
+    fieldnames, rows = read_csv()
+    return jsonify({
+        "success": True,
+        "csv_path": str(CSV_PATH),
+        "exists": CSV_PATH.exists(),
+        "total_papers": len(rows),
+        "columns": fieldnames
+    })
+
+
+@app.get("/api/papers")
+def get_papers():
+    fieldnames, rows = read_csv()
+
+    include_text = request.args.get("include_text", "false").lower() in (
+        "1", "true", "yes", "on"
+    )
+
+    q = request.args.get("q", "").strip().lower()
+
+    if q:
+        rows = [
+            row for row in rows
+            if q in " ".join(clean_value(v).lower() for v in row.values())
+        ]
+
+    if not include_text:
+        text_aliases = {
+            "full text", "full_text", "fulltext",
+            "text", "extracted text", "extracted_text",
+            "content"
+        }
+        filtered_rows = []
+        for row in rows:
+            filtered = dict(row)
+            for key in list(filtered.keys()):
+                normalized = key.strip().lower()
+                if normalized in text_aliases or "full text" in normalized:
+                    filtered.pop(key, None)
+            filtered_rows.append(filtered)
+        rows = filtered_rows
+
+    return jsonify({
+        "success": True,
+        "count": len(rows),
+        "columns": fieldnames,
+        "papers": rows
+    })
+
+
+@app.get("/api/paper/<path:paper_id_value>")
+def get_paper(paper_id_value):
+    _, rows = read_csv()
+
+    for row in rows:
+        if str(paper_id(row)) == str(paper_id_value):
+            return jsonify({
+                "success": True,
+                "paper": row
+            })
+
+    return jsonify({
+        "success": False,
+        "message": "Paper tidak ditemukan di data.csv."
+    }), 404
+
+
+@app.post("/api/paper")
+def add_paper():
+    data = request.get_json(silent=True)
+
+    if not isinstance(data, dict):
+        return jsonify({
+            "success": False,
+            "message": "Request JSON tidak valid."
+        }), 400
+
+    _, rows = read_csv()
+
+    incoming_id = clean_value(
+        data.get("id") or data.get("ID")
+    ).strip()
+
+    if not incoming_id:
+        return jsonify({
+            "success": False,
+            "message": "Paper ID wajib diisi."
+        }), 400
+
+    existing_ids = {
+        str(paper_id(row)).strip()
+        for row in rows
+        if paper_id(row)
+    }
+
+    if incoming_id in existing_ids:
+        return jsonify({
+            "success": False,
+            "message": "Paper dengan ID tersebut sudah ada di data.csv."
+        }), 409
+
+    # Preserve existing CSV columns exactly and append missing columns
+    # only when the incoming record contains them.
+    fieldnames, _ = read_csv()
+
+    if not fieldnames:
+        fieldnames = list(data.keys())
+
+    for key in data.keys():
+        if key not in fieldnames:
+            fieldnames.append(key)
+
+    row = {field: "" for field in fieldnames}
+
+    # Map the input_paper.html payload to the CSV's existing naming convention
+    aliases = {
+        "id": ["ID", "id", "Paper ID", "Paper_ID"],
+        "title": ["Title", "title", "Paper Title"],
+        "authors": ["Authors", "Author", "Author(s)", "authors", "author", "Author Names", "Authors Name"],
+        "year": ["Year", "year", "Publication Year", "Pub Year"],
+        "journal": ["Journal", "journal", "Journal Name", "Journal/Conference", "Publication"],
+        "volume": ["Volume", "volume"],
+        "issue": ["Issue", "issue", "Number"],
+        "pages": ["Pages", "Page", "Page Range", "Page_Range", "pages"],
+        "publisher": ["Publisher", "publisher", "Publisher Name"],
+        "doi": ["DOI", "doi", "DOI Number"],
+        "abstract": ["Abstract", "abstract", "Abstract Text", "Summary"],
+        "url": ["URL", "Url", "Link", "Article URL", "Paper URL"],
+        "type": ["Type", "type", "Document Type", "Document_Type", "Publication Type"],
+        "ris": ["RIS", "ris", "RIS Text", "ris_text", "RIS_Text"],
+        "ris_type": ["RIS Type", "ris_type"],
+        "ris_title": ["RIS Title", "ris_title"],
+        "ris_author": ["RIS Author", "ris_author"],
+        "ris_year": ["RIS Year", "ris_year"],
+        "ris_journal": ["RIS Journal", "ris_journal"],
+        "ris_doi": ["RIS DOI", "ris_doi"],
+        "ris_abstract": ["RIS Abstract", "ris_abstract"],
+        "ris_url": ["RIS URL", "ris_url"],
+        "ris_text": ["RIS Text", "ris_text", "RIS", "ris"],
+        "file_name": ["File Name", "file_name", "Filename"],
+        "page_count": ["Page Count", "page_count", "Page_Count"],
+        "text": ["Full Text", "Full_Text", "full_text", "Text", "Extracted Text", "Content"],
+        "drive_file_id": ["Drive File ID", "drive_file_id", "File ID", "Drive ID"],
+        "drive_url": ["Drive URL", "drive_url", "PDF URL", "Drive Link"],
+        "uploaded_at": ["Upload Date", "Upload_Date", "Uploaded At", "uploaded_at"]
+    }
+
+    for incoming_key, value in data.items():
+        if incoming_key in aliases:
+            target = None
+            for candidate in aliases[incoming_key]:
+                for field in fieldnames:
+                    if field.strip().lower().replace(" ", "").replace("_", "").replace("-", "") == candidate.strip().lower().replace(" ", "").replace("_", "").replace("-", ""):
+                        target = field
+                        break
+                if target:
+                    break
+
+            if target:
+                row[target] = clean_value(value)
+                continue
+
+        if incoming_key in fieldnames:
+            row[incoming_key] = clean_value(value)
+
+    # If a completely new CSV is being created, use the payload names directly.
+    if not CSV_PATH.exists() and not rows:
+        fieldnames = list(data.keys())
+        row = {field: clean_value(data.get(field, "")) for field in fieldnames}
+
+    # Make sure upload status is useful when a status column exists.
+    for field in fieldnames:
+        if field.strip().lower() == "status" and not row.get(field):
+            row[field] = "Uploaded"
+
+    rows.append(row)
+    write_csv(fieldnames, rows)
+
+    return jsonify({
+        "success": True,
+        "message": "Paper berhasil disimpan ke data.csv.",
+        "paper": row,
+        "total_papers": len(rows)
+    })
+
+
+@app.delete("/api/paper/<path:paper_id_value>")
+def delete_paper(paper_id_value):
+    fieldnames, rows = read_csv()
+
+    original_count = len(rows)
+    remaining = [
+        row for row in rows
+        if str(paper_id(row)) != str(paper_id_value)
+    ]
+
+    if len(remaining) == original_count:
+        return jsonify({
+            "success": False,
+            "message": "Paper tidak ditemukan di data.csv."
+        }), 404
+
+    write_csv(fieldnames, remaining)
+
+    return jsonify({
+        "success": True,
+        "message": "Paper berhasil dihapus dari data.csv.",
+        "total_papers": len(remaining)
+    })
+
+
+@app.get("/api/search")
+def search_papers():
+    q = request.args.get("q", "").strip().lower()
+
+    if not q:
+        return jsonify({
+            "success": True,
+            "count": 0,
+            "papers": []
+        })
+
+    _, rows = read_csv()
+
+    results = []
+
+    for row in rows:
+        haystack = " ".join(
+            clean_value(value).lower()
+            for value in row.values()
+        )
+
+        if q in haystack:
+            results.append(row)
+
+    return jsonify({
+        "success": True,
+        "count": len(results),
+        "papers": results
+    })
+
+
+if __name__ == "__main__":
+    print("=" * 60)
+    print("Paper Library CSV Server")
+    print("CSV:", CSV_PATH)
+    print("API: http://127.0.0.1:5000/api")
+    print("=" * 60)
+    app.run(host="127.0.0.1", port=5000, debug=False)

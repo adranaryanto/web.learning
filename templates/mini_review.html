@@ -1,0 +1,2599 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Mini Review</title>
+
+<style>
+* {
+    box-sizing: border-box;
+}
+
+body {
+    margin: 0;
+    font-family: Arial, Helvetica, sans-serif;
+    background: #f4f6f8;
+    color: #1f2937;
+}
+
+/* =====================================================
+   HEADER
+===================================================== */
+
+header {
+    background: linear-gradient(135deg, #111827, #374151);
+    color: white;
+    padding: 25px 35px;
+}
+
+.header-inner {
+    max-width: 1500px;
+    margin: auto;
+}
+
+header h1 {
+    margin: 0;
+    font-size: 30px;
+}
+
+header p {
+    margin: 8px 0 0;
+    color: #d1d5db;
+}
+
+/* =====================================================
+   CONTAINER
+===================================================== */
+
+.container {
+    max-width: 1500px;
+    margin: 25px auto;
+    padding: 0 20px;
+}
+
+/* =====================================================
+   ACTION BUTTON
+===================================================== */
+
+.top-actions {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 20px;
+    flex-wrap: wrap;
+}
+
+button {
+    border: none;
+    border-radius: 8px;
+    padding: 10px 16px;
+    cursor: pointer;
+    font-weight: 600;
+    transition: 0.2s;
+}
+
+button:hover {
+    transform: translateY(-1px);
+}
+
+.btn-primary {
+    background: #2563eb;
+    color: white;
+}
+
+.btn-primary:hover {
+    background: #1d4ed8;
+}
+
+.btn-secondary {
+    background: #e5e7eb;
+    color: #111827;
+}
+
+.btn-secondary:hover {
+    background: #d1d5db;
+}
+
+.btn-success {
+    background: #059669;
+    color: white;
+}
+
+.btn-success:hover {
+    background: #047857;
+}
+
+.btn-danger {
+    background: #dc2626;
+    color: white;
+}
+
+/* =====================================================
+   STATISTICS
+===================================================== */
+
+.stats {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 15px;
+    margin-bottom: 20px;
+}
+
+.stat-card {
+    background: white;
+    padding: 20px;
+    border-radius: 12px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.07);
+}
+
+.stat-label {
+    color: #6b7280;
+    font-size: 14px;
+}
+
+.stat-value {
+    font-size: 28px;
+    font-weight: bold;
+    margin-top: 5px;
+}
+
+/* =====================================================
+   TOOLBAR
+===================================================== */
+
+.toolbar {
+    background: white;
+    padding: 18px;
+    border-radius: 12px;
+    margin-bottom: 20px;
+    display: flex;
+    gap: 12px;
+    flex-wrap: wrap;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.07);
+}
+
+.toolbar input,
+.toolbar select {
+    padding: 11px 13px;
+    border: 1px solid #d1d5db;
+    border-radius: 8px;
+    font-size: 14px;
+}
+
+.search {
+    flex: 1;
+    min-width: 250px;
+}
+
+/* =====================================================
+   MAIN GRID
+===================================================== */
+
+.main-grid {
+    display: grid;
+    grid-template-columns: 1.5fr 1fr;
+    gap: 20px;
+}
+
+/* =====================================================
+   TABLE
+===================================================== */
+
+.table-card {
+    background: white;
+    border-radius: 12px;
+    overflow: hidden;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.07);
+}
+
+.table-header {
+    padding: 18px;
+    border-bottom: 1px solid #e5e7eb;
+}
+
+.table-header h2 {
+    margin: 0;
+    font-size: 19px;
+}
+
+.table-wrapper {
+    overflow-x: auto;
+    max-height: 650px;
+    overflow-y: auto;
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+th {
+    background: #f9fafb;
+    position: sticky;
+    top: 0;
+    z-index: 2;
+    text-align: left;
+    font-size: 13px;
+    color: #4b5563;
+}
+
+th,
+td {
+    padding: 12px;
+    border-bottom: 1px solid #e5e7eb;
+    vertical-align: top;
+}
+
+td {
+    font-size: 13px;
+}
+
+tr:hover {
+    background: #f9fafb;
+}
+
+.title-cell {
+    font-weight: 600;
+    min-width: 280px;
+}
+
+.checkbox {
+    width: 18px;
+    height: 18px;
+}
+
+/* =====================================================
+   SUMMARY
+===================================================== */
+
+.summary-card {
+    background: white;
+    border-radius: 12px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.07);
+    padding: 22px;
+    height: fit-content;
+    position: sticky;
+    top: 20px;
+}
+
+.summary-card h2 {
+    margin-top: 0;
+}
+
+.summary-placeholder {
+    color: #6b7280;
+    line-height: 1.7;
+}
+
+.summary-content {
+    display: none;
+}
+
+.paper-title {
+    font-size: 20px;
+    font-weight: bold;
+    margin-bottom: 15px;
+    line-height: 1.4;
+}
+
+.summary-section {
+    margin-top: 20px;
+}
+
+.summary-section h3 {
+    font-size: 15px;
+    margin-bottom: 8px;
+    color: #374151;
+}
+
+.summary-section p {
+    line-height: 1.7;
+    margin: 0;
+}
+
+/* =====================================================
+   TAG
+===================================================== */
+
+.tag {
+    display: inline-block;
+    background: #eff6ff;
+    color: #1d4ed8;
+    padding: 5px 9px;
+    border-radius: 20px;
+    font-size: 12px;
+    margin: 3px;
+}
+
+/* =====================================================
+   INFO GRID
+===================================================== */
+
+.info-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+}
+
+.info-item {
+    background: #f9fafb;
+    padding: 10px;
+    border-radius: 8px;
+}
+
+.info-item strong {
+    display: block;
+    font-size: 11px;
+    color: #6b7280;
+    margin-bottom: 4px;
+}
+
+/* =====================================================
+   COMPARE
+===================================================== */
+
+.compare-box {
+    background: #f0fdf4;
+    border-left: 4px solid #16a34a;
+    padding: 15px;
+    border-radius: 8px;
+    margin-bottom: 15px;
+}
+
+.review-table {
+    width: 100%;
+    margin-top: 10px;
+    border-collapse: collapse;
+}
+
+.review-table td {
+    border: 1px solid #e5e7eb;
+}
+
+.review-table td:first-child {
+    font-weight: bold;
+    width: 35%;
+}
+
+/* =====================================================
+   STATUS
+===================================================== */
+
+.status {
+    margin-bottom: 15px;
+    padding: 12px 15px;
+    border-radius: 8px;
+    background: #ecfdf5;
+    color: #065f46;
+}
+
+/* =====================================================
+   RESPONSIVE
+===================================================== */
+
+@media (max-width: 1000px) {
+
+    .stats {
+        grid-template-columns: repeat(2, 1fr);
+    }
+
+    .main-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .summary-card {
+        position: static;
+    }
+}
+
+@media (max-width: 600px) {
+
+    .stats {
+        grid-template-columns: 1fr;
+    }
+
+    header {
+        padding: 20px;
+    }
+
+    .container {
+        padding: 0 10px;
+    }
+
+    .info-grid {
+        grid-template-columns: 1fr;
+    }
+}
+</style>
+</head>
+
+<body>
+
+<!-- =====================================================
+     HEADER
+===================================================== -->
+
+<header>
+
+    <div class="header-inner">
+
+        <h1>📚 Mini Review</h1>
+
+        <p>
+            Analisis dan rangkuman literatur
+            berdasarkan database CSV
+        </p>
+
+    </div>
+
+</header>
+
+
+<div class="container">
+
+<!-- =====================================================
+     TOP ACTIONS
+===================================================== -->
+
+<div class="top-actions">
+
+    <!-- KEMBALI KE MENU UTAMA -->
+
+    <button
+        class="btn-secondary"
+        onclick="goToMenu()">
+
+        ← Kembali ke Menu Utama
+
+    </button>
+
+
+    <!-- REFRESH -->
+
+    <button
+        class="btn-primary"
+        onclick="loadCSV()">
+
+        🔄 Refresh Database
+
+    </button>
+
+
+    <!-- SUMMARY -->
+
+    <button
+        class="btn-success"
+        onclick="summarizeSelected()">
+
+        ✨ Rangkum Paper Terpilih
+
+    </button>
+
+
+    <!-- SELECT -->
+
+    <button
+        class="btn-secondary"
+        onclick="selectAllVisible()">
+
+        ☑ Pilih Semua
+
+    </button>
+
+
+    <!-- CLEAR -->
+
+    <button
+        class="btn-secondary"
+        onclick="clearSelection()">
+
+        ☐ Hapus Pilihan
+
+    </button>
+
+</div>
+
+
+<!-- =====================================================
+     STATUS
+===================================================== -->
+
+<div id="status" class="status">
+
+    ⏳ Memuat database...
+
+</div>
+
+
+<!-- =====================================================
+     STATISTICS
+===================================================== -->
+
+<div class="stats">
+
+    <div class="stat-card">
+
+        <div class="stat-label">
+            Total Paper
+        </div>
+
+        <div
+            class="stat-value"
+            id="totalPapers">
+
+            0
+
+        </div>
+
+    </div>
+
+
+    <div class="stat-card">
+
+        <div class="stat-label">
+            Paper Dipilih
+        </div>
+
+        <div
+            class="stat-value"
+            id="selectedPapers">
+
+            0
+
+        </div>
+
+    </div>
+
+
+    <div class="stat-card">
+
+        <div class="stat-label">
+            Tahun
+        </div>
+
+        <div
+            class="stat-value"
+            id="totalYears">
+
+            0
+
+        </div>
+
+    </div>
+
+
+    <div class="stat-card">
+
+        <div class="stat-label">
+            DOI
+        </div>
+
+        <div
+            class="stat-value"
+            id="totalDOI">
+
+            0
+
+        </div>
+
+    </div>
+
+</div>
+
+
+<!-- =====================================================
+     SEARCH
+===================================================== -->
+
+<div class="toolbar">
+
+    <input
+        id="searchInput"
+        class="search"
+        type="text"
+        placeholder="🔍 Cari judul, author, jurnal, DOI, keyword...">
+
+
+    <select id="yearFilter">
+
+        <option value="">
+            Semua Tahun
+        </option>
+
+    </select>
+
+</div>
+
+
+<!-- =====================================================
+     MAIN
+===================================================== -->
+
+<div class="main-grid">
+
+
+<!-- =====================================================
+     PAPER TABLE
+===================================================== -->
+
+<div class="table-card">
+
+    <div class="table-header">
+
+        <h2>
+            Database Paper
+        </h2>
+
+    </div>
+
+
+    <div class="table-wrapper">
+
+        <table>
+
+            <thead>
+
+                <tr>
+
+                    <th>
+
+                        <input
+                            type="checkbox"
+                            id="masterCheckbox"
+                            onclick="toggleAll(this)">
+
+                    </th>
+
+                    <th>
+                        No.
+                    </th>
+
+                    <th>
+                        Title
+                    </th>
+
+                    <th>
+                        Author
+                    </th>
+
+                    <th>
+                        Year
+                    </th>
+
+                    <th>
+                        Journal
+                    </th>
+
+                    <th>
+                        DOI
+                    </th>
+
+                </tr>
+
+            </thead>
+
+
+            <tbody id="paperTable">
+
+            </tbody>
+
+        </table>
+
+    </div>
+
+</div>
+
+
+<!-- =====================================================
+     SUMMARY PANEL
+===================================================== -->
+
+<div class="summary-card">
+
+    <h2>
+        🧠 Mini Review
+    </h2>
+
+
+    <div
+        id="summaryPlaceholder"
+        class="summary-placeholder">
+
+        Pilih satu atau beberapa paper
+        kemudian klik
+        <b>“Rangkum Paper Terpilih”</b>.
+
+        <br><br>
+
+        Sistem akan mencoba mengidentifikasi:
+
+        <br><br>
+
+        • Tujuan penelitian
+        <br>
+        • Material / katalis
+        <br>
+        • Metode sintesis
+        <br>
+        • Surface area / SBET
+        <br>
+        • ECSA / Cdl
+        <br>
+        • Aktivitas elektrokatalitik
+        <br>
+        • Selektivitas
+        <br>
+        • Stabilitas
+        <br>
+        • Hasil utama
+        <br>
+        • Hubungan dengan mini-review
+
+    </div>
+
+
+    <div
+        id="summaryContent"
+        class="summary-content">
+
+    </div>
+
+</div>
+
+</div>
+
+</div>
+
+
+<script>
+
+/* =====================================================
+   GLOBAL DATA
+===================================================== */
+
+let papers = [];
+
+let filteredPapers = [];
+
+
+/* =====================================================
+   MENU UTAMA
+===================================================== */
+
+function goToMenu() {
+
+    window.location.href = "menu_utama.html";
+
+}
+
+
+/* =====================================================
+   LOAD CSV
+===================================================== */
+
+async function loadCSV() {
+
+    const status =
+        document.getElementById("status");
+
+    status.innerHTML =
+        "⏳ Memuat data.csv...";
+
+
+    try {
+
+        const response =
+            await fetch(
+                "/data.csv?t=" +
+                Date.now()
+            );
+
+
+        if (!response.ok) {
+
+            throw new Error(
+                "HTTP " +
+                response.status
+            );
+
+        }
+
+
+        const text =
+            await response.text();
+
+
+        papers =
+            parseCSV(text);
+
+
+        normalizePapers();
+
+
+        filteredPapers =
+            [...papers];
+
+
+        populateYearFilter();
+
+
+        renderTable();
+
+
+        updateStatistics();
+
+
+        status.innerHTML =
+            "✅ Database berhasil dimuat — " +
+            papers.length +
+            " paper.";
+
+    }
+
+    catch (error) {
+
+        console.error(error);
+
+
+        status.innerHTML =
+            "❌ Gagal memuat data.csv." +
+            "<br>" +
+            "Pastikan server Flask berjalan." +
+            "<br><br>" +
+            "Error: " +
+            error.message;
+
+    }
+
+}
+
+
+/* =====================================================
+   CSV PARSER
+===================================================== */
+
+function parseCSV(text) {
+
+    const rows = [];
+
+    let row = [];
+
+    let value = "";
+
+    let insideQuotes = false;
+
+
+    for (
+        let i = 0;
+        i < text.length;
+        i++
+    ) {
+
+        const char = text[i];
+
+        const next = text[i + 1];
+
+
+        if (
+            char === '"' &&
+            insideQuotes &&
+            next === '"'
+        ) {
+
+            value += '"';
+
+            i++;
+
+        }
+
+
+        else if (char === '"') {
+
+            insideQuotes =
+                !insideQuotes;
+
+        }
+
+
+        else if (
+            char === "," &&
+            !insideQuotes
+        ) {
+
+            row.push(value);
+
+            value = "";
+
+        }
+
+
+        else if (
+            (char === "\n" ||
+             char === "\r") &&
+            !insideQuotes
+        ) {
+
+            if (
+                char === "\r" &&
+                next === "\n"
+            ) {
+
+                i++;
+
+            }
+
+
+            row.push(value);
+
+            rows.push(row);
+
+            row = [];
+
+            value = "";
+
+        }
+
+
+        else {
+
+            value += char;
+
+        }
+
+    }
+
+
+    if (
+        value.length > 0 ||
+        row.length > 0
+    ) {
+
+        row.push(value);
+
+        rows.push(row);
+
+    }
+
+
+    if (rows.length === 0) {
+
+        return [];
+
+    }
+
+
+    const headers =
+        rows[0].map(
+            h =>
+                h.trim().toLowerCase()
+        );
+
+
+    return rows
+        .slice(1)
+        .filter(
+            r =>
+                r.some(
+                    cell =>
+                        cell.trim() !== ""
+                )
+        )
+        .map(r => {
+
+            const obj = {};
+
+
+            headers.forEach(
+                (header, index) => {
+
+                    obj[header] =
+                        r[index] !== undefined
+                        ? r[index].trim()
+                        : "";
+
+                }
+            );
+
+
+            return obj;
+
+        });
+
+}
+
+
+/* =====================================================
+   NORMALIZE
+===================================================== */
+
+function getField(row, aliases) {
+
+    for (
+        const alias of aliases
+    ) {
+
+        if (
+            row[alias] !== undefined &&
+            row[alias] !== ""
+        ) {
+
+            return row[alias];
+
+        }
+
+    }
+
+    return "";
+
+}
+
+
+function normalizePapers() {
+
+    papers =
+        papers.map(
+            (row, index) => {
+
+                return {
+
+                    id: index,
+
+                    title:
+                        getField(
+                            row,
+                            [
+                                "title",
+                                "article title",
+                                "paper title",
+                                "ti"
+                            ]
+                        ),
+
+                    authors:
+                        getField(
+                            row,
+                            [
+                                "authors",
+                                "author",
+                                "au"
+                            ]
+                        ),
+
+                    year:
+                        getField(
+                            row,
+                            [
+                                "year",
+                                "publication year",
+                                "py"
+                            ]
+                        ),
+
+                    journal:
+                        getField(
+                            row,
+                            [
+                                "journal",
+                                "journal name",
+                                "source",
+                                "jo",
+                                "jf"
+                            ]
+                        ),
+
+                    doi:
+                        getField(
+                            row,
+                            [
+                                "doi",
+                                "digital object identifier",
+                                "do"
+                            ]
+                        ),
+
+                    abstract:
+                        getField(
+                            row,
+                            [
+                                "abstract",
+                                "summary",
+                                "ab"
+                            ]
+                        ),
+
+                    keywords:
+                        getField(
+                            row,
+                            [
+                                "keywords",
+                                "keyword",
+                                "kw"
+                            ]
+                        ),
+
+                    raw: row
+
+                };
+
+            }
+        );
+
+}
+
+
+/* =====================================================
+   RENDER TABLE
+===================================================== */
+
+function renderTable() {
+
+    const tbody =
+        document.getElementById(
+            "paperTable"
+        );
+
+
+    tbody.innerHTML = "";
+
+
+    filteredPapers.forEach(
+        (paper, index) => {
+
+            const tr =
+                document.createElement("tr");
+
+
+            tr.innerHTML = `
+
+                <td>
+
+                    <input
+                        type="checkbox"
+                        class="paperCheckbox"
+                        data-id="${paper.id}"
+                        onchange="updateSelectedCount()">
+
+                </td>
+
+
+                <td>
+                    ${index + 1}
+                </td>
+
+
+                <td class="title-cell">
+
+                    ${escapeHTML(
+                        paper.title ||
+                        "Untitled"
+                    )}
+
+                </td>
+
+
+                <td>
+
+                    ${escapeHTML(
+                        paper.authors ||
+                        "-"
+                    )}
+
+                </td>
+
+
+                <td>
+
+                    ${escapeHTML(
+                        paper.year ||
+                        "-"
+                    )}
+
+                </td>
+
+
+                <td>
+
+                    ${escapeHTML(
+                        paper.journal ||
+                        "-"
+                    )}
+
+                </td>
+
+
+                <td>
+
+                    ${escapeHTML(
+                        paper.doi ||
+                        "-"
+                    )}
+
+                </td>
+
+            `;
+
+
+            tbody.appendChild(tr);
+
+        }
+    );
+
+
+    updateSelectedCount();
+
+}
+
+
+/* =====================================================
+   SEARCH
+===================================================== */
+
+document
+    .getElementById("searchInput")
+    .addEventListener(
+        "input",
+        applyFilters
+    );
+
+
+document
+    .getElementById("yearFilter")
+    .addEventListener(
+        "change",
+        applyFilters
+    );
+
+
+function applyFilters() {
+
+    const query =
+        document
+        .getElementById(
+            "searchInput"
+        )
+        .value
+        .toLowerCase()
+        .trim();
+
+
+    const year =
+        document
+        .getElementById(
+            "yearFilter"
+        )
+        .value;
+
+
+    filteredPapers =
+        papers.filter(
+            paper => {
+
+                const text = [
+
+                    paper.title,
+
+                    paper.authors,
+
+                    paper.year,
+
+                    paper.journal,
+
+                    paper.doi,
+
+                    paper.abstract,
+
+                    paper.keywords
+
+                ]
+                .join(" ")
+                .toLowerCase();
+
+
+                const matchSearch =
+                    !query ||
+                    text.includes(query);
+
+
+                const matchYear =
+                    !year ||
+                    paper.year === year;
+
+
+                return (
+                    matchSearch &&
+                    matchYear
+                );
+
+            }
+        );
+
+
+    renderTable();
+
+}
+
+
+/* =====================================================
+   YEAR FILTER
+===================================================== */
+
+function populateYearFilter() {
+
+    const select =
+        document.getElementById(
+            "yearFilter"
+        );
+
+
+    select.innerHTML =
+        `
+        <option value="">
+            Semua Tahun
+        </option>
+        `;
+
+
+    const years =
+        [
+            ...new Set(
+                papers
+                .map(
+                    p => p.year
+                )
+                .filter(Boolean)
+            )
+        ]
+        .sort()
+        .reverse();
+
+
+    years.forEach(
+        year => {
+
+            const option =
+                document.createElement(
+                    "option"
+                );
+
+
+            option.value = year;
+
+            option.textContent =
+                year;
+
+
+            select.appendChild(
+                option
+            );
+
+        }
+    );
+
+}
+
+
+/* =====================================================
+   STATISTICS
+===================================================== */
+
+function updateStatistics() {
+
+    document.getElementById(
+        "totalPapers"
+    ).textContent =
+        papers.length;
+
+
+    const years =
+        new Set(
+            papers
+            .map(
+                p => p.year
+            )
+            .filter(Boolean)
+        );
+
+
+    document.getElementById(
+        "totalYears"
+    ).textContent =
+        years.size;
+
+
+    const doiCount =
+        papers.filter(
+            p => p.doi
+        ).length;
+
+
+    document.getElementById(
+        "totalDOI"
+    ).textContent =
+        doiCount;
+
+}
+
+
+/* =====================================================
+   SELECTION
+===================================================== */
+
+function getSelectedPapers() {
+
+    const ids =
+        [
+            ...document.querySelectorAll(
+                ".paperCheckbox:checked"
+            )
+        ]
+        .map(
+            cb =>
+                Number(
+                    cb.dataset.id
+                )
+        );
+
+
+    return papers.filter(
+        p =>
+            ids.includes(p.id)
+    );
+
+}
+
+
+function updateSelectedCount() {
+
+    const count =
+        document.querySelectorAll(
+            ".paperCheckbox:checked"
+        ).length;
+
+
+    document.getElementById(
+        "selectedPapers"
+    ).textContent =
+        count;
+
+}
+
+
+function toggleAll(master) {
+
+    document
+        .querySelectorAll(
+            ".paperCheckbox"
+        )
+        .forEach(
+            cb => {
+
+                cb.checked =
+                    master.checked;
+
+            }
+        );
+
+
+    updateSelectedCount();
+
+}
+
+
+function selectAllVisible() {
+
+    document
+        .querySelectorAll(
+            ".paperCheckbox"
+        )
+        .forEach(
+            cb => {
+
+                cb.checked = true;
+
+            }
+        );
+
+
+    document.getElementById(
+        "masterCheckbox"
+    ).checked = true;
+
+
+    updateSelectedCount();
+
+}
+
+
+function clearSelection() {
+
+    document
+        .querySelectorAll(
+            ".paperCheckbox"
+        )
+        .forEach(
+            cb => {
+
+                cb.checked = false;
+
+            }
+        );
+
+
+    document.getElementById(
+        "masterCheckbox"
+    ).checked = false;
+
+
+    updateSelectedCount();
+
+}
+
+
+/* =====================================================
+   SUMMARY
+===================================================== */
+
+function summarizeSelected() {
+
+    const selected =
+        getSelectedPapers();
+
+
+    if (
+        selected.length === 0
+    ) {
+
+        alert(
+            "Pilih minimal satu paper terlebih dahulu."
+        );
+
+        return;
+
+    }
+
+
+    if (
+        selected.length === 1
+    ) {
+
+        generateSingleSummary(
+            selected[0]
+        );
+
+    }
+
+    else {
+
+        generateMultiSummary(
+            selected
+        );
+
+    }
+
+}
+
+
+/* =====================================================
+   SINGLE PAPER
+===================================================== */
+
+function generateSingleSummary(
+    paper
+) {
+
+    const abstract =
+        paper.abstract || "";
+
+
+    const sentences =
+        splitSentences(
+            abstract
+        );
+
+
+    const important =
+        selectImportantSentences(
+            sentences,
+            5
+        );
+
+
+    const surfaceArea =
+        findKeywordContext(
+            abstract,
+            [
+                "surface area",
+                "BET",
+                "SBET",
+                "specific surface area"
+            ]
+        );
+
+
+    const ecsa =
+        findKeywordContext(
+            abstract,
+            [
+                "ECSA",
+                "electrochemical surface area",
+                "Cdl",
+                "double layer capacitance"
+            ]
+        );
+
+
+    const selectivity =
+        findKeywordContext(
+            abstract,
+            "selectivity"
+        );
+
+
+    const activity =
+        findKeywordContext(
+            abstract,
+            [
+                "activity",
+                "electrocatalytic activity",
+                "catalytic activity"
+            ]
+        );
+
+
+    const synthesis =
+        findKeywordContext(
+            abstract,
+            [
+                "synthesis",
+                "prepared",
+                "fabricated",
+                "synthesized"
+            ]
+        );
+
+
+    const result =
+        findKeywordContext(
+            abstract,
+            [
+                "result",
+                "results",
+                "achieved",
+                "demonstrated",
+                "showed",
+                "performance"
+            ]
+        );
+
+
+    const stability =
+        findKeywordContext(
+            abstract,
+            [
+                "stability",
+                "stable",
+                "durability"
+            ]
+        );
+
+
+    const catalyst =
+        findKeywordContext(
+            abstract,
+            [
+                "catalyst",
+                "electrocatalyst",
+                "electrode",
+                "material"
+            ]
+        );
+
+
+    let html = `
+
+        <div class="paper-title">
+
+            ${escapeHTML(
+                paper.title ||
+                "Untitled"
+            )}
+
+        </div>
+
+
+        <div class="info-grid">
+
+
+            <div class="info-item">
+
+                <strong>
+                    AUTHOR
+                </strong>
+
+                ${escapeHTML(
+                    paper.authors ||
+                    "-"
+                )}
+
+            </div>
+
+
+            <div class="info-item">
+
+                <strong>
+                    YEAR
+                </strong>
+
+                ${escapeHTML(
+                    paper.year ||
+                    "-"
+                )}
+
+            </div>
+
+
+            <div class="info-item">
+
+                <strong>
+                    JOURNAL
+                </strong>
+
+                ${escapeHTML(
+                    paper.journal ||
+                    "-"
+                )}
+
+            </div>
+
+
+            <div class="info-item">
+
+                <strong>
+                    DOI
+                </strong>
+
+                ${escapeHTML(
+                    paper.doi ||
+                    "-"
+                )}
+
+            </div>
+
+
+        </div>
+
+
+        <div class="summary-section">
+
+            <h3>
+                📌 Rangkuman Utama
+            </h3>
+
+            <p>
+
+                ${
+                    important.length
+                    ? escapeHTML(
+                        important.join(" ")
+                    )
+                    : "Abstract tidak tersedia."
+                }
+
+            </p>
+
+        </div>
+
+
+        <div class="summary-section">
+
+            <h3>
+                🔬 Parameter Penting
+            </h3>
+
+
+            ${createParameter(
+                "Material / Katalis",
+                catalyst
+            )}
+
+
+            ${createParameter(
+                "Surface Area / SBET",
+                surfaceArea
+            )}
+
+
+            ${createParameter(
+                "ECSA / Cdl",
+                ecsa
+            )}
+
+
+            ${createParameter(
+                "Aktivitas",
+                activity
+            )}
+
+
+            ${createParameter(
+                "Selektivitas",
+                selectivity
+            )}
+
+
+            ${createParameter(
+                "Metode Sintesis",
+                synthesis
+            )}
+
+
+            ${createParameter(
+                "Stabilitas",
+                stability
+            )}
+
+
+            ${createParameter(
+                "Hasil",
+                result
+            )}
+
+        </div>
+
+
+        <div class="summary-section">
+
+            <h3>
+                🏷 Keywords
+            </h3>
+
+            ${
+                createTags(
+                    paper.keywords
+                )
+            }
+
+        </div>
+
+
+        <div class="summary-section">
+
+            <h3>
+                📖 Abstract
+            </h3>
+
+            <p>
+
+                ${escapeHTML(
+                    abstract ||
+                    "Abstract tidak tersedia."
+                )}
+
+            </p>
+
+        </div>
+
+    `;
+
+
+    showSummary(html);
+
+}
+
+
+/* =====================================================
+   MULTI PAPER
+===================================================== */
+
+function generateMultiSummary(
+    selected
+) {
+
+    const abstracts =
+        selected
+        .map(
+            p =>
+                p.abstract || ""
+        )
+        .filter(Boolean);
+
+
+    const combined =
+        abstracts.join(" ");
+
+
+    const sentences =
+        splitSentences(
+            combined
+        );
+
+
+    const important =
+        selectImportantSentences(
+            sentences,
+            8
+        );
+
+
+    const surface =
+        extractContexts(
+            combined,
+            [
+                "surface area",
+                "SBET",
+                "BET",
+                "specific surface area"
+            ]
+        );
+
+
+    const ecsa =
+        extractContexts(
+            combined,
+            [
+                "ECSA",
+                "Cdl",
+                "electrochemical surface area"
+            ]
+        );
+
+
+    const selectivity =
+        extractContexts(
+            combined,
+            [
+                "selectivity"
+            ]
+        );
+
+
+    const activity =
+        extractContexts(
+            combined,
+            [
+                "activity",
+                "electrocatalytic activity"
+            ]
+        );
+
+
+    let html = `
+
+        <div class="paper-title">
+
+            Comparative Mini Review
+
+        </div>
+
+
+        <div class="compare-box">
+
+            <strong>
+
+                ${selected.length}
+                paper dipilih.
+
+            </strong>
+
+
+            <br><br>
+
+
+            Rangkuman dibuat dengan
+            menggabungkan informasi dari
+            seluruh paper yang dipilih.
+
+        </div>
+
+
+        <div class="summary-section">
+
+            <h3>
+                🧠 Sintesis Literatur
+            </h3>
+
+
+            <p>
+
+                ${
+                    important.length
+                    ? escapeHTML(
+                        important.join(" ")
+                    )
+                    : "Tidak terdapat abstract yang dapat dirangkum."
+                }
+
+            </p>
+
+        </div>
+
+
+        <div class="summary-section">
+
+            <h3>
+                📊 Perbandingan Parameter
+            </h3>
+
+
+            <table class="review-table">
+
+                <tbody>
+
+
+                    <tr>
+
+                        <td>
+                            Jumlah Paper
+                        </td>
+
+                        <td>
+                            ${selected.length}
+                        </td>
+
+                    </tr>
+
+
+                    <tr>
+
+                        <td>
+                            Tahun Publikasi
+                        </td>
+
+                        <td>
+
+                            ${
+                                [
+                                    ...new Set(
+                                        selected
+                                        .map(
+                                            p =>
+                                                p.year
+                                        )
+                                        .filter(Boolean)
+                                    )
+                                ].join(", ")
+                                || "-"
+                            }
+
+                        </td>
+
+                    </tr>
+
+
+                    <tr>
+
+                        <td>
+                            Surface Area / SBET
+                        </td>
+
+                        <td>
+
+                            ${escapeHTML(
+                                surface ||
+                                "-"
+                            )}
+
+                        </td>
+
+                    </tr>
+
+
+                    <tr>
+
+                        <td>
+                            ECSA / Cdl
+                        </td>
+
+                        <td>
+
+                            ${escapeHTML(
+                                ecsa ||
+                                "-"
+                            )}
+
+                        </td>
+
+                    </tr>
+
+
+                    <tr>
+
+                        <td>
+                            Aktivitas
+                        </td>
+
+                        <td>
+
+                            ${escapeHTML(
+                                activity ||
+                                "-"
+                            )}
+
+                        </td>
+
+                    </tr>
+
+
+                    <tr>
+
+                        <td>
+                            Selektivitas
+                        </td>
+
+                        <td>
+
+                            ${escapeHTML(
+                                selectivity ||
+                                "-"
+                            )}
+
+                        </td>
+
+                    </tr>
+
+
+                </tbody>
+
+            </table>
+
+        </div>
+
+
+        <div class="summary-section">
+
+            <h3>
+                📚 Paper yang Dipilih
+            </h3>
+
+
+            ${selected.map(
+                (paper, index) => `
+
+                <div
+                    class="info-item"
+                    style="margin-bottom:8px">
+
+                    <strong>
+                        PAPER ${index + 1}
+                    </strong>
+
+
+                    ${escapeHTML(
+                        paper.title ||
+                        "Untitled"
+                    )}
+
+
+                    ${
+                        paper.year
+                        ? " (" +
+                          escapeHTML(
+                              paper.year
+                          ) +
+                          ")"
+                        : ""
+                    }
+
+                </div>
+
+            `).join("")}
+
+        </div>
+
+    `;
+
+
+    showSummary(html);
+
+}
+
+
+/* =====================================================
+   TEXT PROCESSING
+===================================================== */
+
+function splitSentences(text) {
+
+    if (!text) {
+
+        return [];
+
+    }
+
+
+    return text
+        .replace(
+            /\s+/g,
+            " "
+        )
+        .split(
+            /(?<=[.!?])\s+/
+        )
+        .map(
+            s =>
+                s.trim()
+        )
+        .filter(
+            s =>
+                s.length > 30
+        );
+
+}
+
+
+function selectImportantSentences(
+    sentences,
+    maxSentences
+) {
+
+    const keywords = [
+
+        "objective",
+        "aim",
+        "purpose",
+
+        "method",
+        "synthesis",
+        "prepared",
+        "fabricated",
+        "synthesized",
+
+        "result",
+        "results",
+        "demonstrated",
+        "showed",
+
+        "performance",
+        "activity",
+        "selectivity",
+
+        "surface",
+        "surface area",
+        "specific surface area",
+
+        "BET",
+        "SBET",
+
+        "ECSA",
+        "Cdl",
+
+        "stability",
+        "stable",
+
+        "catalyst",
+        "electrocatalyst",
+        "material"
+
+    ];
+
+
+    const scored =
+        sentences.map(
+            (sentence, index) => {
+
+                const lower =
+                    sentence.toLowerCase();
+
+
+                let score = 0;
+
+
+                keywords.forEach(
+                    keyword => {
+
+                        if (
+                            lower.includes(
+                                keyword.toLowerCase()
+                            )
+                        ) {
+
+                            score += 2;
+
+                        }
+
+                    }
+                );
+
+
+                if (index < 2) {
+
+                    score += 1;
+
+                }
+
+
+                return {
+
+                    sentence,
+
+                    score,
+
+                    index
+
+                };
+
+            }
+        );
+
+
+    scored.sort(
+        (a, b) =>
+            b.score - a.score ||
+            a.index - b.index
+    );
+
+
+    return scored
+        .slice(
+            0,
+            maxSentences
+        )
+        .sort(
+            (a, b) =>
+                a.index - b.index
+        )
+        .map(
+            x =>
+                x.sentence
+        );
+
+}
+
+
+/* =====================================================
+   FIND CONTEXT
+===================================================== */
+
+function findKeywordContext(
+    text,
+    keywords
+) {
+
+    if (!text) {
+
+        return "";
+
+    }
+
+
+    if (!Array.isArray(keywords)) {
+
+        keywords = [
+            keywords
+        ];
+
+    }
+
+
+    const sentences =
+        splitSentences(text);
+
+
+    for (
+        const sentence of sentences
+    ) {
+
+        const lower =
+            sentence.toLowerCase();
+
+
+        for (
+            const keyword of keywords
+        ) {
+
+            if (
+                lower.includes(
+                    keyword.toLowerCase()
+                )
+            ) {
+
+                return sentence;
+
+            }
+
+        }
+
+    }
+
+
+    return "";
+
+}
+
+
+/* =====================================================
+   EXTRACT CONTEXTS
+===================================================== */
+
+function extractContexts(
+    text,
+    keywords
+) {
+
+    const sentences =
+        splitSentences(text);
+
+
+    const result = [];
+
+
+    sentences.forEach(
+        sentence => {
+
+            const lower =
+                sentence.toLowerCase();
+
+
+            if (
+                keywords.some(
+                    k =>
+                        lower.includes(
+                            k.toLowerCase()
+                        )
+                )
+            ) {
+
+                result.push(
+                    sentence
+                );
+
+            }
+
+        }
+    );
+
+
+    return result
+        .slice(0, 3)
+        .join(" ");
+
+}
+
+
+/* =====================================================
+   PARAMETER
+===================================================== */
+
+function createParameter(
+    label,
+    value
+) {
+
+    if (!value) {
+
+        return "";
+
+    }
+
+
+    return `
+
+        <div
+            class="info-item"
+            style="margin-top:8px">
+
+            <strong>
+                ${label}
+            </strong>
+
+            ${escapeHTML(
+                value
+            )}
+
+        </div>
+
+    `;
+
+}
+
+
+/* =====================================================
+   TAG
+===================================================== */
+
+function createTags(
+    keywords
+) {
+
+    if (!keywords) {
+
+        return "-";
+
+    }
+
+
+    return keywords
+        .split(
+            /[;,|]/
+        )
+        .map(
+            k =>
+                k.trim()
+        )
+        .filter(Boolean)
+        .map(
+            k =>
+                `<span class="tag">
+                    ${escapeHTML(k)}
+                 </span>`
+        )
+        .join("");
+
+}
+
+
+/* =====================================================
+   SHOW SUMMARY
+===================================================== */
+
+function showSummary(
+    html
+) {
+
+    document.getElementById(
+        "summaryPlaceholder"
+    ).style.display = "none";
+
+
+    const content =
+        document.getElementById(
+            "summaryContent"
+        );
+
+
+    content.style.display =
+        "block";
+
+
+    content.innerHTML =
+        html;
+
+}
+
+
+/* =====================================================
+   SECURITY
+===================================================== */
+
+function escapeHTML(
+    value
+) {
+
+    return String(
+        value || ""
+    )
+    .replace(
+        /&/g,
+        "&amp;"
+    )
+    .replace(
+        /</g,
+        "&lt;"
+    )
+    .replace(
+        />/g,
+        "&gt;"
+    )
+    .replace(
+        /"/g,
+        "&quot;"
+    )
+    .replace(
+        /'/g,
+        "&#039;"
+    );
+
+}
+
+
+/* =====================================================
+   START
+===================================================== */
+
+loadCSV();
+
+</script>
+
+</body>
+</html>

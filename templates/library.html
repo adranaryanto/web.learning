@@ -1,0 +1,2690 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+<meta charset="UTF-8">
+
+<meta
+    name="viewport"
+    content="width=device-width, initial-scale=1.0"
+>
+
+<title>Library - Paper</title>
+
+
+<style>
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+
+body {
+
+    font-family:
+        "Segoe UI",
+        Arial,
+        sans-serif;
+
+    background: #f5f7fb;
+
+    color: #202638;
+
+    min-height: 100vh;
+}
+
+
+/* =========================================================
+   SIDEBAR
+========================================================= */
+
+.sidebar {
+
+    position: fixed;
+
+    left: 0;
+    top: 0;
+    bottom: 0;
+
+    width: 250px;
+
+    background: #151a2d;
+
+    color: white;
+
+    display: flex;
+    flex-direction: column;
+
+    z-index: 1000;
+
+    transition: .3s ease;
+}
+
+
+/* LOGO */
+
+.sidebar-header {
+
+    height: 82px;
+
+    display: flex;
+
+    align-items: center;
+
+    padding: 0 22px;
+
+    border-bottom:
+        1px solid rgba(255,255,255,.06);
+}
+
+
+.sidebar-logo {
+
+    width: 42px;
+    height: 42px;
+
+    object-fit: contain;
+
+    margin-right: 11px;
+}
+
+
+.brand-text {
+
+    display: flex;
+
+    flex-direction: column;
+}
+
+
+.brand-name {
+
+    font-size: 18px;
+
+    font-weight: 700;
+
+    letter-spacing: -.3px;
+}
+
+
+.brand-version {
+
+    font-size: 9px;
+
+    color: #7f88a7;
+
+    margin-top: 2px;
+}
+
+
+/* NAVIGATION */
+
+.sidebar-content {
+
+    flex: 1;
+
+    overflow-y: auto;
+
+    padding: 20px 13px;
+}
+
+
+.nav-section {
+
+    margin-bottom: 23px;
+}
+
+
+.nav-title {
+
+    padding: 0 12px;
+
+    margin-bottom: 8px;
+
+    color: #69728f;
+
+    font-size: 10px;
+
+    font-weight: 700;
+
+    letter-spacing: 1px;
+
+    text-transform: uppercase;
+}
+
+
+.nav-item {
+
+    display: flex;
+
+    align-items: center;
+
+    width: 100%;
+
+    padding: 11px 12px;
+
+    margin-bottom: 3px;
+
+    border-radius: 9px;
+
+    color: #aeb5c9;
+
+    text-decoration: none;
+
+    font-size: 13px;
+
+    font-weight: 500;
+
+    transition: .2s ease;
+}
+
+
+.nav-item:hover {
+
+    background:
+        rgba(255,255,255,.06);
+
+    color: white;
+}
+
+
+.nav-item.active {
+
+    background: #5667f2;
+
+    color: white;
+
+    box-shadow:
+        0 6px 16px
+        rgba(86,103,242,.22);
+}
+
+
+.nav-icon {
+
+    width: 28px;
+
+    font-size: 16px;
+
+    text-align: center;
+
+    margin-right: 7px;
+}
+
+
+/* USER */
+
+.sidebar-user {
+
+    padding: 15px;
+
+    border-top:
+        1px solid rgba(255,255,255,.06);
+}
+
+
+.user-card {
+
+    display: flex;
+
+    align-items: center;
+
+    padding: 10px;
+
+    border-radius: 10px;
+
+    background:
+        rgba(255,255,255,.04);
+}
+
+
+.user-avatar {
+
+    width: 36px;
+    height: 36px;
+
+    border-radius: 50%;
+
+    background: #5667f2;
+
+    display: flex;
+
+    align-items: center;
+    justify-content: center;
+
+    font-size: 14px;
+
+    font-weight: 700;
+
+    margin-right: 10px;
+}
+
+
+.user-info {
+
+    flex: 1;
+}
+
+
+.user-name {
+
+    font-size: 12px;
+
+    font-weight: 600;
+
+    color: white;
+}
+
+
+.user-role {
+
+    font-size: 10px;
+
+    color: #78819c;
+
+    margin-top: 2px;
+}
+
+
+.logout-button {
+
+    color: #8e96ad;
+
+    text-decoration: none;
+
+    font-size: 16px;
+}
+
+
+.logout-button:hover {
+
+    color: #ff7777;
+}
+
+
+/* =========================================================
+   MAIN
+========================================================= */
+
+.main {
+
+    margin-left: 250px;
+
+    min-height: 100vh;
+
+    transition: .3s ease;
+}
+
+
+/* =========================================================
+   TOPBAR
+========================================================= */
+
+.topbar {
+
+    height: 70px;
+
+    background: white;
+
+    border-bottom:
+        1px solid #e9ecf2;
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: space-between;
+
+    padding: 0 30px;
+}
+
+
+.page-title {
+
+    font-size: 17px;
+
+    font-weight: 700;
+
+    color: #202638;
+}
+
+
+.page-subtitle {
+
+    font-size: 11px;
+
+    color: #9299a9;
+
+    margin-top: 3px;
+}
+
+
+.topbar-right {
+
+    display: flex;
+
+    align-items: center;
+
+    gap: 15px;
+}
+
+
+.status-indicator {
+
+    display: flex;
+
+    align-items: center;
+
+    gap: 6px;
+
+    font-size: 11px;
+
+    color: #7e8798;
+}
+
+
+.status-dot {
+
+    width: 7px;
+    height: 7px;
+
+    border-radius: 50%;
+
+    background: #35c77a;
+}
+
+
+.menu-toggle {
+
+    display: none;
+
+    border: none;
+
+    background: transparent;
+
+    font-size: 22px;
+
+    cursor: pointer;
+}
+
+
+/* =========================================================
+   CONTENT
+========================================================= */
+
+.content {
+
+    padding: 30px;
+}
+
+
+/* PAGE HEADER */
+
+.library-header {
+
+    display: flex;
+
+    align-items: flex-end;
+
+    justify-content: space-between;
+
+    gap: 20px;
+
+    margin-bottom: 25px;
+}
+
+
+.library-title {
+
+    font-size: 25px;
+
+    font-weight: 700;
+
+    color: #202638;
+}
+
+
+.library-description {
+
+    margin-top: 7px;
+
+    color: #8991a3;
+
+    font-size: 13px;
+}
+
+
+/* =========================================================
+   STATISTICS
+========================================================= */
+
+.stats-grid {
+
+    display: grid;
+
+    grid-template-columns:
+        repeat(3, 1fr);
+
+    gap: 18px;
+
+    margin-bottom: 25px;
+}
+
+
+.stat-card {
+
+    background: white;
+
+    border:
+        1px solid #e8ebf1;
+
+    border-radius: 14px;
+
+    padding: 20px;
+
+    display: flex;
+
+    align-items: center;
+
+    transition: .2s ease;
+}
+
+
+.stat-card:hover {
+
+    transform:
+        translateY(-2px);
+
+    box-shadow:
+        0 8px 25px
+        rgba(32,38,56,.06);
+}
+
+
+.stat-icon {
+
+    width: 46px;
+    height: 46px;
+
+    border-radius: 11px;
+
+    background: #eef0ff;
+
+    display: flex;
+
+    align-items: center;
+    justify-content: center;
+
+    font-size: 20px;
+
+    margin-right: 13px;
+}
+
+
+.stat-label {
+
+    color: #9299a9;
+
+    font-size: 11px;
+}
+
+
+.stat-value {
+
+    font-size: 23px;
+
+    font-weight: 700;
+
+    color: #202638;
+
+    margin-top: 2px;
+}
+
+
+/* =========================================================
+   TOOLBAR
+========================================================= */
+
+.toolbar {
+
+    background: white;
+
+    border:
+        1px solid #e8ebf1;
+
+    border-radius: 14px;
+
+    padding: 18px;
+
+    margin-bottom: 22px;
+}
+
+
+.toolbar-row {
+
+    display: flex;
+
+    gap: 10px;
+
+    flex-wrap: wrap;
+}
+
+
+.search-wrapper {
+
+    position: relative;
+
+    flex: 1;
+
+    min-width: 280px;
+}
+
+
+.search-icon {
+
+    position: absolute;
+
+    left: 14px;
+
+    top: 50%;
+
+    transform:
+        translateY(-50%);
+
+    color: #9299a9;
+
+    font-size: 15px;
+}
+
+
+#search {
+
+    width: 100%;
+
+    padding:
+        12px
+        14px
+        12px
+        40px;
+
+    border:
+        1px solid #e0e4ec;
+
+    border-radius: 9px;
+
+    outline: none;
+
+    font-size: 13px;
+
+    color: #202638;
+}
+
+
+#search:focus {
+
+    border-color: #5667f2;
+
+    box-shadow:
+        0 0 0 3px
+        rgba(86,103,242,.08);
+}
+
+
+.filter-select {
+
+    min-width: 160px;
+
+    padding: 12px 14px;
+
+    border:
+        1px solid #e0e4ec;
+
+    border-radius: 9px;
+
+    background: white;
+
+    color: #454c5d;
+
+    outline: none;
+
+    font-size: 13px;
+
+    cursor: pointer;
+}
+
+
+.filter-select:focus {
+
+    border-color: #5667f2;
+}
+
+
+/* =========================================================
+   PAPER LIST
+========================================================= */
+
+.library-grid {
+
+    display: grid;
+
+    grid-template-columns:
+        repeat(
+            auto-fill,
+            minmax(340px, 1fr)
+        );
+
+    gap: 18px;
+}
+
+
+.paper-card {
+
+    background: white;
+
+    border:
+        1px solid #e8ebf1;
+
+    border-radius: 14px;
+
+    padding: 20px;
+
+    transition: .2s ease;
+
+    display: flex;
+
+    flex-direction: column;
+}
+
+
+.paper-card:hover {
+
+    transform:
+        translateY(-3px);
+
+    box-shadow:
+        0 10px 28px
+        rgba(32,38,56,.07);
+
+    border-color:
+        #dce1ff;
+}
+
+
+/* PAPER NUMBER */
+
+.paper-number {
+
+    display: inline-flex;
+
+    align-items: center;
+
+    justify-content: center;
+
+    width: 30px;
+    height: 30px;
+
+    border-radius: 8px;
+
+    background: #eef0ff;
+
+    color: #5667f2;
+
+    font-size: 11px;
+
+    font-weight: 700;
+
+    margin-bottom: 12px;
+}
+
+
+/* TITLE */
+
+.paper-title {
+
+    font-size: 15px;
+
+    line-height: 1.45;
+
+    font-weight: 700;
+
+    color: #252b3b;
+
+    margin-bottom: 13px;
+}
+
+
+/* META */
+
+.paper-meta {
+
+    display: flex;
+
+    flex-direction: column;
+
+    gap: 6px;
+
+    margin-bottom: 14px;
+}
+
+
+.meta-row {
+
+    display: flex;
+
+    gap: 7px;
+
+    font-size: 11px;
+
+    color: #8b93a4;
+
+    line-height: 1.4;
+}
+
+
+.meta-label {
+
+    min-width: 58px;
+
+    font-weight: 600;
+
+    color: #626b7e;
+}
+
+
+.abstract-preview {
+
+    padding-top: 13px;
+
+    border-top:
+        1px solid #edf0f4;
+
+    color: #8b93a4;
+
+    font-size: 11px;
+
+    line-height: 1.6;
+
+    flex: 1;
+}
+
+
+/* BUTTON */
+
+.paper-actions {
+
+    margin-top: 17px;
+
+    display: flex;
+
+    gap: 8px;
+}
+
+
+.view-button {
+
+    border: none;
+
+    background: #5667f2;
+
+    color: white;
+
+    border-radius: 8px;
+
+    padding: 9px 14px;
+
+    font-size: 11px;
+
+    font-weight: 600;
+
+    cursor: pointer;
+
+    transition: .2s;
+}
+
+
+.view-button:hover {
+
+    background: #4556df;
+}
+
+
+.doi-button {
+
+    border:
+        1px solid #e0e4ec;
+
+    background: white;
+
+    color: #5667f2;
+
+    border-radius: 8px;
+
+    padding: 9px 14px;
+
+    font-size: 11px;
+
+    font-weight: 600;
+
+    text-decoration: none;
+}
+
+
+.doi-button:hover {
+
+    background: #f5f6ff;
+}
+
+
+/* =========================================================
+   EMPTY / LOADING
+========================================================= */
+
+.state-card {
+
+    grid-column: 1 / -1;
+
+    background: white;
+
+    border:
+        1px solid #e8ebf1;
+
+    border-radius: 14px;
+
+    min-height: 250px;
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: center;
+
+    text-align: center;
+}
+
+
+.state-icon {
+
+    width: 55px;
+    height: 55px;
+
+    border-radius: 13px;
+
+    background: #f0f2f7;
+
+    display: flex;
+
+    align-items: center;
+    justify-content: center;
+
+    margin: 0 auto 13px;
+
+    font-size: 23px;
+}
+
+
+.state-title {
+
+    font-size: 14px;
+
+    font-weight: 700;
+
+    color: #454c5d;
+}
+
+
+.state-description {
+
+    margin-top: 5px;
+
+    font-size: 11px;
+
+    color: #969dac;
+}
+
+
+/* =========================================================
+   MODAL
+========================================================= */
+
+.modal {
+
+    display: none;
+
+    position: fixed;
+
+    inset: 0;
+
+    background:
+        rgba(21,26,45,.58);
+
+    z-index: 2000;
+
+    padding: 30px;
+
+    overflow-y: auto;
+}
+
+
+.modal.active {
+
+    display: block;
+}
+
+
+.modal-content {
+
+    max-width: 900px;
+
+    margin: 30px auto;
+
+    background: white;
+
+    border-radius: 16px;
+
+    padding: 28px;
+
+    box-shadow:
+        0 20px 60px
+        rgba(0,0,0,.18);
+}
+
+
+.modal-header {
+
+    display: flex;
+
+    justify-content: space-between;
+
+    align-items: flex-start;
+
+    gap: 20px;
+
+    padding-bottom: 18px;
+
+    border-bottom:
+        1px solid #edf0f4;
+}
+
+
+.modal-title {
+
+    font-size: 22px;
+
+    font-weight: 700;
+
+    line-height: 1.45;
+
+    color: #202638;
+}
+
+
+.close-button {
+
+    width: 36px;
+    height: 36px;
+
+    flex-shrink: 0;
+
+    border: none;
+
+    border-radius: 8px;
+
+    background: #f2f4f7;
+
+    color: #626b7e;
+
+    font-size: 20px;
+
+    cursor: pointer;
+}
+
+
+.close-button:hover {
+
+    background: #e8ebf1;
+}
+
+
+.detail-content {
+
+    padding-top: 22px;
+}
+
+
+.detail-section {
+
+    margin-bottom: 20px;
+}
+
+
+.detail-label {
+
+    font-size: 10px;
+
+    font-weight: 700;
+
+    text-transform: uppercase;
+
+    letter-spacing: .8px;
+
+    color: #9299a9;
+
+    margin-bottom: 6px;
+}
+
+
+.detail-value {
+
+    font-size: 13px;
+
+    color: #454c5d;
+
+    line-height: 1.7;
+
+    white-space: pre-wrap;
+
+    word-break: break-word;
+}
+
+
+/* =========================================================
+   RESPONSIVE
+========================================================= */
+
+@media(max-width: 1100px) {
+
+    .stats-grid {
+
+        grid-template-columns:
+            repeat(3, 1fr);
+    }
+}
+
+
+@media(max-width: 850px) {
+
+    .sidebar {
+
+        transform:
+            translateX(-100%);
+    }
+
+    .sidebar.open {
+
+        transform:
+            translateX(0);
+    }
+
+    .main {
+
+        margin-left: 0;
+    }
+
+    .menu-toggle {
+
+        display: block;
+    }
+
+    .library-header {
+
+        align-items: flex-start;
+
+        flex-direction: column;
+    }
+
+    .stats-grid {
+
+        grid-template-columns:
+            1fr;
+    }
+}
+
+
+@media(max-width: 600px) {
+
+    .content {
+
+        padding: 20px;
+    }
+
+    .topbar {
+
+        padding:
+            0 18px;
+    }
+
+    .status-indicator {
+
+        display: none;
+    }
+
+    .library-title {
+
+        font-size: 21px;
+    }
+
+    .library-grid {
+
+        grid-template-columns: 1fr;
+    }
+
+    .toolbar-row {
+
+        flex-direction: column;
+    }
+
+    .search-wrapper {
+
+        width: 100%;
+
+        min-width: 0;
+    }
+
+    .filter-select {
+
+        width: 100%;
+    }
+
+    .modal {
+
+        padding: 12px;
+    }
+
+    .modal-content {
+
+        padding: 20px;
+
+        margin: 10px auto;
+    }
+}
+
+</style>
+
+</head>
+
+
+<body>
+
+
+<!-- =====================================================
+     SIDEBAR
+===================================================== -->
+
+<aside class="sidebar" id="sidebar">
+
+
+    <div class="sidebar-header">
+
+        <img
+            src="../static/logo.png"
+            alt="Paper Logo"
+            class="sidebar-logo"
+        >
+
+        <div class="brand-text">
+
+            <div class="brand-name">
+                Paper
+            </div>
+
+            <div class="brand-version">
+                AI RESEARCH PLATFORM
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <div class="sidebar-content">
+
+
+        <!-- MAIN -->
+
+        <div class="nav-section">
+
+            <div class="nav-title">
+                Main
+            </div>
+
+
+            <a
+                href="menu_utama.html"
+                class="nav-item"
+            >
+
+                <span class="nav-icon">
+                    ⌂
+                </span>
+
+                Dashboard
+
+            </a>
+
+
+            <a
+                href="input_paper.html"
+                class="nav-item"
+            >
+
+                <span class="nav-icon">
+                    ＋
+                </span>
+
+                Input Papers
+
+            </a>
+
+
+            <!-- LIBRARY -->
+
+            <a
+                href="library.html"
+                class="nav-item active"
+            >
+
+                <span class="nav-icon">
+                    ▤
+                </span>
+
+                Library
+
+            </a>
+
+        </div>
+
+
+        <!-- RESEARCH -->
+
+        <div class="nav-section">
+
+            <div class="nav-title">
+                Research
+            </div>
+
+
+            <a
+                href="#"
+                class="nav-item"
+                onclick="comingSoon(event,'Projects')"
+            >
+
+                <span class="nav-icon">
+                    ▦
+                </span>
+
+                Projects
+
+            </a>
+
+
+            <a
+                href="research_gap.html"
+                class="nav-item"
+            >
+
+                <span class="nav-icon">
+                    ⌕
+                </span>
+
+                Research Gap
+
+            </a>
+
+
+            <a
+                href="novelty_finder.html"
+                class="nav-item"
+            >
+
+                <span class="nav-icon">
+                    ✦
+                </span>
+
+                Novelty Finder
+
+            </a>
+
+
+            <a
+                href="paper_summary.html"
+                class="nav-item"
+            >
+
+                <span class="nav-icon">
+                    ≡
+                </span>
+
+                Paper Summary
+
+            </a>
+
+
+            <a
+                href="mini_review.html"
+                class="nav-item"
+            >
+
+                <span class="nav-icon">
+                    ▥
+                </span>
+
+                Mini Review
+
+            </a>
+
+        </div>
+
+
+        <!-- SYSTEM -->
+
+        <div class="nav-section">
+
+            <div class="nav-title">
+                System
+            </div>
+
+
+            <a
+                href="#"
+                class="nav-item"
+                onclick="comingSoon(event,'Settings')"
+            >
+
+                <span class="nav-icon">
+                    ⚙
+                </span>
+
+                Settings
+
+            </a>
+
+        </div>
+
+    </div>
+
+
+    <!-- USER -->
+
+    <div class="sidebar-user">
+
+        <div class="user-card">
+
+            <div class="user-avatar">
+                A
+            </div>
+
+            <div class="user-info">
+
+                <div class="user-name">
+                    Administrator
+                </div>
+
+                <div class="user-role">
+                    Researcher
+                </div>
+
+            </div>
+
+
+            <a
+                href="../index.html"
+                class="logout-button"
+                title="Logout"
+            >
+                ⇥
+            </a>
+
+        </div>
+
+    </div>
+
+</aside>
+
+
+
+<!-- =====================================================
+     MAIN
+===================================================== -->
+
+<main class="main">
+
+
+    <!-- TOPBAR -->
+
+    <header class="topbar">
+
+        <div>
+
+            <div class="page-title">
+                Literature Research Dashboard
+            </div>
+
+            <div class="page-subtitle">
+                AI-powered research analysis workspace
+            </div>
+
+        </div>
+
+
+        <div class="topbar-right">
+
+            <div class="status-indicator">
+
+                <span class="status-dot"></span>
+
+                System Ready
+
+            </div>
+
+
+            <button
+                class="menu-toggle"
+                onclick="toggleSidebar()"
+            >
+                ☰
+            </button>
+
+        </div>
+
+    </header>
+
+
+
+    <!-- CONTENT -->
+
+    <div class="content">
+
+
+        <!-- HEADER -->
+
+        <div class="library-header">
+
+            <div>
+
+                <h1 class="library-title">
+                    Library
+                </h1>
+
+                <p class="library-description">
+                    Manage and explore your research literature.
+                </p>
+
+            </div>
+
+        </div>
+
+
+
+        <!-- =================================================
+             STATISTICS
+        ================================================= -->
+
+        <div class="stats-grid">
+
+
+            <div class="stat-card">
+
+                <div class="stat-icon">
+                    📚
+                </div>
+
+                <div>
+
+                    <div class="stat-label">
+                        Total Papers
+                    </div>
+
+                    <div
+                        class="stat-value"
+                        id="totalPapers"
+                    >
+                        0
+                    </div>
+
+                </div>
+
+            </div>
+
+
+            <div class="stat-card">
+
+                <div class="stat-icon">
+                    🔎
+                </div>
+
+                <div>
+
+                    <div class="stat-label">
+                        Showing
+                    </div>
+
+                    <div
+                        class="stat-value"
+                        id="visiblePapers"
+                    >
+                        0
+                    </div>
+
+                </div>
+
+            </div>
+
+
+            <div class="stat-card">
+
+                <div class="stat-icon">
+                    📅
+                </div>
+
+                <div>
+
+                    <div class="stat-label">
+                        Years
+                    </div>
+
+                    <div
+                        class="stat-value"
+                        id="totalYears"
+                    >
+                        0
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+
+
+        <!-- =================================================
+             SEARCH / FILTER
+        ================================================= -->
+
+        <div class="toolbar">
+
+            <div class="toolbar-row">
+
+
+                <div class="search-wrapper">
+
+                    <span class="search-icon">
+                        🔎
+                    </span>
+
+                    <input
+                        type="text"
+                        id="search"
+                        placeholder="Search title, author, DOI, journal, keyword..."
+                    >
+
+                </div>
+
+
+                <select
+                    id="yearFilter"
+                    class="filter-select"
+                >
+
+                    <option value="">
+                        All Years
+                    </option>
+
+                </select>
+
+
+                <select
+                    id="authorFilter"
+                    class="filter-select"
+                >
+
+                    <option value="">
+                        All Authors
+                    </option>
+
+                </select>
+
+            </div>
+
+        </div>
+
+
+
+        <!-- =================================================
+             PAPER LIBRARY
+        ================================================= -->
+
+        <div
+            id="library"
+            class="library-grid"
+        >
+
+            <div class="state-card">
+
+                <div>
+
+                    <div class="state-icon">
+                        ⏳
+                    </div>
+
+                    <div class="state-title">
+                        Loading Library...
+                    </div>
+
+                    <div class="state-description">
+                        Reading your paper database.
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+
+    </div>
+
+</main>
+
+
+
+<!-- =====================================================
+     MODAL
+===================================================== -->
+
+<div
+    id="modal"
+    class="modal"
+>
+
+    <div class="modal-content">
+
+
+        <div class="modal-header">
+
+            <div
+                id="modalTitle"
+                class="modal-title"
+            >
+                Paper
+            </div>
+
+
+            <button
+                class="close-button"
+                onclick="closeModal()"
+            >
+                ×
+            </button>
+
+        </div>
+
+
+        <div
+            id="modalBody"
+            class="detail-content"
+        >
+        </div>
+
+    </div>
+
+</div>
+
+
+
+<script>
+
+/* =========================================================
+   GLOBAL DATA
+========================================================= */
+
+let papers = [];
+
+
+/* =========================================================
+   LOAD CSV THROUGH SERVER
+========================================================= */
+
+async function loadPapers() {
+
+    try {
+
+        const response =
+            await fetch("/api/papers");
+
+
+        if (!response.ok) {
+
+            throw new Error(
+                "Server tidak dapat mengirim data."
+            );
+        }
+
+
+        papers =
+            await response.json();
+
+
+        document
+            .getElementById("totalPapers")
+            .textContent =
+            papers.length;
+
+
+        updateYearCount();
+
+        createFilters();
+
+        renderPapers();
+
+
+    } catch (error) {
+
+        console.error(error);
+
+
+        document
+            .getElementById("library")
+            .innerHTML = `
+
+                <div class="state-card">
+
+                    <div>
+
+                        <div class="state-icon">
+                            ⚠️
+                        </div>
+
+                        <div class="state-title">
+                            Failed to Load Library
+                        </div>
+
+                        <div class="state-description">
+
+                            Pastikan server.py sedang berjalan
+                            dan data.csv tersedia.
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+            `;
+    }
+
+}
+
+
+/* =========================================================
+   GET VALUE
+========================================================= */
+
+function getValue(
+    paper,
+    names
+) {
+
+    for (
+        const name of names
+    ) {
+
+        if (
+            paper[name] !== undefined &&
+            paper[name] !== null &&
+            String(paper[name]).trim() !== ""
+        ) {
+
+            return String(
+                paper[name]
+            ).trim();
+
+        }
+
+    }
+
+    return "";
+
+}
+
+
+/* =========================================================
+   CREATE FILTERS
+========================================================= */
+
+function createFilters() {
+
+    const years =
+        new Set();
+
+    const authors =
+        new Set();
+
+
+    papers.forEach(
+        paper => {
+
+            const year =
+                getValue(
+                    paper,
+                    [
+                        "year",
+                        "Year",
+                        "publication_year",
+                        "Publication Year",
+                        "published"
+                    ]
+                );
+
+
+            if (year) {
+
+                years.add(year);
+
+            }
+
+
+            const author =
+                getValue(
+                    paper,
+                    [
+                        "author",
+                        "authors",
+                        "Author",
+                        "Authors"
+                    ]
+                );
+
+
+            if (author) {
+
+                authors.add(author);
+
+            }
+
+        }
+    );
+
+
+    const yearFilter =
+        document.getElementById(
+            "yearFilter"
+        );
+
+
+    [...years]
+        .sort(
+            (a,b) =>
+                Number(b) -
+                Number(a)
+        )
+        .forEach(
+            year => {
+
+                const option =
+                    document.createElement(
+                        "option"
+                    );
+
+                option.value = year;
+
+                option.textContent = year;
+
+                yearFilter.appendChild(
+                    option
+                );
+
+            }
+        );
+
+
+    const authorFilter =
+        document.getElementById(
+            "authorFilter"
+        );
+
+
+    [...authors]
+        .sort()
+        .forEach(
+            author => {
+
+                const option =
+                    document.createElement(
+                        "option"
+                    );
+
+                option.value = author;
+
+                option.textContent = author;
+
+                authorFilter.appendChild(
+                    option
+                );
+
+            }
+        );
+
+}
+
+
+/* =========================================================
+   YEAR COUNT
+========================================================= */
+
+function updateYearCount() {
+
+    const years =
+        new Set();
+
+
+    papers.forEach(
+        paper => {
+
+            const year =
+                getValue(
+                    paper,
+                    [
+                        "year",
+                        "Year",
+                        "publication_year",
+                        "Publication Year"
+                    ]
+                );
+
+
+            if (year) {
+
+                years.add(year);
+
+            }
+
+        }
+    );
+
+
+    document
+        .getElementById(
+            "totalYears"
+        )
+        .textContent =
+        years.size;
+
+}
+
+
+/* =========================================================
+   FILTER PAPERS
+========================================================= */
+
+function getFilteredPapers() {
+
+    const search =
+        document
+            .getElementById("search")
+            .value
+            .toLowerCase()
+            .trim();
+
+
+    const year =
+        document
+            .getElementById("yearFilter")
+            .value;
+
+
+    const author =
+        document
+            .getElementById("authorFilter")
+            .value;
+
+
+    return papers.filter(
+        paper => {
+
+
+            const searchable =
+                Object
+                    .values(paper)
+                    .join(" ")
+                    .toLowerCase();
+
+
+            const paperYear =
+                getValue(
+                    paper,
+                    [
+                        "year",
+                        "Year",
+                        "publication_year",
+                        "Publication Year"
+                    ]
+                );
+
+
+            const paperAuthor =
+                getValue(
+                    paper,
+                    [
+                        "author",
+                        "authors",
+                        "Author",
+                        "Authors"
+                    ]
+                );
+
+
+            return (
+
+                (
+                    !search ||
+                    searchable.includes(search)
+                )
+
+                &&
+
+                (
+                    !year ||
+                    paperYear === year
+                )
+
+                &&
+
+                (
+                    !author ||
+                    paperAuthor === author
+                )
+
+            );
+
+        }
+    );
+
+}
+
+
+/* =========================================================
+   RENDER
+========================================================= */
+
+function renderPapers() {
+
+    const filtered =
+        getFilteredPapers();
+
+
+    document
+        .getElementById(
+            "visiblePapers"
+        )
+        .textContent =
+        filtered.length;
+
+
+    const library =
+        document.getElementById(
+            "library"
+        );
+
+
+    if (
+        filtered.length === 0
+    ) {
+
+        library.innerHTML = `
+
+            <div class="state-card">
+
+                <div>
+
+                    <div class="state-icon">
+                        🔎
+                    </div>
+
+                    <div class="state-title">
+                        No Papers Found
+                    </div>
+
+                    <div class="state-description">
+                        Try another search or filter.
+                    </div>
+
+                </div>
+
+            </div>
+
+        `;
+
+        return;
+
+    }
+
+
+    library.innerHTML =
+        filtered
+            .map(
+                (
+                    paper,
+                    index
+                ) =>
+                    createPaperCard(
+                        paper,
+                        index
+                    )
+            )
+            .join("");
+
+}
+
+
+/* =========================================================
+   PAPER CARD
+========================================================= */
+
+function createPaperCard(
+    paper,
+    index
+) {
+
+    const title =
+        getValue(
+            paper,
+            [
+                "title",
+                "Title",
+                "paper_title",
+                "Paper Title"
+            ]
+        ) ||
+        "Untitled Paper";
+
+
+    const author =
+        getValue(
+            paper,
+            [
+                "author",
+                "authors",
+                "Author",
+                "Authors"
+            ]
+        );
+
+
+    const year =
+        getValue(
+            paper,
+            [
+                "year",
+                "Year",
+                "publication_year",
+                "Publication Year"
+            ]
+        );
+
+
+    const journal =
+        getValue(
+            paper,
+            [
+                "journal",
+                "Journal",
+                "source",
+                "Source"
+            ]
+        );
+
+
+    const doi =
+        getValue(
+            paper,
+            [
+                "doi",
+                "DOI"
+            ]
+        );
+
+
+    const abstract =
+        getValue(
+            paper,
+            [
+                "abstract",
+                "Abstract"
+            ]
+        );
+
+
+    const paperIndex =
+        papers.indexOf(paper);
+
+
+    let doiLink = "";
+
+
+    if (doi) {
+
+        let cleanDOI =
+            doi
+                .replace(
+                    /^https?:\/\/doi\.org\//i,
+                    ""
+                )
+                .trim();
+
+
+        doiLink = `
+
+            <a
+                class="doi-button"
+                href="https://doi.org/${encodeURIComponent(cleanDOI)}"
+                target="_blank"
+                rel="noopener noreferrer"
+            >
+                DOI
+            </a>
+
+        `;
+
+    }
+
+
+    return `
+
+        <div class="paper-card">
+
+
+            <div class="paper-number">
+                ${index + 1}
+            </div>
+
+
+            <div class="paper-title">
+                ${escapeHTML(title)}
+            </div>
+
+
+            <div class="paper-meta">
+
+
+                ${
+                    author
+                    ?
+
+                    `
+
+                    <div class="meta-row">
+
+                        <span class="meta-label">
+                            Author
+                        </span>
+
+                        <span>
+                            ${escapeHTML(author)}
+                        </span>
+
+                    </div>
+
+                    `
+
+                    :
+
+                    ""
+                }
+
+
+                ${
+                    year
+                    ?
+
+                    `
+
+                    <div class="meta-row">
+
+                        <span class="meta-label">
+                            Year
+                        </span>
+
+                        <span>
+                            ${escapeHTML(year)}
+                        </span>
+
+                    </div>
+
+                    `
+
+                    :
+
+                    ""
+                }
+
+
+                ${
+                    journal
+                    ?
+
+                    `
+
+                    <div class="meta-row">
+
+                        <span class="meta-label">
+                            Journal
+                        </span>
+
+                        <span>
+                            ${escapeHTML(journal)}
+                        </span>
+
+                    </div>
+
+                    `
+
+                    :
+
+                    ""
+                }
+
+            </div>
+
+
+            ${
+                abstract
+
+                ?
+
+                `
+
+                <div class="abstract-preview">
+
+                    ${escapeHTML(
+                        abstract.length > 280
+                        ?
+                        abstract.substring(
+                            0,
+                            280
+                        ) + "..."
+                        :
+                        abstract
+                    )}
+
+                </div>
+
+                `
+
+                :
+
+                ""
+
+            }
+
+
+            <div class="paper-actions">
+
+
+                <button
+                    class="view-button"
+                    onclick="viewPaper(${paperIndex})"
+                >
+                    View Details
+                </button>
+
+
+                ${doiLink}
+
+
+            </div>
+
+
+        </div>
+
+    `;
+
+}
+
+
+/* =========================================================
+   VIEW PAPER
+========================================================= */
+
+function viewPaper(index) {
+
+    const paper =
+        papers[index];
+
+
+    if (!paper) return;
+
+
+    const title =
+        getValue(
+            paper,
+            [
+                "title",
+                "Title",
+                "paper_title",
+                "Paper Title"
+            ]
+        ) ||
+        "Untitled Paper";
+
+
+    document
+        .getElementById(
+            "modalTitle"
+        )
+        .textContent =
+        title;
+
+
+    let html = "";
+
+
+    Object
+        .entries(paper)
+        .forEach(
+            ([key, value]) => {
+
+
+                if (
+                    value === null ||
+                    value === undefined ||
+                    String(value).trim() === ""
+                ) {
+
+                    return;
+
+                }
+
+
+                html += `
+
+                    <div class="detail-section">
+
+                        <div class="detail-label">
+
+                            ${escapeHTML(key)}
+
+                        </div>
+
+                        <div class="detail-value">
+
+                            ${escapeHTML(
+                                String(value)
+                            )}
+
+                        </div>
+
+                    </div>
+
+                `;
+
+            }
+        );
+
+
+    document
+        .getElementById(
+            "modalBody"
+        )
+        .innerHTML =
+        html;
+
+
+    document
+        .getElementById(
+            "modal"
+        )
+        .classList.add(
+            "active"
+        );
+
+}
+
+
+/* =========================================================
+   CLOSE MODAL
+========================================================= */
+
+function closeModal() {
+
+    document
+        .getElementById(
+            "modal"
+        )
+        .classList.remove(
+            "active"
+        );
+
+}
+
+
+document
+    .getElementById("modal")
+    .addEventListener(
+        "click",
+        function(event) {
+
+            if (
+                event.target === this
+            ) {
+
+                closeModal();
+
+            }
+
+        }
+    );
+
+
+/* =========================================================
+   ESCAPE HTML
+========================================================= */
+
+function escapeHTML(value) {
+
+    return String(value)
+
+        .replace(
+            /&/g,
+            "&amp;"
+        )
+
+        .replace(
+            /</g,
+            "&lt;"
+        )
+
+        .replace(
+            />/g,
+            "&gt;"
+        )
+
+        .replace(
+            /"/g,
+            "&quot;"
+        )
+
+        .replace(
+            /'/g,
+            "&#039;"
+        );
+
+}
+
+
+/* =========================================================
+   SIDEBAR
+========================================================= */
+
+function toggleSidebar() {
+
+    document
+        .getElementById("sidebar")
+        .classList.toggle("open");
+
+}
+
+
+/* =========================================================
+   COMING SOON
+========================================================= */
+
+function comingSoon(
+    event,
+    feature
+) {
+
+    event.preventDefault();
+
+    alert(
+        feature +
+        " module is currently under development."
+    );
+
+}
+
+
+/* =========================================================
+   EVENTS
+========================================================= */
+
+document
+    .getElementById("search")
+    .addEventListener(
+        "input",
+        renderPapers
+    );
+
+
+document
+    .getElementById("yearFilter")
+    .addEventListener(
+        "change",
+        renderPapers
+    );
+
+
+document
+    .getElementById("authorFilter")
+    .addEventListener(
+        "change",
+        renderPapers
+    );
+
+
+/* =========================================================
+   START
+========================================================= */
+
+loadPapers();
+
+</script>
+
+
+</body>
+
+</html>

@@ -1,0 +1,1927 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Novelty Finder - Paper AI</title>
+
+<style>
+*{
+    box-sizing:border-box;
+    margin:0;
+    padding:0;
+}
+
+body{
+    font-family:"Segoe UI",Arial,sans-serif;
+    background:#f5f7fb;
+    color:#202638;
+    min-height:100vh;
+}
+
+.header{
+    background:#151a2d;
+    color:white;
+    padding:20px 30px;
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    gap:20px;
+}
+
+.header-left h1{
+    font-size:22px;
+    margin-bottom:5px;
+}
+
+.header-left p{
+    font-size:12px;
+    color:#9fa7bd;
+}
+
+.header-actions{
+    display:flex;
+    gap:8px;
+    flex-wrap:wrap;
+}
+
+button{
+    border:none;
+    cursor:pointer;
+    font-family:inherit;
+}
+
+.btn{
+    padding:10px 15px;
+    border-radius:8px;
+    font-size:12px;
+    font-weight:600;
+    transition:.2s;
+}
+
+.btn:hover{
+    transform:translateY(-1px);
+}
+
+.btn-primary{
+    background:#5667f2;
+    color:white;
+}
+
+.btn-secondary{
+    background:white;
+    color:#30384c;
+}
+
+.btn-danger{
+    background:#fff0f0;
+    color:#d64545;
+}
+
+.container{
+    max-width:1450px;
+    margin:auto;
+    padding:25px;
+}
+
+.panel{
+    background:white;
+    border:1px solid #e5e8ef;
+    border-radius:14px;
+    margin-bottom:20px;
+    overflow:hidden;
+}
+
+.panel-header{
+    padding:18px 20px;
+    border-bottom:1px solid #edf0f5;
+}
+
+.panel-header h2{
+    font-size:15px;
+}
+
+.panel-header p{
+    font-size:11px;
+    color:#9299a9;
+    margin-top:4px;
+}
+
+.panel-body{
+    padding:20px;
+}
+
+textarea{
+    width:100%;
+    min-height:100px;
+    resize:vertical;
+    border:1px solid #dce1ea;
+    border-radius:9px;
+    padding:13px;
+    font-family:inherit;
+    font-size:13px;
+    outline:none;
+}
+
+textarea:focus{
+    border-color:#5667f2;
+    box-shadow:0 0 0 3px rgba(86,103,242,.08);
+}
+
+.controls{
+    display:flex;
+    gap:10px;
+    margin-bottom:15px;
+    flex-wrap:wrap;
+}
+
+input[type="text"],
+select{
+    padding:10px 12px;
+    border:1px solid #dce1ea;
+    border-radius:8px;
+    outline:none;
+    font-family:inherit;
+    font-size:12px;
+    background:white;
+}
+
+input[type="text"]{
+    flex:1;
+    min-width:220px;
+}
+
+input:focus,
+select:focus{
+    border-color:#5667f2;
+}
+
+.stats{
+    display:grid;
+    grid-template-columns:repeat(4,1fr);
+    gap:12px;
+    margin-bottom:15px;
+}
+
+.stat{
+    background:#f8f9fc;
+    border:1px solid #e8ebf1;
+    border-radius:10px;
+    padding:14px;
+}
+
+.stat-label{
+    font-size:10px;
+    color:#9299a9;
+}
+
+.stat-value{
+    font-size:21px;
+    font-weight:700;
+    margin-top:3px;
+}
+
+.table-wrap{
+    overflow-x:auto;
+}
+
+table{
+    width:100%;
+    border-collapse:collapse;
+}
+
+th{
+    text-align:left;
+    font-size:10px;
+    text-transform:uppercase;
+    letter-spacing:.5px;
+    color:#8b93a4;
+    padding:12px;
+    background:#f8f9fc;
+    border-bottom:1px solid #e6e9ef;
+}
+
+td{
+    padding:12px;
+    border-bottom:1px solid #edf0f4;
+    font-size:12px;
+    vertical-align:top;
+}
+
+tr:hover{
+    background:#fafbfe;
+}
+
+.title-cell{
+    min-width:300px;
+    font-weight:600;
+}
+
+.meta{
+    margin-top:4px;
+    color:#9299a9;
+    font-size:10px;
+    line-height:1.5;
+}
+
+.checkbox{
+    width:16px;
+    height:16px;
+    cursor:pointer;
+}
+
+.empty{
+    text-align:center;
+    padding:45px 20px;
+    color:#9299a9;
+}
+
+.empty-icon{
+    font-size:35px;
+    margin-bottom:10px;
+}
+
+.loading{
+    display:none;
+    text-align:center;
+    padding:40px;
+}
+
+.spinner{
+    width:35px;
+    height:35px;
+    border:3px solid #e6e9f0;
+    border-top-color:#5667f2;
+    border-radius:50%;
+    animation:spin 1s linear infinite;
+    margin:0 auto 12px;
+}
+
+@keyframes spin{
+    to{transform:rotate(360deg);}
+}
+
+.result{
+    display:none;
+}
+
+.ai-summary{
+    background:#f7f8ff;
+    border:1px solid #dfe3ff;
+    border-radius:12px;
+    padding:18px;
+    line-height:1.7;
+    font-size:13px;
+    margin-bottom:18px;
+}
+
+.result-grid{
+    display:grid;
+    grid-template-columns:repeat(2,1fr);
+    gap:15px;
+}
+
+.result-card{
+    border:1px solid #e6e9ef;
+    border-radius:12px;
+    padding:17px;
+    background:white;
+}
+
+.result-card.full{
+    grid-column:1/-1;
+}
+
+.result-card h3{
+    font-size:13px;
+    margin-bottom:10px;
+}
+
+.result-card p{
+    font-size:12px;
+    line-height:1.7;
+    color:#4f586b;
+}
+
+.result-card ul{
+    padding-left:20px;
+}
+
+.result-card li{
+    font-size:12px;
+    line-height:1.7;
+    margin-bottom:7px;
+    color:#4f586b;
+}
+
+.gap-item{
+    border-left:4px solid #5667f2;
+    background:#f8f9ff;
+    border-radius:8px;
+    padding:13px;
+    margin-bottom:10px;
+}
+
+.gap-title{
+    font-weight:700;
+    font-size:12px;
+    margin-bottom:5px;
+}
+
+.gap-desc{
+    font-size:11px;
+    line-height:1.6;
+    color:#596174;
+}
+
+.badge{
+    display:inline-block;
+    padding:3px 7px;
+    border-radius:20px;
+    font-size:9px;
+    font-weight:700;
+    margin-left:5px;
+}
+
+.high{
+    background:#ffe7e7;
+    color:#c73d3d;
+}
+
+.medium{
+    background:#fff3d8;
+    color:#a66a00;
+}
+
+.low{
+    background:#e8f7ee;
+    color:#25814b;
+}
+
+.confidence{
+    display:inline-block;
+    padding:5px 9px;
+    border-radius:20px;
+    background:#eef0ff;
+    color:#4c5be1;
+    font-size:10px;
+    font-weight:700;
+}
+
+.paper-chip{
+    display:inline-block;
+    background:#f1f3f8;
+    padding:5px 8px;
+    border-radius:6px;
+    margin:3px;
+    font-size:10px;
+}
+
+.warning{
+    background:#fff8e7;
+    border:1px solid #f1dfaa;
+    color:#725b19;
+    border-radius:9px;
+    padding:12px;
+    font-size:11px;
+    line-height:1.6;
+    margin-top:15px;
+}
+
+.error{
+    background:#fff0f0;
+    border:1px solid #f2caca;
+    color:#a52e2e;
+    border-radius:9px;
+    padding:14px;
+    font-size:12px;
+    line-height:1.6;
+    display:none;
+}
+
+.success{
+    background:#edf9f2;
+    border:1px solid #ccebd8;
+    color:#277344;
+    border-radius:9px;
+    padding:12px;
+    font-size:11px;
+    margin-bottom:15px;
+    display:none;
+}
+
+@media(max-width:900px){
+    .stats{
+        grid-template-columns:repeat(2,1fr);
+    }
+
+    .result-grid{
+        grid-template-columns:1fr;
+    }
+
+    .result-card.full{
+        grid-column:auto;
+    }
+}
+
+@media(max-width:600px){
+    .header{
+        padding:18px;
+        align-items:flex-start;
+        flex-direction:column;
+    }
+
+    .container{
+        padding:15px;
+    }
+
+    .stats{
+        grid-template-columns:1fr;
+    }
+}
+</style>
+</head>
+
+<body>
+
+<header class="header">
+
+    <div class="header-left">
+        <h1>🔎 Novelty Finder</h1>
+        <p>AI-powered research gap & novelty analysis</p>
+    </div>
+
+    <div class="header-actions">
+
+        <button
+            class="btn btn-secondary"
+            onclick="window.location.href='menu_utama.html'">
+            ← Menu Utama
+        </button>
+
+        <button
+            class="btn btn-secondary"
+            onclick="loadDatabase()">
+            🔄 Refresh Database
+        </button>
+
+    </div>
+
+</header>
+
+
+<main class="container">
+
+    <!-- RESEARCH QUESTION -->
+
+    <section class="panel">
+
+        <div class="panel-header">
+            <h2>🎯 Research Question</h2>
+
+            <p>
+                Masukkan pertanyaan penelitian yang menjadi fokus
+                pencarian research gap dan novelty.
+            </p>
+        </div>
+
+        <div class="panel-body">
+
+            <textarea
+                id="researchQuestion"
+                placeholder="Contoh:
+Bagaimana luas permukaan katalis mempengaruhi selektivitas elektrokatalis?
+
+Atau:
+Apa hubungan antara SBET, ECSA/Cdl, struktur pori, aktivitas dan selektivitas elektrokatalis?"></textarea>
+
+        </div>
+
+    </section>
+
+
+    <!-- DATABASE -->
+
+    <section class="panel">
+
+        <div class="panel-header">
+
+            <h2>📚 Paper Database</h2>
+
+            <p>
+                Pilih paper yang ingin dibandingkan oleh AI.
+            </p>
+
+        </div>
+
+        <div class="panel-body">
+
+            <div class="controls">
+
+                <input
+                    type="text"
+                    id="searchInput"
+                    placeholder="🔎 Cari judul, author, journal, DOI..."
+                    oninput="renderPapers()">
+
+                <select
+                    id="yearFilter"
+                    onchange="renderPapers()">
+
+                    <option value="">Semua Tahun</option>
+
+                </select>
+
+                <button
+                    class="btn btn-secondary"
+                    onclick="selectAll()">
+                    ☑ Pilih Semua
+                </button>
+
+                <button
+                    class="btn btn-danger"
+                    onclick="clearSelection()">
+                    ☐ Hapus Pilihan
+                </button>
+
+            </div>
+
+
+            <div class="stats">
+
+                <div class="stat">
+                    <div class="stat-label">
+                        Total Database
+                    </div>
+
+                    <div
+                        class="stat-value"
+                        id="totalPapers">
+                        0
+                    </div>
+                </div>
+
+
+                <div class="stat">
+                    <div class="stat-label">
+                        Paper Terpilih
+                    </div>
+
+                    <div
+                        class="stat-value"
+                        id="selectedPapers">
+                        0
+                    </div>
+                </div>
+
+
+                <div class="stat">
+                    <div class="stat-label">
+                        Tahun
+                    </div>
+
+                    <div
+                        class="stat-value"
+                        id="yearCount">
+                        0
+                    </div>
+                </div>
+
+
+                <div class="stat">
+                    <div class="stat-label">
+                        Status
+                    </div>
+
+                    <div
+                        class="stat-value"
+                        id="dbStatus">
+                        —
+                    </div>
+                </div>
+
+            </div>
+
+
+            <div id="successBox" class="success"></div>
+
+            <div id="errorBox" class="error"></div>
+
+
+            <div class="table-wrap">
+
+                <table>
+
+                    <thead>
+
+                        <tr>
+
+                            <th width="45">
+                                <input
+                                    type="checkbox"
+                                    id="masterCheck"
+                                    class="checkbox"
+                                    onchange="toggleMaster(this)">
+                            </th>
+
+                            <th>Paper</th>
+
+                            <th width="100">
+                                Tahun
+                            </th>
+
+                            <th width="230">
+                                Journal
+                            </th>
+
+                        </tr>
+
+                    </thead>
+
+                    <tbody id="paperTable">
+
+                    </tbody>
+
+                </table>
+
+            </div>
+
+        </div>
+
+    </section>
+
+
+    <!-- ANALYZE BUTTON -->
+
+    <section class="panel">
+
+        <div class="panel-body">
+
+            <button
+                class="btn btn-primary"
+                style="width:100%;font-size:13px;padding:13px"
+                onclick="runAnalysis()">
+
+                🧠 Analisis Research Gap & Novelty dengan AI
+
+            </button>
+
+        </div>
+
+    </section>
+
+
+    <!-- LOADING -->
+
+    <div
+        class="panel loading"
+        id="loadingBox">
+
+        <div class="spinner"></div>
+
+        <strong>AI sedang menganalisis paper...</strong>
+
+        <p style="font-size:11px;color:#9299a9;margin-top:6px">
+            Membandingkan tujuan, metode, hasil, parameter,
+            keterbatasan, dan hubungan antar-paper.
+        </p>
+
+    </div>
+
+
+    <!-- RESULT -->
+
+    <section
+        class="panel result"
+        id="resultBox">
+
+        <div class="panel-header">
+
+            <h2>🧠 AI Research Gap Analysis</h2>
+
+            <p>
+                Hasil analisis berdasarkan paper yang kamu pilih.
+            </p>
+
+        </div>
+
+        <div class="panel-body">
+
+            <div
+                id="aiResult">
+            </div>
+
+        </div>
+
+    </section>
+
+</main>
+
+
+<script>
+
+let papers = [];
+let selected = new Set();
+
+
+/* =========================================================
+   CSV PARSER
+========================================================= */
+
+function parseCSV(text){
+
+    const rows = [];
+    let row = [];
+    let cell = "";
+    let insideQuotes = false;
+
+    for(let i = 0; i < text.length; i++){
+
+        const char = text[i];
+        const next = text[i + 1];
+
+        if(char === '"' && insideQuotes && next === '"'){
+            cell += '"';
+            i++;
+            continue;
+        }
+
+        if(char === '"'){
+            insideQuotes = !insideQuotes;
+            continue;
+        }
+
+        if(char === ',' && !insideQuotes){
+            row.push(cell);
+            cell = "";
+            continue;
+        }
+
+        if((char === '\n' || char === '\r') && !insideQuotes){
+
+            if(char === '\r' && next === '\n'){
+                i++;
+            }
+
+            row.push(cell);
+
+            if(row.some(v => String(v).trim() !== "")){
+                rows.push(row);
+            }
+
+            row = [];
+            cell = "";
+
+            continue;
+        }
+
+        cell += char;
+    }
+
+    if(cell !== "" || row.length > 0){
+
+        row.push(cell);
+
+        if(row.some(v => String(v).trim() !== "")){
+            rows.push(row);
+        }
+    }
+
+    if(!rows.length){
+        return [];
+    }
+
+    const headers = rows[0].map(h =>
+        normalizeHeader(h)
+    );
+
+    return rows.slice(1).map(values => {
+
+        const obj = {};
+
+        headers.forEach((header,index) => {
+            obj[header] = values[index] || "";
+        });
+
+        return obj;
+
+    });
+}
+
+
+function normalizeHeader(value){
+
+    return String(value || "")
+        .trim()
+        .toLowerCase()
+        .replace(/^\uFEFF/,"")
+        .replace(/\s+/g," ")
+        .replace(/[_-]+/g," ");
+}
+
+
+function getValue(row, aliases){
+
+    for(const alias of aliases){
+
+        const key = normalizeHeader(alias);
+
+        if(
+            Object.prototype.hasOwnProperty.call(row,key)
+            &&
+            String(row[key]).trim() !== ""
+        ){
+            return String(row[key]).trim();
+        }
+    }
+
+    return "";
+}
+
+
+/* =========================================================
+   LOAD DATABASE
+========================================================= */
+
+async function loadDatabase(){
+
+    hideMessages();
+
+    try{
+
+        const response = await fetch(
+            "/data.csv?t=" + Date.now(),
+            {
+                cache:"no-store"
+            }
+        );
+
+        if(!response.ok){
+            throw new Error(
+                "data.csv tidak dapat diakses. HTTP " +
+                response.status
+            );
+        }
+
+        const text = await response.text();
+
+        papers = parseCSV(text);
+
+        selected.clear();
+
+        prepareYears();
+        renderPapers();
+
+        document.getElementById("dbStatus").textContent = "OK";
+
+        showSuccess(
+            `${papers.length} paper berhasil dimuat dari data.csv.`
+        );
+
+    }catch(error){
+
+        console.error(error);
+
+        document.getElementById("dbStatus").textContent = "ERROR";
+
+        showError(
+            "Gagal membaca database: " + error.message
+        );
+    }
+}
+
+
+/* =========================================================
+   YEAR FILTER
+========================================================= */
+
+function prepareYears(){
+
+    const years = new Set();
+
+    papers.forEach((paper,index)=>{
+
+        const year = getYear(paper);
+
+        if(year){
+            years.add(year);
+        }
+
+    });
+
+    const select =
+        document.getElementById("yearFilter");
+
+    select.innerHTML =
+        `<option value="">Semua Tahun</option>`;
+
+    [...years]
+        .sort((a,b)=>Number(b)-Number(a))
+        .forEach(year=>{
+
+            const option =
+                document.createElement("option");
+
+            option.value = year;
+            option.textContent = year;
+
+            select.appendChild(option);
+        });
+
+    document.getElementById("yearCount").textContent =
+        years.size;
+}
+
+
+/* =========================================================
+   PAPER HELPERS
+========================================================= */
+
+function getTitle(paper){
+
+    return getValue(
+        paper,
+        [
+            "title",
+            "article title",
+            "paper title",
+            "ti"
+        ]
+    ) || "Untitled Paper";
+}
+
+
+function getAuthors(paper){
+
+    return getValue(
+        paper,
+        [
+            "authors",
+            "author",
+            "au"
+        ]
+    );
+}
+
+
+function getYear(paper){
+
+    return getValue(
+        paper,
+        [
+            "year",
+            "publication year",
+            "py"
+        ]
+    );
+}
+
+
+function getJournal(paper){
+
+    return getValue(
+        paper,
+        [
+            "journal",
+            "journal name",
+            "source",
+            "jo",
+            "jf"
+        ]
+    );
+}
+
+
+function getDOI(paper){
+
+    return getValue(
+        paper,
+        [
+            "doi",
+            "digital object identifier",
+            "do"
+        ]
+    );
+}
+
+
+/* =========================================================
+   TEXT EXTRACTION
+========================================================= */
+
+function getAbstract(paper){
+
+    return getValue(
+        paper,
+        [
+            "abstract",
+            "summary",
+            "ab"
+        ]
+    );
+}
+
+
+function getKeywords(paper){
+
+    return getValue(
+        paper,
+        [
+            "keywords",
+            "keyword",
+            "kw"
+        ]
+    );
+}
+
+
+/* =========================================================
+   RENDER
+========================================================= */
+
+function renderPapers(){
+
+    const tbody =
+        document.getElementById("paperTable");
+
+    const search =
+        document.getElementById("searchInput")
+        .value
+        .toLowerCase()
+        .trim();
+
+    const year =
+        document.getElementById("yearFilter")
+        .value;
+
+    tbody.innerHTML = "";
+
+    const filtered =
+        papers
+        .map((paper,index)=>({paper,index}))
+        .filter(item=>{
+
+            const paper = item.paper;
+
+            const haystack = [
+
+                getTitle(paper),
+                getAuthors(paper),
+                getJournal(paper),
+                getDOI(paper),
+                getAbstract(paper),
+                getKeywords(paper)
+
+            ].join(" ").toLowerCase();
+
+            const matchSearch =
+                !search ||
+                haystack.includes(search);
+
+            const matchYear =
+                !year ||
+                getYear(paper) === year;
+
+            return matchSearch && matchYear;
+        });
+
+
+    if(!filtered.length){
+
+        tbody.innerHTML = `
+            <tr>
+                <td colspan="4">
+                    <div class="empty">
+                        <div class="empty-icon">📄</div>
+                        Tidak ada paper yang cocok.
+                    </div>
+                </td>
+            </tr>
+        `;
+
+        updateStats();
+
+        return;
+    }
+
+
+    filtered.forEach(({paper,index})=>{
+
+        const tr =
+            document.createElement("tr");
+
+        const checked =
+            selected.has(index)
+            ? "checked"
+            : "";
+
+        const author =
+            getAuthors(paper);
+
+        const doi =
+            getDOI(paper);
+
+        tr.innerHTML = `
+
+            <td>
+                <input
+                    type="checkbox"
+                    class="checkbox paper-check"
+                    data-index="${index}"
+                    ${checked}>
+            </td>
+
+            <td>
+
+                <div class="title-cell">
+                    ${escapeHTML(getTitle(paper))}
+                </div>
+
+                <div class="meta">
+                    ${escapeHTML(author || "Author tidak tersedia")}
+                    ${doi ? " · DOI: " + escapeHTML(doi) : ""}
+                </div>
+
+            </td>
+
+            <td>
+                ${escapeHTML(getYear(paper) || "—")}
+            </td>
+
+            <td>
+                ${escapeHTML(getJournal(paper) || "—")}
+            </td>
+
+        `;
+
+        tbody.appendChild(tr);
+    });
+
+
+    document
+        .querySelectorAll(".paper-check")
+        .forEach(box=>{
+
+            box.addEventListener(
+                "change",
+                function(){
+
+                    const index =
+                        Number(this.dataset.index);
+
+                    if(this.checked){
+                        selected.add(index);
+                    }else{
+                        selected.delete(index);
+                    }
+
+                    updateStats();
+                    updateMasterCheck();
+                }
+            );
+        });
+
+    updateStats();
+    updateMasterCheck();
+}
+
+
+/* =========================================================
+   SELECTION
+========================================================= */
+
+function selectAll(){
+
+    papers.forEach((_,index)=>{
+        selected.add(index);
+    });
+
+    renderPapers();
+}
+
+
+function clearSelection(){
+
+    selected.clear();
+
+    renderPapers();
+}
+
+
+function toggleMaster(checkbox){
+
+    const visible =
+        document
+        .querySelectorAll(".paper-check");
+
+    visible.forEach(box=>{
+
+        const index =
+            Number(box.dataset.index);
+
+        if(checkbox.checked){
+            selected.add(index);
+        }else{
+            selected.delete(index);
+        }
+
+    });
+
+    renderPapers();
+}
+
+
+function updateMasterCheck(){
+
+    const boxes =
+        document.querySelectorAll(".paper-check");
+
+    const master =
+        document.getElementById("masterCheck");
+
+    if(!boxes.length){
+
+        master.checked = false;
+        master.indeterminate = false;
+
+        return;
+    }
+
+    const checked =
+        [...boxes].filter(box=>box.checked).length;
+
+    master.checked =
+        checked === boxes.length;
+
+    master.indeterminate =
+        checked > 0 &&
+        checked < boxes.length;
+}
+
+
+/* =========================================================
+   STATS
+========================================================= */
+
+function updateStats(){
+
+    document.getElementById("totalPapers")
+        .textContent = papers.length;
+
+    document.getElementById("selectedPapers")
+        .textContent = selected.size;
+}
+
+
+/* =========================================================
+   AI ANALYSIS
+========================================================= */
+
+async function runAnalysis(){
+
+    hideMessages();
+
+    const question =
+        document
+        .getElementById("researchQuestion")
+        .value
+        .trim();
+
+    if(!question){
+
+        showError(
+            "Masukkan Research Question terlebih dahulu."
+        );
+
+        document
+            .getElementById("researchQuestion")
+            .focus();
+
+        return;
+    }
+
+
+    if(selected.size === 0){
+
+        showError(
+            "Pilih minimal 1 paper untuk dianalisis."
+        );
+
+        return;
+    }
+
+
+    const selectedPapers =
+        [...selected]
+        .map(index=>{
+
+            const paper = papers[index];
+
+            return {
+
+                id:index,
+
+                title:getTitle(paper),
+
+                authors:getAuthors(paper),
+
+                year:getYear(paper),
+
+                journal:getJournal(paper),
+
+                doi:getDOI(paper),
+
+                abstract:getAbstract(paper),
+
+                keywords:getKeywords(paper)
+
+            };
+
+        });
+
+
+    document.getElementById("resultBox")
+        .style.display = "none";
+
+    document.getElementById("loadingBox")
+        .style.display = "block";
+
+
+    try{
+
+        const response =
+            await fetch(
+                "/api/novelty",
+                {
+                    method:"POST",
+
+                    headers:{
+                        "Content-Type":
+                            "application/json"
+                    },
+
+                    body:JSON.stringify({
+
+                        research_question:
+                            question,
+
+                        papers:
+                            selectedPapers
+
+                    })
+                }
+            );
+
+
+        const data =
+            await response.json();
+
+
+        if(!response.ok){
+
+            throw new Error(
+                data.error ||
+                "Server AI mengembalikan error."
+            );
+        }
+
+
+        renderAIResult(data);
+
+
+    }catch(error){
+
+        console.error(error);
+
+        showError(
+            "Analisis AI gagal: " +
+            error.message
+        );
+
+    }finally{
+
+        document.getElementById("loadingBox")
+            .style.display = "none";
+    }
+}
+
+
+/* =========================================================
+   RENDER AI RESULT
+========================================================= */
+
+function renderAIResult(data){
+
+    const box =
+        document.getElementById("aiResult");
+
+    const gaps =
+        Array.isArray(data.research_gaps)
+        ? data.research_gaps
+        : [];
+
+    const contradictions =
+        Array.isArray(data.contradictions)
+        ? data.contradictions
+        : [];
+
+    const novelties =
+        Array.isArray(data.potential_novelty)
+        ? data.potential_novelty
+        : [];
+
+    const limitations =
+        Array.isArray(data.paper_limitations)
+        ? data.paper_limitations
+        : [];
+
+    const missing =
+        Array.isArray(data.missing_variables)
+        ? data.missing_variables
+        : [];
+
+
+    let html = `
+
+        <div class="ai-summary">
+
+            <strong>Kesimpulan Utama</strong>
+
+            <p style="margin-top:8px">
+                ${formatText(
+                    data.overall_assessment ||
+                    "Tidak ada kesimpulan."
+                )}
+            </p>
+
+        </div>
+
+
+        <div class="result-grid">
+
+    `;
+
+
+    /* RESEARCH GAPS */
+
+    html += `
+        <div class="result-card full">
+
+            <h3>
+                🔎 Research Gaps
+            </h3>
+
+            ${
+                gaps.length
+                ?
+                gaps.map(gap=>`
+
+                    <div class="gap-item">
+
+                        <div class="gap-title">
+
+                            ${escapeHTML(
+                                gap.title ||
+                                "Research Gap"
+                            )}
+
+                            ${
+                                gap.priority
+                                ?
+                                `<span class="badge ${priorityClass(gap.priority)}">
+                                    ${escapeHTML(gap.priority)}
+                                </span>`
+                                : ""
+                            }
+
+                        </div>
+
+                        <div class="gap-desc">
+
+                            ${formatText(
+                                gap.explanation ||
+                                ""
+                            )}
+
+                            ${
+                                gap.evidence
+                                ?
+                                `<br><br>
+                                <strong>Evidence:</strong>
+                                ${formatText(gap.evidence)}`
+                                : ""
+                            }
+
+                        </div>
+
+                    </div>
+
+                `).join("")
+                :
+                "<p>Tidak ditemukan research gap yang cukup kuat dari data yang tersedia.</p>"
+            }
+
+        </div>
+    `;
+
+
+    /* NOVELTY */
+
+    html += `
+        <div class="result-card full">
+
+            <h3>
+                ✦ Potential Novelty
+            </h3>
+
+            ${
+                novelties.length
+                ?
+                novelties.map((item,index)=>`
+
+                    <div class="gap-item">
+
+                        <div class="gap-title">
+
+                            ${index+1}.
+                            ${escapeHTML(
+                                item.title ||
+                                "Potential Novelty"
+                            )}
+
+                            ${
+                                item.confidence
+                                ?
+                                `<span class="confidence">
+                                    Confidence:
+                                    ${escapeHTML(
+                                        item.confidence
+                                    )}
+                                </span>`
+                                : ""
+                            }
+
+                        </div>
+
+                        <div class="gap-desc">
+
+                            ${formatText(
+                                item.description ||
+                                ""
+                            )}
+
+                            ${
+                                item.testable_question
+                                ?
+                                `<br><br>
+                                <strong>Testable Question:</strong>
+                                ${formatText(
+                                    item.testable_question
+                                )}`
+                                : ""
+                            }
+
+                        </div>
+
+                    </div>
+
+                `).join("")
+                :
+                "<p>Belum ada novelty yang dapat disimpulkan secara defensible.</p>"
+            }
+
+        </div>
+    `;
+
+
+    /* CONTRADICTIONS */
+
+    html += `
+        <div class="result-card">
+
+            <h3>
+                ⚡ Kontradiksi Antar-Paper
+            </h3>
+
+            ${
+                contradictions.length
+                ?
+                `<ul>
+                    ${
+                        contradictions.map(item=>`
+
+                            <li>
+                                <strong>
+                                    ${escapeHTML(
+                                        item.topic ||
+                                        "Kontradiksi"
+                                    )}
+                                </strong>
+                                <br>
+                                ${formatText(
+                                    item.explanation ||
+                                    ""
+                                )}
+                            </li>
+
+                        `).join("")
+                    }
+                </ul>`
+                :
+                "<p>Tidak ditemukan kontradiksi yang jelas.</p>"
+            }
+
+        </div>
+    `;
+
+
+    /* MISSING VARIABLES */
+
+    html += `
+        <div class="result-card">
+
+            <h3>
+                🧩 Variabel yang Kurang
+            </h3>
+
+            ${
+                missing.length
+                ?
+                `<ul>
+                    ${
+                        missing.map(item=>`
+
+                            <li>
+                                <strong>
+                                    ${escapeHTML(
+                                        item.variable ||
+                                        ""
+                                    )}
+                                </strong>
+
+                                ${
+                                    item.reason
+                                    ?
+                                    " — " +
+                                    formatText(item.reason)
+                                    : ""
+                                }
+                            </li>
+
+                        `).join("")
+                    }
+                </ul>`
+                :
+                "<p>Tidak ada variabel penting yang teridentifikasi sebagai missing.</p>"
+            }
+
+        </div>
+    `;
+
+
+    /* LIMITATIONS */
+
+    html += `
+        <div class="result-card full">
+
+            <h3>
+                ⚠ Limitasi Paper
+            </h3>
+
+            ${
+                limitations.length
+                ?
+                `<ul>
+                    ${
+                        limitations.map(item=>`
+
+                            <li>
+
+                                <strong>
+                                    ${escapeHTML(
+                                        item.paper ||
+                                        "Paper"
+                                    )}
+                                </strong>
+
+                                ${
+                                    item.limitation
+                                    ?
+                                    " — " +
+                                    formatText(item.limitation)
+                                    : ""
+                                }
+
+                            </li>
+
+                        `).join("")
+                    }
+                </ul>`
+                :
+                "<p>Limitasi eksplisit tidak cukup tersedia pada data CSV.</p>"
+            }
+
+        </div>
+    `;
+
+
+    /* RECOMMENDATION */
+
+    html += `
+        <div class="result-card full">
+
+            <h3>
+                🧪 Recommended Research Direction
+            </h3>
+
+            <p>
+                ${formatText(
+                    data.recommended_direction ||
+                    "Tidak tersedia."
+                )}
+            </p>
+
+            ${
+                data.proposed_title
+                ?
+                `
+                <div
+                    style="
+                    margin-top:14px;
+                    padding:12px;
+                    background:#f8f9fc;
+                    border-radius:8px;
+                    "
+                >
+
+                    <strong>
+                        Suggested Research Title
+                    </strong>
+
+                    <p style="margin-top:5px">
+                        ${formatText(
+                            data.proposed_title
+                        )}
+                    </p>
+
+                </div>
+                `
+                : ""
+            }
+
+        </div>
+    `;
+
+
+    /* EVIDENCE */
+
+    html += `
+        <div class="result-card full">
+
+            <h3>
+                📚 Papers yang Menjadi Evidence
+            </h3>
+
+            <div>
+
+                ${
+                    selected
+                    .size
+                    ?
+                    [...selected]
+                    .map(index=>`
+
+                        <span class="paper-chip">
+                            ${escapeHTML(
+                                getTitle(papers[index])
+                            )}
+                        </span>
+
+                    `)
+                    .join("")
+                    :
+                    ""
+                }
+
+            </div>
+
+            <div class="warning">
+
+                ⚠ <strong>Catatan metodologis:</strong>
+                AI tidak boleh dianggap sebagai bukti bahwa suatu
+                topik benar-benar belum pernah diteliti.
+                Hasil ini adalah <strong>candidate research gap</strong>
+                berdasarkan paper yang tersedia di database.
+                Verifikasi systematic search dan full-text literature
+                tetap diperlukan sebelum menyatakan novelty.
+
+            </div>
+
+        </div>
+
+    `;
+
+
+    html += `</div>`;
+
+
+    box.innerHTML = html;
+
+    document.getElementById("resultBox")
+        .style.display = "block";
+
+
+    window.scrollTo({
+        top:
+            document.getElementById("resultBox")
+            .offsetTop - 20,
+        behavior:"smooth"
+    });
+}
+
+
+/* =========================================================
+   HELPERS
+========================================================= */
+
+function priorityClass(priority){
+
+    const p =
+        String(priority || "")
+        .toLowerCase();
+
+    if(p.includes("high") || p.includes("tinggi")){
+        return "high";
+    }
+
+    if(p.includes("medium") || p.includes("sedang")){
+        return "medium";
+    }
+
+    return "low";
+}
+
+
+function formatText(text){
+
+    if(!text){
+        return "";
+    }
+
+    return escapeHTML(String(text))
+        .replace(/\n/g,"<br>");
+}
+
+
+function escapeHTML(value){
+
+    return String(value || "")
+        .replace(/&/g,"&amp;")
+        .replace(/</g,"&lt;")
+        .replace(/>/g,"&gt;")
+        .replace(/"/g,"&quot;")
+        .replace(/'/g,"&#039;");
+}
+
+
+function showError(message){
+
+    const box =
+        document.getElementById("errorBox");
+
+    box.textContent = message;
+    box.style.display = "block";
+}
+
+
+function showSuccess(message){
+
+    const box =
+        document.getElementById("successBox");
+
+    box.textContent = message;
+    box.style.display = "block";
+}
+
+
+function hideMessages(){
+
+    document.getElementById("errorBox")
+        .style.display = "none";
+
+    document.getElementById("successBox")
+        .style.display = "none";
+}
+
+
+/* =========================================================
+   START
+========================================================= */
+
+loadDatabase();
+
+</script>
+
+</body>
+</html>

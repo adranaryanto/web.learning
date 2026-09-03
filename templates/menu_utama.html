@@ -1,0 +1,2320 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
+    <title>Paper - Dashboard</title>
+
+
+    <style>
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+
+        body {
+
+            font-family:
+                "Segoe UI",
+                Arial,
+                sans-serif;
+
+            background: #f5f7fb;
+
+            color: #202638;
+
+            min-height: 100vh;
+
+        }
+
+
+        /* =====================================================
+           SIDEBAR
+        ===================================================== */
+
+        .sidebar {
+
+            position: fixed;
+
+            left: 0;
+            top: 0;
+            bottom: 0;
+
+            width: 250px;
+
+            background: #151a2d;
+
+            color: white;
+
+            display: flex;
+
+            flex-direction: column;
+
+            z-index: 1000;
+
+            transition: 0.3s ease;
+
+        }
+
+
+        /* LOGO */
+
+        .sidebar-header {
+
+            height: 82px;
+
+            display: flex;
+
+            align-items: center;
+
+            padding: 0 22px;
+
+            border-bottom:
+                1px solid
+                rgba(255,255,255,0.06);
+
+        }
+
+
+        .sidebar-logo {
+
+            width: 42px;
+
+            height: 42px;
+
+            object-fit: contain;
+
+            margin-right: 11px;
+
+        }
+
+
+        .brand-text {
+
+            display: flex;
+
+            flex-direction: column;
+
+        }
+
+
+        .brand-name {
+
+            font-size: 18px;
+
+            font-weight: 700;
+
+            letter-spacing: -0.3px;
+
+        }
+
+
+        .brand-version {
+
+            font-size: 9px;
+
+            color: #7f88a7;
+
+            margin-top: 2px;
+
+        }
+
+
+        /* NAVIGATION */
+
+        .sidebar-content {
+
+            flex: 1;
+
+            overflow-y: auto;
+
+            padding: 20px 13px;
+
+        }
+
+
+        .nav-section {
+
+            margin-bottom: 23px;
+
+        }
+
+
+        .nav-title {
+
+            padding: 0 12px;
+
+            margin-bottom: 8px;
+
+            color: #69728f;
+
+            font-size: 10px;
+
+            font-weight: 700;
+
+            letter-spacing: 1px;
+
+            text-transform: uppercase;
+
+        }
+
+
+        .nav-item {
+
+            display: flex;
+
+            align-items: center;
+
+            width: 100%;
+
+            padding: 11px 12px;
+
+            margin-bottom: 3px;
+
+            border-radius: 9px;
+
+            color: #aeb5c9;
+
+            text-decoration: none;
+
+            font-size: 13px;
+
+            font-weight: 500;
+
+            transition: 0.2s ease;
+
+        }
+
+
+        .nav-item:hover {
+
+            background:
+                rgba(255,255,255,0.06);
+
+            color: white;
+
+        }
+
+
+        .nav-item.active {
+
+            background: #5667f2;
+
+            color: white;
+
+            box-shadow:
+                0 6px 16px
+                rgba(86,103,242,0.22);
+
+        }
+
+
+        .nav-icon {
+
+            width: 28px;
+
+            font-size: 16px;
+
+            text-align: center;
+
+            margin-right: 7px;
+
+        }
+
+
+        /* USER */
+
+        .sidebar-user {
+
+            padding: 15px;
+
+            border-top:
+                1px solid
+                rgba(255,255,255,0.06);
+
+        }
+
+
+        .user-card {
+
+            display: flex;
+
+            align-items: center;
+
+            padding: 10px;
+
+            border-radius: 10px;
+
+            background:
+                rgba(255,255,255,0.04);
+
+        }
+
+
+        .user-avatar {
+
+            width: 36px;
+
+            height: 36px;
+
+            border-radius: 50%;
+
+            background: #5667f2;
+
+            display: flex;
+
+            align-items: center;
+
+            justify-content: center;
+
+            font-size: 14px;
+
+            font-weight: 700;
+
+            margin-right: 10px;
+
+        }
+
+
+        .user-info {
+
+            flex: 1;
+
+        }
+
+
+        .user-name {
+
+            font-size: 12px;
+
+            font-weight: 600;
+
+            color: white;
+
+        }
+
+
+        .user-role {
+
+            font-size: 10px;
+
+            color: #78819c;
+
+            margin-top: 2px;
+
+        }
+
+
+        .logout-button {
+
+            color: #8e96ad;
+
+            text-decoration: none;
+
+            font-size: 16px;
+
+        }
+
+
+        .logout-button:hover {
+
+            color: #ff7777;
+
+        }
+
+
+        /* =====================================================
+           MAIN
+        ===================================================== */
+
+        .main {
+
+            margin-left: 250px;
+
+            min-height: 100vh;
+
+            transition: 0.3s ease;
+
+        }
+
+
+        /* TOPBAR */
+
+        .topbar {
+
+            height: 70px;
+
+            background: white;
+
+            border-bottom:
+                1px solid #e9ecf2;
+
+            display: flex;
+
+            align-items: center;
+
+            justify-content: space-between;
+
+            padding: 0 30px;
+
+        }
+
+
+        .page-title {
+
+            font-size: 17px;
+
+            font-weight: 700;
+
+            color: #202638;
+
+        }
+
+
+        .page-subtitle {
+
+            font-size: 11px;
+
+            color: #9299a9;
+
+            margin-top: 3px;
+
+        }
+
+
+        .topbar-right {
+
+            display: flex;
+
+            align-items: center;
+
+            gap: 15px;
+
+        }
+
+
+        .status-indicator {
+
+            display: flex;
+
+            align-items: center;
+
+            gap: 6px;
+
+            font-size: 11px;
+
+            color: #7e8798;
+
+        }
+
+
+        .status-dot {
+
+            width: 7px;
+
+            height: 7px;
+
+            border-radius: 50%;
+
+            background: #35c77a;
+
+        }
+
+
+        .menu-toggle {
+
+            display: none;
+
+            border: none;
+
+            background: transparent;
+
+            font-size: 22px;
+
+            cursor: pointer;
+
+        }
+
+
+        /* =====================================================
+           CONTENT
+        ===================================================== */
+
+        .content {
+
+            padding: 30px;
+
+        }
+
+
+        .welcome {
+
+            margin-bottom: 25px;
+
+        }
+
+
+        .welcome h1 {
+
+            font-size: 25px;
+
+            font-weight: 700;
+
+            color: #202638;
+
+        }
+
+
+        .welcome p {
+
+            margin-top: 7px;
+
+            color: #8991a3;
+
+            font-size: 13px;
+
+        }
+
+
+        /* =====================================================
+           STATISTICS
+        ===================================================== */
+
+        .stats-grid {
+
+            display: grid;
+
+            grid-template-columns:
+                repeat(4, 1fr);
+
+            gap: 18px;
+
+            margin-bottom: 30px;
+
+        }
+
+
+        .stat-card {
+
+            background: white;
+
+            border:
+                1px solid #e8ebf1;
+
+            border-radius: 14px;
+
+            padding: 20px;
+
+            display: flex;
+
+            align-items: center;
+
+            transition: 0.2s ease;
+
+        }
+
+
+        .stat-card:hover {
+
+            transform:
+                translateY(-2px);
+
+            box-shadow:
+                0 8px 25px
+                rgba(32,38,56,0.06);
+
+        }
+
+
+        .stat-icon {
+
+            width: 46px;
+
+            height: 46px;
+
+            border-radius: 11px;
+
+            background: #eef0ff;
+
+            display: flex;
+
+            align-items: center;
+
+            justify-content: center;
+
+            font-size: 20px;
+
+            margin-right: 13px;
+
+        }
+
+
+        .stat-label {
+
+            color: #9299a9;
+
+            font-size: 11px;
+
+        }
+
+
+        .stat-value {
+
+            font-size: 23px;
+
+            font-weight: 700;
+
+            color: #202638;
+
+            margin-top: 2px;
+
+        }
+
+
+        /* =====================================================
+           SECTION HEADER
+        ===================================================== */
+
+        .section-header {
+
+            display: flex;
+
+            align-items: center;
+
+            justify-content: space-between;
+
+            margin-bottom: 15px;
+
+        }
+
+
+        .section-title {
+
+            font-size: 16px;
+
+            font-weight: 700;
+
+        }
+
+
+        .section-description {
+
+            font-size: 11px;
+
+            color: #9299a9;
+
+            margin-top: 3px;
+
+        }
+
+
+        /* =====================================================
+           RESEARCH TOOLS
+        ===================================================== */
+
+        .tools-grid {
+
+            display: grid;
+
+            grid-template-columns:
+                repeat(3, 1fr);
+
+            gap: 18px;
+
+            margin-bottom: 30px;
+
+        }
+
+
+        .tool-card {
+
+            background: white;
+
+            border:
+                1px solid #e8ebf1;
+
+            border-radius: 14px;
+
+            padding: 21px;
+
+            text-decoration: none;
+
+            color: inherit;
+
+            transition: 0.2s ease;
+
+        }
+
+
+        .tool-card:hover {
+
+            transform:
+                translateY(-3px);
+
+            box-shadow:
+                0 10px 30px
+                rgba(32,38,56,0.07);
+
+            border-color: #dce1ff;
+
+        }
+
+
+        .tool-icon {
+
+            width: 43px;
+
+            height: 43px;
+
+            border-radius: 11px;
+
+            background: #eef0ff;
+
+            display: flex;
+
+            align-items: center;
+
+            justify-content: center;
+
+            font-size: 19px;
+
+            margin-bottom: 14px;
+
+        }
+
+
+        .tool-title {
+
+            font-size: 14px;
+
+            font-weight: 700;
+
+            color: #252b3b;
+
+            margin-bottom: 6px;
+
+        }
+
+
+        .tool-description {
+
+            font-size: 11px;
+
+            color: #8b93a4;
+
+            line-height: 1.55;
+
+        }
+
+
+        /* =====================================================
+           RECENT PAPERS
+        ===================================================== */
+
+        .recent-card {
+
+            background: white;
+
+            border:
+                1px solid #e8ebf1;
+
+            border-radius: 14px;
+
+            min-height: 190px;
+
+            display: flex;
+
+            align-items: center;
+
+            justify-content: center;
+
+        }
+
+
+        .empty-state {
+
+            text-align: center;
+
+            padding: 30px;
+
+        }
+
+
+        .empty-icon {
+
+            width: 50px;
+
+            height: 50px;
+
+            border-radius: 12px;
+
+            background: #f0f2f7;
+
+            display: flex;
+
+            align-items: center;
+
+            justify-content: center;
+
+            margin: 0 auto 12px;
+
+            font-size: 22px;
+
+        }
+
+
+        .empty-title {
+
+            font-size: 14px;
+
+            font-weight: 700;
+
+            color: #454c5d;
+
+        }
+
+
+        .empty-description {
+
+            font-size: 11px;
+
+            color: #969dac;
+
+            margin-top: 5px;
+
+        }
+
+
+        .upload-button {
+
+            display: inline-block;
+
+            margin-top: 14px;
+
+            padding: 9px 16px;
+
+            background: #5667f2;
+
+            color: white;
+
+            border-radius: 8px;
+
+            text-decoration: none;
+
+            font-size: 11px;
+
+            font-weight: 600;
+
+        }
+
+
+        .upload-button:hover {
+
+            background: #4556df;
+
+        }
+
+
+        /* =====================================================
+           RESPONSIVE
+        ===================================================== */
+
+        @media (max-width: 1100px) {
+
+            .stats-grid {
+
+                grid-template-columns:
+                    repeat(2, 1fr);
+
+            }
+
+
+            .tools-grid {
+
+                grid-template-columns:
+                    repeat(2, 1fr);
+
+            }
+
+        }
+
+
+        @media (max-width: 800px) {
+
+            .sidebar {
+
+                transform:
+                    translateX(-100%);
+
+            }
+
+
+            .sidebar.open {
+
+                transform:
+                    translateX(0);
+
+            }
+
+
+            .main {
+
+                margin-left: 0;
+
+            }
+
+
+            .menu-toggle {
+
+                display: block;
+
+            }
+
+
+            .content {
+
+                padding: 22px;
+
+            }
+
+        }
+
+
+        @media (max-width: 550px) {
+
+            .stats-grid {
+
+                grid-template-columns: 1fr;
+
+            }
+
+
+            .tools-grid {
+
+                grid-template-columns: 1fr;
+
+            }
+
+
+            .topbar {
+
+                padding: 0 18px;
+
+            }
+
+
+            .status-indicator {
+
+                display: none;
+
+            }
+
+
+            .welcome h1 {
+
+                font-size: 21px;
+
+            }
+
+        }
+
+    </style>
+
+</head>
+
+
+<body>
+
+
+<!-- =====================================================
+     SIDEBAR
+===================================================== -->
+
+<aside
+    class="sidebar"
+    id="sidebar"
+>
+
+
+    <!-- LOGO -->
+
+    <div class="sidebar-header">
+
+        <img
+            src="../static/logo.png"
+            alt="Paper Logo"
+            class="sidebar-logo"
+        >
+
+        <div class="brand-text">
+
+            <div class="brand-name">
+                Paper
+            </div>
+
+            <div class="brand-version">
+                AI RESEARCH PLATFORM
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <!-- NAVIGATION -->
+
+    <div class="sidebar-content">
+
+
+        <!-- =================================================
+             MAIN
+        ================================================= -->
+
+        <div class="nav-section">
+
+            <div class="nav-title">
+                Main
+            </div>
+
+
+            <a
+                href="menu_utama.html"
+                class="nav-item active"
+            >
+
+                <span class="nav-icon">
+                    ⌂
+                </span>
+
+                Dashboard
+
+            </a>
+
+
+            <a
+                href="input_paper.html"
+                class="nav-item"
+            >
+
+                <span class="nav-icon">
+                    ＋
+                </span>
+
+                Input Papers
+
+            </a>
+
+
+            <a
+                href="library.html"
+                class="nav-item"
+            >
+
+                <span class="nav-icon">
+                    ▤
+                </span>
+
+                Library
+
+            </a>
+
+        </div>
+
+
+        <!-- =================================================
+             RESEARCH
+        ================================================= -->
+
+        <div class="nav-section">
+
+            <div class="nav-title">
+                Research
+            </div>
+
+
+            <a
+                href="#"
+                class="nav-item"
+                onclick="comingSoon(event, 'Projects')"
+            >
+
+                <span class="nav-icon">
+                    ▦
+                </span>
+
+                Projects
+
+            </a>
+
+
+            <a
+                href="research_gap.html"
+                class="nav-item"
+            >
+
+                <span class="nav-icon">
+                    ⌕
+                </span>
+
+                Research Gap
+
+            </a>
+
+
+            <a
+                href="novelty_find.html"
+                class="nav-item"
+            >
+
+                <span class="nav-icon">
+                    ✦
+                </span>
+
+                Novelty Find
+
+            </a>
+
+
+            <a
+                href="paper_summary.html"
+                class="nav-item"
+            >
+
+                <span class="nav-icon">
+                    ≡
+                </span>
+
+                Paper Summary
+
+            </a>
+
+
+            <a
+                href="mini_review.html"
+                class="nav-item"
+            >
+
+                <span class="nav-icon">
+                    ▥
+                </span>
+
+                Mini Review
+
+            </a>
+
+        </div>
+
+
+        <!-- =================================================
+             SYSTEM
+        ================================================= -->
+
+        <div class="nav-section">
+
+            <div class="nav-title">
+                System
+            </div>
+
+
+            <a
+                href="#"
+                class="nav-item"
+                onclick="comingSoon(event, 'Settings')"
+            >
+
+                <span class="nav-icon">
+                    ⚙
+                </span>
+
+                Settings
+
+            </a>
+
+        </div>
+
+
+    </div>
+
+
+    <!-- =====================================================
+         USER
+    ===================================================== -->
+
+    <div class="sidebar-user">
+
+        <div class="user-card">
+
+
+            <div class="user-avatar">
+                A
+            </div>
+
+
+            <div class="user-info">
+
+                <div class="user-name">
+                    Administrator
+                </div>
+
+                <div class="user-role">
+                    Researcher
+                </div>
+
+            </div>
+
+
+            <a
+                href="../index.html"
+                class="logout-button"
+                title="Logout"
+            >
+                ⇥
+            </a>
+
+
+        </div>
+
+    </div>
+
+
+</aside>
+
+
+
+<!-- =====================================================
+     MAIN
+===================================================== -->
+
+<main class="main">
+
+
+    <!-- TOPBAR -->
+
+    <header class="topbar">
+
+
+        <div>
+
+            <div class="page-title">
+                Literature Research Dashboard
+            </div>
+
+            <div class="page-subtitle">
+                AI-powered research analysis workspace
+            </div>
+
+        </div>
+
+
+        <div class="topbar-right">
+
+
+            <div class="status-indicator">
+
+                <span class="status-dot"></span>
+
+                System Ready
+
+            </div>
+
+
+            <button
+                class="menu-toggle"
+                onclick="toggleSidebar()"
+            >
+                ☰
+            </button>
+
+
+        </div>
+
+
+    </header>
+
+
+
+    <!-- =====================================================
+         CONTENT
+    ===================================================== -->
+
+    <div class="content">
+
+
+        <!-- WELCOME -->
+
+        <div class="welcome">
+
+            <h1>
+                Research Overview
+            </h1>
+
+            <p>
+                Analyze your literature, identify research gaps,
+                and discover potential novelty with AI assistance.
+            </p>
+
+        </div>
+
+
+
+        <!-- =================================================
+             STATISTICS
+        ================================================= -->
+
+        <div class="stats-grid">
+
+
+            <div class="stat-card">
+
+                <div class="stat-icon">
+                    📄
+                </div>
+
+                <div>
+
+                    <div class="stat-label">
+                        Total Papers
+                    </div>
+
+                    <div
+                        class="stat-value"
+                        id="totalPapers"
+                    >
+                        0
+                    </div>
+
+                </div>
+
+            </div>
+
+
+            <div class="stat-card">
+
+                <div class="stat-icon">
+                    📁
+                </div>
+
+                <div>
+
+                    <div class="stat-label">
+                        Research Projects
+                    </div>
+
+                    <div
+                        class="stat-value"
+                        id="projectCount"
+                    >
+                        0
+                    </div>
+
+                </div>
+
+            </div>
+
+
+            <div class="stat-card">
+
+                <div class="stat-icon">
+                    🔎
+                </div>
+
+                <div>
+
+                    <div class="stat-label">
+                        Research Gaps
+                    </div>
+
+                    <div
+                        class="stat-value"
+                        id="gapCount"
+                    >
+                        0
+                    </div>
+
+                </div>
+
+            </div>
+
+
+            <div class="stat-card">
+
+                <div class="stat-icon">
+                    ✦
+                </div>
+
+                <div>
+
+                    <div class="stat-label">
+                        Potential Novelties
+                    </div>
+
+                    <div
+                        class="stat-value"
+                        id="noveltyCount"
+                    >
+                        0
+                    </div>
+
+                </div>
+
+            </div>
+
+
+        </div>
+
+
+
+        <!-- =================================================
+             RESEARCH TOOLS
+        ================================================= -->
+
+        <div class="section-header">
+
+            <div>
+
+                <div class="section-title">
+                    Research Tools
+                </div>
+
+                <div class="section-description">
+                    Tools for analyzing and developing your research
+                </div>
+
+            </div>
+
+        </div>
+
+
+
+        <div class="tools-grid">
+
+
+            <!-- INPUT PAPERS -->
+
+            <a
+                href="input_paper.html"
+                class="tool-card"
+            >
+
+                <div class="tool-icon">
+                    ＋
+                </div>
+
+                <div class="tool-title">
+                    Input Papers
+                </div>
+
+                <div class="tool-description">
+                    Upload research papers in PDF format
+                    for AI-powered analysis.
+                </div>
+
+            </a>
+
+
+
+            <!-- LIBRARY -->
+
+            <a
+                href="library.html"
+                class="tool-card"
+            >
+
+                <div class="tool-icon">
+                    ▤
+                </div>
+
+                <div class="tool-title">
+                    Library
+                </div>
+
+                <div class="tool-description">
+                    Manage and explore all uploaded
+                    research papers.
+                </div>
+
+            </a>
+
+
+
+            <!-- RESEARCH GAP -->
+
+            <a
+                href="research_gap.html"
+                class="tool-card"
+            >
+
+                <div class="tool-icon">
+                    🔎
+                </div>
+
+                <div class="tool-title">
+                    Research Gap
+                </div>
+
+                <div class="tool-description">
+                    Identify unresolved problems,
+                    limitations, and research gaps.
+                </div>
+
+            </a>
+
+
+
+            <!-- NOVELTY FIND -->
+
+            <a
+                href="novelty_find.html"
+                class="tool-card"
+            >
+
+                <div class="tool-icon">
+                    ✦
+                </div>
+
+                <div class="tool-title">
+                    Novelty Find
+                </div>
+
+                <div class="tool-description">
+                    Discover potential novelty,
+                    compare existing studies,
+                    and identify promising research directions.
+                </div>
+
+            </a>
+
+
+
+            <!-- PAPER SUMMARY -->
+
+            <a
+                href="paper_summary.html"
+                class="tool-card"
+            >
+
+                <div class="tool-icon">
+                    ≡
+                </div>
+
+                <div class="tool-title">
+                    Paper Summary
+                </div>
+
+                <div class="tool-description">
+                    Generate structured summaries
+                    from research papers.
+                </div>
+
+            </a>
+
+
+
+            <!-- MINI REVIEW -->
+
+            <a
+                href="mini_review.html"
+                class="tool-card"
+            >
+
+                <div class="tool-icon">
+                    ▥
+                </div>
+
+                <div class="tool-title">
+                    Mini Review
+                </div>
+
+                <div class="tool-description">
+                    Build a literature map and generate
+                    structured mini reviews.
+                </div>
+
+            </a>
+
+
+        </div>
+
+
+
+        <!-- =================================================
+             RECENT PAPERS
+        ================================================= -->
+
+        <div class="section-header">
+
+            <div>
+
+                <div class="section-title">
+                    Recent Papers
+                </div>
+
+                <div class="section-description">
+                    Your recently uploaded research papers
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <div
+            class="recent-card"
+            id="recentPapers"
+        >
+
+            <div class="empty-state">
+
+                <div class="empty-icon">
+                    📄
+                </div>
+
+                <div class="empty-title">
+                    Loading papers...
+                </div>
+
+                <div class="empty-description">
+                    Reading your paper database.
+                </div>
+
+            </div>
+
+        </div>
+
+
+    </div>
+
+</main>
+
+
+
+<script>
+
+
+/* =====================================================
+   SIDEBAR
+===================================================== */
+
+function toggleSidebar(){
+
+    const sidebar =
+        document.getElementById(
+            "sidebar"
+        );
+
+    sidebar.classList.toggle(
+        "open"
+    );
+
+}
+
+
+
+/* =====================================================
+   COMING SOON
+===================================================== */
+
+function comingSoon(
+    event,
+    feature
+){
+
+    event.preventDefault();
+
+    alert(
+        feature +
+        " module is currently under development."
+    );
+
+}
+
+
+
+/* =====================================================
+   CSV PARSER
+===================================================== */
+
+function parseCSV(text){
+
+    const rows = [];
+
+    let row = [];
+
+    let cell = "";
+
+    let insideQuotes = false;
+
+
+    for(
+        let i = 0;
+        i < text.length;
+        i++
+    ){
+
+        const char =
+            text[i];
+
+        const next =
+            text[i + 1];
+
+
+        if(
+            char === '"' &&
+            insideQuotes &&
+            next === '"'
+        ){
+
+            cell += '"';
+
+            i++;
+
+            continue;
+
+        }
+
+
+        if(char === '"'){
+
+            insideQuotes =
+                !insideQuotes;
+
+            continue;
+
+        }
+
+
+        if(
+            char === "," &&
+            !insideQuotes
+        ){
+
+            row.push(cell);
+
+            cell = "";
+
+            continue;
+
+        }
+
+
+        if(
+            (
+                char === "\n" ||
+                char === "\r"
+            ) &&
+            !insideQuotes
+        ){
+
+            if(
+                char === "\r" &&
+                next === "\n"
+            ){
+
+                i++;
+
+            }
+
+
+            row.push(cell);
+
+
+            if(
+                row.some(
+                    value =>
+                        String(value)
+                        .trim() !== ""
+                )
+            ){
+
+                rows.push(row);
+
+            }
+
+
+            row = [];
+
+            cell = "";
+
+            continue;
+
+        }
+
+
+        cell += char;
+
+    }
+
+
+    if(
+        cell !== "" ||
+        row.length > 0
+    ){
+
+        row.push(cell);
+
+
+        if(
+            row.some(
+                value =>
+                    String(value)
+                    .trim() !== ""
+            )
+        ){
+
+            rows.push(row);
+
+        }
+
+    }
+
+
+    if(!rows.length){
+
+        return [];
+
+    }
+
+
+    const headers =
+        rows[0].map(
+            header =>
+                normalizeHeader(header)
+        );
+
+
+    return rows
+        .slice(1)
+        .map(values => {
+
+            const object = {};
+
+
+            headers.forEach(
+                (header,index) => {
+
+                    object[header] =
+                        values[index] || "";
+
+                }
+            );
+
+
+            return object;
+
+        });
+
+}
+
+
+
+/* =====================================================
+   NORMALIZE HEADER
+===================================================== */
+
+function normalizeHeader(
+    value
+){
+
+    return String(
+        value || ""
+    )
+    .trim()
+    .toLowerCase()
+    .replace(
+        /^\uFEFF/,
+        ""
+    )
+    .replace(
+        /\s+/g,
+        " "
+    )
+    .replace(
+        /[_-]+/g,
+        " "
+    );
+
+}
+
+
+
+/* =====================================================
+   GET CSV VALUE
+===================================================== */
+
+function getValue(
+    row,
+    aliases
+){
+
+    for(
+        const alias of aliases
+    ){
+
+        const key =
+            normalizeHeader(
+                alias
+            );
+
+
+        if(
+            Object.prototype
+                .hasOwnProperty
+                .call(
+                    row,
+                    key
+                )
+            &&
+            String(
+                row[key]
+            ).trim() !== ""
+        ){
+
+            return String(
+                row[key]
+            ).trim();
+
+        }
+
+    }
+
+
+    return "";
+
+}
+
+
+
+/* =====================================================
+   LOAD DASHBOARD
+===================================================== */
+
+async function loadDashboard(){
+
+    try{
+
+        const response =
+            await fetch(
+                "/data.csv?t=" +
+                Date.now(),
+                {
+                    cache:
+                        "no-store"
+                }
+            );
+
+
+        if(
+            !response.ok
+        ){
+
+            throw new Error(
+                "HTTP " +
+                response.status
+            );
+
+        }
+
+
+        const text =
+            await response.text();
+
+
+        const papers =
+            parseCSV(text);
+
+
+        updateStatistics(
+            papers
+        );
+
+
+        renderRecentPapers(
+            papers
+        );
+
+
+    }catch(error){
+
+        console.error(
+            "Database error:",
+            error
+        );
+
+
+        document
+            .getElementById(
+                "recentPapers"
+            )
+            .innerHTML = `
+
+                <div class="empty-state">
+
+                    <div class="empty-icon">
+                        ⚠️
+                    </div>
+
+                    <div class="empty-title">
+                        Database unavailable
+                    </div>
+
+                    <div class="empty-description">
+                        Tidak dapat membaca data.csv.
+                        Pastikan server Python sedang berjalan.
+                    </div>
+
+                    <a
+                        href="input_paper.html"
+                        class="upload-button"
+                    >
+                        Open Input Papers
+                    </a>
+
+                </div>
+
+            `;
+
+    }
+
+}
+
+
+
+/* =====================================================
+   STATISTICS
+===================================================== */
+
+function updateStatistics(
+    papers
+){
+
+    document
+        .getElementById(
+            "totalPapers"
+        )
+        .textContent =
+        papers.length;
+
+
+    /*
+       Research Projects,
+       Research Gaps dan
+       Potential Novelties
+       belum mempunyai database
+       tersendiri.
+
+       Jadi jangan mengarang angka.
+    */
+
+    document
+        .getElementById(
+            "projectCount"
+        )
+        .textContent = "0";
+
+
+    document
+        .getElementById(
+            "gapCount"
+        )
+        .textContent = "0";
+
+
+    document
+        .getElementById(
+            "noveltyCount"
+        )
+        .textContent = "0";
+
+}
+
+
+
+/* =====================================================
+   RECENT PAPERS
+===================================================== */
+
+function renderRecentPapers(
+    papers
+){
+
+    const container =
+        document.getElementById(
+            "recentPapers"
+        );
+
+
+    if(!papers.length){
+
+        container.innerHTML = `
+
+            <div class="empty-state">
+
+                <div class="empty-icon">
+                    📄
+                </div>
+
+                <div class="empty-title">
+                    No papers uploaded yet
+                </div>
+
+                <div class="empty-description">
+                    Start by uploading your first
+                    research paper.
+                </div>
+
+                <a
+                    href="input_paper.html"
+                    class="upload-button"
+                >
+                    Upload First Paper
+                </a>
+
+            </div>
+
+        `;
+
+        return;
+
+    }
+
+
+    /*
+       Tampilkan maksimal
+       5 paper terakhir dari CSV.
+    */
+
+    const recent =
+        papers
+        .slice(-5)
+        .reverse();
+
+
+    let html = `
+
+        <div
+            style="
+                width:100%;
+                padding:18px;
+            "
+        >
+
+            <div
+                style="
+                    display:grid;
+                    gap:10px;
+                "
+            >
+    `;
+
+
+    recent.forEach(
+        paper => {
+
+            const title =
+                getValue(
+                    paper,
+                    [
+                        "title",
+                        "article title",
+                        "paper title",
+                        "ti"
+                    ]
+                ) ||
+                "Untitled Paper";
+
+
+            const author =
+                getValue(
+                    paper,
+                    [
+                        "authors",
+                        "author",
+                        "au"
+                    ]
+                );
+
+
+            const year =
+                getValue(
+                    paper,
+                    [
+                        "year",
+                        "publication year",
+                        "py"
+                    ]
+                );
+
+
+            const journal =
+                getValue(
+                    paper,
+                    [
+                        "journal",
+                        "journal name",
+                        "source",
+                        "jo",
+                        "jf"
+                    ]
+                );
+
+
+            html += `
+
+                <div
+                    style="
+                        padding:13px;
+                        border:1px solid #edf0f5;
+                        border-radius:9px;
+                        background:#fafbfe;
+                    "
+                >
+
+                    <div
+                        style="
+                            font-size:12px;
+                            font-weight:600;
+                            color:#30374a;
+                            line-height:1.5;
+                        "
+                    >
+                        ${escapeHTML(title)}
+                    </div>
+
+
+                    <div
+                        style="
+                            margin-top:5px;
+                            font-size:10px;
+                            color:#9299a9;
+                        "
+                    >
+
+                        ${
+                            author
+                            ?
+                            escapeHTML(author)
+                            : "Author tidak tersedia"
+                        }
+
+                        ${
+                            year
+                            ?
+                            " · " +
+                            escapeHTML(year)
+                            : ""
+                        }
+
+                        ${
+                            journal
+                            ?
+                            " · " +
+                            escapeHTML(journal)
+                            : ""
+                        }
+
+                    </div>
+
+                </div>
+
+            `;
+
+        }
+    );
+
+
+    html += `
+
+            </div>
+
+            <div
+                style="
+                    text-align:right;
+                    margin-top:12px;
+                "
+            >
+
+                <a
+                    href="library.html"
+                    style="
+                        font-size:11px;
+                        color:#5667f2;
+                        text-decoration:none;
+                        font-weight:600;
+                    "
+                >
+                    View Full Library →
+                </a>
+
+            </div>
+
+        </div>
+
+    `;
+
+
+    container.innerHTML =
+        html;
+
+}
+
+
+
+/* =====================================================
+   ESCAPE HTML
+===================================================== */
+
+function escapeHTML(
+    value
+){
+
+    return String(
+        value || ""
+    )
+    .replace(
+        /&/g,
+        "&amp;"
+    )
+    .replace(
+        /</g,
+        "&lt;"
+    )
+    .replace(
+        />/g,
+        "&gt;"
+    )
+    .replace(
+        /"/g,
+        "&quot;"
+    )
+    .replace(
+        /'/g,
+        "&#039;"
+    );
+
+}
+
+
+
+/* =====================================================
+   START
+===================================================== */
+
+loadDashboard();
+
+
+</script>
+
+
+</body>
+
+</html>
